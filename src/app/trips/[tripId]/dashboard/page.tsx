@@ -1,4 +1,3 @@
-import { TripNavbar } from "@/components/trip-navbar";
 import { Wallet, Receipt, Map, Hotel } from "lucide-react";
 import { getTripDashboardMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
@@ -15,9 +14,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ trip
 
     return (
         <div className="min-h-screen bg-[#f7f6f1]">
-            <TripNavbar tripId={tripId} activeTab="dashboard" />
-
-            <main className="px-1 py-1">
+            <main >
                 {/* Lista de cards de viagens (Florianópolis, Serra Gaúcha, etc.) entra aqui */}
                 <div className="space-y-1">
                     <TripHeaderCard trip={data.trip} />

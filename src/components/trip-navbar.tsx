@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sparkles } from "lucide-react";
+import { useUser } from "@/contexts/user-context";
+import { UserAvatarMenu } from "@/components/user-avatar-menu";
 
 export type TripTab =
     | "dashboard"
@@ -23,22 +25,13 @@ const TRIP_NAV_ITEMS: { key: TripTab; label: string; path: string }[] = [
 
 interface TripNavbarProps {
     tripId: string;
-    /**
-     * Opcional: se não for passado, a aba ativa é detectada automaticamente
-     * comparando a URL atual com o path de cada item (igual ao GlobalNavbar).
-     * Só passe activeTab manualmente se precisar forçar um valor específico
-     * (ex: páginas que não seguem o padrão de rota /viagens/[tripId]/<aba>).
-     */
+    /** Opcional: se omitido, a aba ativa é detectada pela URL atual. */
     activeTab?: TripTab;
-    userInitials?: string;
 }
 
-export function TripNavbar({
-    tripId,
-    activeTab,
-    userInitials = "LH",
-}: TripNavbarProps) {
+export function TripNavbar({ tripId, activeTab }: TripNavbarProps) {
     const pathname = usePathname();
+    const { user, isLoading } = useUser();
 
     return (
         <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-4">
@@ -74,9 +67,11 @@ export function TripNavbar({
                 })}
             </nav>
 
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-xs font-semibold text-emerald-700">
-                {userInitials}
-            </div>
+            {isLoading ? (
+                <div className="h-8 w-8 animate-pulse rounded-full bg-neutral-200" />
+            ) : (
+                <UserAvatarMenu />
+            )}
         </header>
     );
 }

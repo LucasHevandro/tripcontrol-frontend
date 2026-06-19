@@ -164,3 +164,32 @@ export interface ReservationsData {
     nextFlightSublabel: string;
     reservations: ReservationDetail[];
 }
+
+export type ParticipantRole = "organizer" | "member";
+
+export interface ParticipantDetail {
+    id: string;
+    name: string;
+    email: string;
+    role: ParticipantRole;
+    totalPaid: number;
+    individualQuota: number;
+    balance: number;
+}
+
+export interface ParticipantsData {
+    tripName: string;
+    tripPeriod: string;
+    participantCount: number;
+    maxParticipants: number;
+    organizerCount: number;
+    totalSpent: number;
+    perPersonAverage: number;
+    pendingSettlementsCount: number;
+    pendingSettlementsAmount: number;
+    groupStatusLabel: string;
+    groupStatusSublabel: string;
+    inviteLink: string;
+    participants: ParticipantDetail[];
+    settlementSummary: Settlement[];
+}

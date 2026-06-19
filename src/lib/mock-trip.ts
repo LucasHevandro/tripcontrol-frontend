@@ -309,3 +309,84 @@ export function getTripReservationsMock(tripId: string): ReservationsData {
         ],
     };
 }
+
+import type { ParticipantsData } from "@/types/trip";
+
+export function getTripParticipantsMock(tripId: string): ParticipantsData {
+    return {
+        tripName: "Viagem para Florianópolis",
+        tripPeriod: "Jan 2026",
+        participantCount: 6,
+        maxParticipants: 10,
+        organizerCount: 1,
+        totalSpent: 4320,
+        perPersonAverage: 720,
+        pendingSettlementsCount: 4,
+        pendingSettlementsAmount: 265,
+        groupStatusLabel: "Ativo",
+        groupStatusSublabel: "todos confirmados",
+        inviteLink: "tripcontrol.app/join/floripa...",
+        participants: [
+            {
+                id: "lucas",
+                name: "Lucas Hevandro",
+                email: "lucas@email.com",
+                role: "organizer",
+                totalPaid: 1350,
+                individualQuota: 720,
+                balance: 210,
+            },
+            {
+                id: "ana",
+                name: "Ana Beatriz",
+                email: "ana.b@email.com",
+                role: "member",
+                totalPaid: 630,
+                individualQuota: 720,
+                balance: -90,
+            },
+            {
+                id: "pedro",
+                name: "Pedro Augusto",
+                email: "pedro.a@email.com",
+                role: "member",
+                totalPaid: 775,
+                individualQuota: 720,
+                balance: 55,
+            },
+            {
+                id: "mariana",
+                name: "Mariana Costa",
+                email: "mari.costa@email.com",
+                role: "member",
+                totalPaid: 640,
+                individualQuota: 720,
+                balance: -80,
+            },
+            {
+                id: "gustavo",
+                name: "Gustavo",
+                email: "gustavo@email.com",
+                role: "member",
+                totalPaid: 675,
+                individualQuota: 720,
+                balance: -45,
+            },
+            {
+                id: "carla",
+                name: "Carla",
+                email: "carla@email.com",
+                role: "member",
+                totalPaid: 670,
+                individualQuota: 720,
+                balance: -50,
+            },
+        ],
+        settlementSummary: [
+            { id: "set-1", fromParticipantId: "ana", fromName: "Ana", toParticipantId: "lucas", toName: "Lucas", amount: 90, description: "" },
+            { id: "set-2", fromParticipantId: "mariana", fromName: "Mariana", toParticipantId: "lucas", toName: "Lucas", amount: 80, description: "" },
+            { id: "set-3", fromParticipantId: "gustavo", fromName: "Gustavo", toParticipantId: "pedro", toName: "Pedro", amount: 45, description: "" },
+            { id: "set-4", fromParticipantId: "carla", fromName: "Carla", toParticipantId: "pedro", toName: "Pedro", amount: 50, description: "" },
+        ],
+    };
+}

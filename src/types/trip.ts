@@ -84,3 +84,51 @@ export interface FinancesData {
     settlements: Settlement[];
     participants: TripParticipant[];
 }
+
+export type ReservationStatus = "confirmed" | "pending" | "cancelled";
+
+export interface ActiveReservation {
+    id: string;
+    title: string;
+    subtitle: string;
+    status: ReservationStatus;
+    icon: "hotel" | "car" | "flight" | "boat";
+}
+
+export interface ChecklistItem {
+    id: string;
+    label: string;
+    checked: boolean;
+}
+
+export interface RoadmapActivity {
+    id: string;
+    time: string;
+    title: string;
+    emoji: string;
+    duration: string;
+    location: string;
+    costLabel: string;
+    note: string;
+    status: ActivityStatus;
+    badge?: string;
+}
+
+export interface RoadmapDay {
+    date: string;
+    label: string;
+    shortLabel: string;
+    fullLabel: string;
+    activityCount: number;
+    participantCount: number;
+    activities: RoadmapActivity[];
+}
+
+export interface RoadmapData {
+    tripName: string;
+    tripPeriod: string;
+    tripDurationDays: number;
+    days: RoadmapDay[];
+    activeReservations: ActiveReservation[];
+    todayChecklist: ChecklistItem[];
+}

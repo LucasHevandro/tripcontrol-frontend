@@ -140,3 +140,90 @@ export function getTripFinancesMock(tripId: string): FinancesData {
         ],
     };
 }
+
+import type { RoadmapData } from "@/types/trip";
+
+export function getTripRoadmapMock(tripId: string): RoadmapData {
+    return {
+        tripName: "Florianópolis",
+        tripPeriod: "10–17 jan 2026",
+        tripDurationDays: 7,
+        activeReservations: [
+            { id: "res-1", title: "Hotel Beira Mar", subtitle: "10–17 jan · 7 noites", status: "confirmed", icon: "hotel" },
+            { id: "res-2", title: "Carro alugado", subtitle: "10–17 jan · Localiza", status: "confirmed", icon: "car" },
+            { id: "res-3", title: "Voo de volta", subtitle: "17 jan · Azul 4521", status: "confirmed", icon: "flight" },
+        ],
+        todayChecklist: [
+            { id: "chk-1", label: "Café da manhã", checked: true },
+            { id: "chk-2", label: "Protetor solar", checked: true },
+            { id: "chk-3", label: "Reserva restaurante", checked: false },
+            { id: "chk-4", label: "Pagar passeio barco", checked: false },
+            { id: "chk-5", label: "Foto da praia", checked: false },
+        ],
+        days: [
+            { date: "2026-01-10", label: "Sex 10/01", shortLabel: "Sex 10/01", fullLabel: "Sábado, 10 de janeiro", activityCount: 2, participantCount: 6, activities: [] },
+            { date: "2026-01-11", label: "Sáb 11/01", shortLabel: "Sáb 11/01", fullLabel: "Sábado, 11 de janeiro", activityCount: 3, participantCount: 6, activities: [] },
+            { date: "2026-01-12", label: "Dom 12/01", shortLabel: "Dom 12/01", fullLabel: "Domingo, 12 de janeiro", activityCount: 2, participantCount: 6, activities: [] },
+            { date: "2026-01-13", label: "Seg 13/01", shortLabel: "Seg 13/01", fullLabel: "Segunda-feira, 13 de janeiro", activityCount: 1, participantCount: 6, activities: [] },
+            {
+                date: "2026-01-14",
+                label: "Ter 14/01",
+                shortLabel: "Ter 14/01",
+                fullLabel: "Terça-feira, 14 de janeiro",
+                activityCount: 4,
+                participantCount: 5,
+                activities: [
+                    {
+                        id: "act-1",
+                        time: "08:00",
+                        emoji: "☕",
+                        title: "Café da manhã no hotel",
+                        duration: "1h",
+                        location: "Hotel Beira Mar",
+                        costLabel: "",
+                        note: "",
+                        status: "completed",
+                        badge: "Concluído",
+                    },
+                    {
+                        id: "act-2",
+                        time: "10:00",
+                        emoji: "🏖️",
+                        title: "Praia da Joaquina",
+                        duration: "3h",
+                        location: "Joaquina, Floripa",
+                        costLabel: "R$ 0",
+                        note: "Levar protetor solar e água",
+                        status: "current",
+                        badge: "Agora",
+                    },
+                    {
+                        id: "act-3",
+                        time: "13:00",
+                        emoji: "🍽️",
+                        title: "Almoço · Restaurante Náutico",
+                        duration: "1h30",
+                        location: "Centro",
+                        costLabel: "~R$ 60/pessoa",
+                        note: "Reserva confirmada · Mesa para 6",
+                        status: "upcoming",
+                    },
+                    {
+                        id: "act-4",
+                        time: "16:00",
+                        emoji: "⛵",
+                        title: "Passeio de barco",
+                        duration: "2h",
+                        location: "Marina do Sul",
+                        costLabel: "R$ 150 total",
+                        note: "Pagamento já registrado",
+                        status: "upcoming",
+                    },
+                ],
+            },
+            { date: "2026-01-15", label: "Qua 15/01", shortLabel: "Qua 15/01", fullLabel: "Quarta-feira, 15 de janeiro", activityCount: 3, participantCount: 6, activities: [] },
+            { date: "2026-01-16", label: "Qui 16/01", shortLabel: "Qui 16/01", fullLabel: "Quinta-feira, 16 de janeiro", activityCount: 2, participantCount: 6, activities: [] },
+            { date: "2026-01-17", label: "Sex 17/01", shortLabel: "Sex 17/01", fullLabel: "Sexta-feira, 17 de janeiro", activityCount: 1, participantCount: 6, activities: [] },
+        ],
+    };
+}

@@ -52,3 +52,35 @@ export interface TripDashboardData {
     todayActivities: Activity[];
     participants: TripParticipant[];
 }
+
+export interface CategoryBreakdown {
+    category: string;
+    total: number;
+    percentage: number;
+}
+
+export interface Settlement {
+    id: string;
+    fromParticipantId: string;
+    fromName: string;
+    toParticipantId: string;
+    toName: string;
+    amount: number;
+    description: string;
+}
+
+export interface FinancesData {
+    tripName: string;
+    tripPeriod: string;
+    totalSpent: number;
+    expenseCount: number;
+    perPersonAverage: number;
+    participantCount: number;
+    largestExpenseAmount: number;
+    largestExpenseDescription: string;
+    groupBalanceLabel: string;
+    expenses: (Expense & { date: string })[];
+    categoryBreakdown: CategoryBreakdown[];
+    settlements: Settlement[];
+    participants: TripParticipant[];
+}

@@ -227,3 +227,85 @@ export function getTripRoadmapMock(tripId: string): RoadmapData {
         ],
     };
 }
+
+import type { ReservationsData } from "@/types/trip";
+
+export function getTripReservationsMock(tripId: string): ReservationsData {
+    return {
+        tripName: "Florianópolis",
+        tripPeriod: "10–17 jan 2026",
+        totalReservations: 5,
+        confirmedCount: 4,
+        totalInvested: 3100,
+        nextCheckinLabel: "10 jan",
+        nextCheckinSublabel: "Hotel Beira Mar",
+        nextFlightLabel: "17 jan",
+        nextFlightSublabel: "Azul 4521 · 18h40",
+        reservations: [
+            {
+                id: "res-1",
+                category: "hotel",
+                status: "confirmed",
+                title: "Hotel Beira Mar Inn",
+                subtitle: "Hospedagem · Florianópolis",
+                details: [
+                    "Check-in: 10 jan · Check-out: 17 jan (7 noites)",
+                    "6 hóspedes · 3 quartos duplos",
+                    "Av. Beira Mar Norte, 1.200 · Centro",
+                    "Reserva: #BM2026-0110",
+                ],
+                amount: 1800,
+                amountSublabel: "R$ 300/noite · pago por Lucas",
+                primaryAction: { label: "Ver voucher", icon: "voucher", href: "#" },
+            },
+            {
+                id: "res-2",
+                category: "flight",
+                status: "confirmed",
+                title: "Azul Linhas Aéreas",
+                subtitle: "Passagem · Ida e volta",
+                details: [
+                    "Ida: 10 jan · Azul 4205 · 07h15 → 09h40",
+                    "Volta: 17 jan · Azul 4521 · 18h40 → 21h05",
+                    "6 passageiros · Economy",
+                    "Localizador: AZUL-XK9F2M",
+                ],
+                amount: 780,
+                amountSublabel: "R$ 130/pessoa · pago individualmente",
+                primaryAction: { label: "Ver passagens", icon: "tickets", href: "#" },
+            },
+            {
+                id: "res-3",
+                category: "car",
+                status: "confirmed",
+                title: "Localiza · Aluguel de carro",
+                subtitle: "Transporte · SUV 7 lugares",
+                details: [
+                    "Retirada: 10 jan 10h00 · Devolução: 17 jan 16h00",
+                    "Jeep Compass ou similar",
+                    "Aeroporto Hercílio Luz",
+                    "Reserva: LOC-489201",
+                ],
+                amount: 480,
+                amountSublabel: "7 dias · pago por Pedro",
+                primaryAction: { label: "Ver voucher", icon: "voucher", href: "#" },
+            },
+            {
+                id: "res-4",
+                category: "tour",
+                status: "pending",
+                title: "Passeio de escuna",
+                subtitle: "Passeio · Baía Sul",
+                details: [
+                    "14 jan · 16h00 às 18h00",
+                    "6 pessoas",
+                    "Trapiche Municipal · Centro",
+                ],
+                amount: 150,
+                amountSublabel: "R$ 25/pessoa · aguardando pagamento",
+                warning: "Pagamento pendente até 12 jan",
+                primaryAction: { label: "Pagar", icon: "pay", href: "#" },
+            },
+        ],
+    };
+}

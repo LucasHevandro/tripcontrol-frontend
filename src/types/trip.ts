@@ -132,3 +132,35 @@ export interface RoadmapData {
     activeReservations: ActiveReservation[];
     todayChecklist: ChecklistItem[];
 }
+
+export type ReservationCategory = "hotel" | "flight" | "car" | "tour";
+
+export interface ReservationDetail {
+    id: string;
+    category: ReservationCategory;
+    status: ReservationStatus;
+    title: string;
+    subtitle: string;
+    details: string[];
+    amount: number;
+    amountSublabel: string;
+    warning?: string;
+    primaryAction?: {
+        label: string;
+        icon: "voucher" | "tickets" | "pay";
+        href: string;
+    };
+}
+
+export interface ReservationsData {
+    tripName: string;
+    tripPeriod: string;
+    totalReservations: number;
+    confirmedCount: number;
+    totalInvested: number;
+    nextCheckinLabel: string;
+    nextCheckinSublabel: string;
+    nextFlightLabel: string;
+    nextFlightSublabel: string;
+    reservations: ReservationDetail[];
+}

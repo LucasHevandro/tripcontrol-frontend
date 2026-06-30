@@ -14,7 +14,7 @@ export function Step2Details({ data, onChange }: Step2DetailsProps) {
                 <p className="mb-1.5 text-sm font-medium text-neutral-700">
                     Tipo de viagem
                 </p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {TRIP_TYPE_OPTIONS.map((opt) => (
                         <OptionCard
                             key={opt.value}

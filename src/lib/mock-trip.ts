@@ -488,3 +488,21 @@ export function getNewTripDashboardMock(tripId: string): TripDashboardData {
         },
     };
 }
+
+import type { UserProfile } from "@/types/trip";
+
+export function getUserProfileMock(): UserProfile {
+    return {
+        id: "lucas",
+        name: "Lucas Hevandro",
+        email: "lucas@email.com",
+        avatarUrl: null,
+        language: "pt-BR",
+        currency: "BRL",
+        notifications: {
+            email: true,
+            expenseAlerts: true,
+            roadmapReminders: false,
+        },
+    };
+}

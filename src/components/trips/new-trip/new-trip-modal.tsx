@@ -78,7 +78,7 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-10"
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-3 py-6 sm:px-4 sm:py-10"
             onClick={handleOverlayClick}
         >
             <div
@@ -88,7 +88,7 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                 aria-label="Criar nova viagem"
                 className="w-full max-w-[520px] rounded-xl bg-white shadow-xl"
             >
-                <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
+                <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-3.5 sm:px-6 sm:py-4">
                     <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900">
                         <Sparkles className="h-4 w-4" />
                         Criar nova viagem
@@ -103,17 +103,17 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                     </button>
                 </div>
 
-                <div className="border-b border-neutral-100 px-6 py-4">
+                <div className="border-b border-neutral-100 px-4 py-3.5 sm:px-6 sm:py-4">
                     <StepIndicator currentStep={step} />
                 </div>
 
-                <div className="px-6 py-5">
+                <div className="px-4 py-4 sm:px-6 sm:py-5">
                     {step === 1 && <Step1Info data={data} onChange={updateData} />}
                     {step === 2 && <Step2Details data={data} onChange={updateData} />}
                     {step === 3 && <Step3Review data={data} />}
                 </div>
 
-                <div className="flex items-center justify-between border-t border-neutral-100 px-6 py-4">
+                <div className="flex items-center justify-between border-t border-neutral-100 px-4 py-3.5 sm:px-6 sm:py-4">
                     {step > 1 ? (
                         <button
                             type="button"
@@ -126,7 +126,7 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                         <span />
                     )}
 
-                    <span className="text-sm text-neutral-400">Passo {step} de 3</span>
+                    <span className="hidden text-sm text-neutral-400 sm:inline">Passo {step} de 3</span>
 
                     {step < 3 ? (
                         <button

@@ -236,3 +236,39 @@ export interface NewTripStatus {
     hasRoadmapActivities: boolean;
     hasExpenses: boolean;
 }
+
+export interface UserProfile {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl: string | null;
+    language: string;
+    currency: string;
+    notifications: {
+        email: boolean;
+        expenseAlerts: boolean;
+        roadmapReminders: boolean;
+    };
+}
+
+export type ExpenseCategory =
+    | "Hospedagem"
+    | "Alimentação"
+    | "Transporte"
+    | "Lazer"
+    | "Compras"
+    | "Outro";
+
+export type ExpenseSplitType = "equal" | "custom";
+
+export interface NewExpenseFormData {
+    description: string;
+    amount: string;
+    date: string;
+    category: ExpenseCategory | null;
+    paidById: string;
+    splitType: ExpenseSplitType;
+    splitParticipantIds: string[];
+    receiptFile: File | null;
+    notes: string;
+}

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
+
 import { getTripFinancesMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
 import { FinanceStatCard } from "@/components/finances/finance-start-card";
@@ -7,6 +6,8 @@ import { ExpensesTable } from "@/components/finances/expenses-table";
 import { CategoryBreakdownList } from "@/components/finances/category-breakdown";
 import { SettlementsList } from "@/components/finances/settlements-list";
 import { IndividualBalances } from "@/components/finances/individual-balances";
+import { ExpenseTrigger } from "@/components/expenses/expense-trigger";
+
 
 export default async function FinancesPage({
     params,
@@ -27,13 +28,7 @@ export default async function FinancesPage({
                         {data.tripName} · {data.tripPeriod}
                     </p>
                 </div>
-                <Link
-                    href={`/trips/${tripId}/finances/new`}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Nova despesa
-                </Link>
+                <ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />
             </div>
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

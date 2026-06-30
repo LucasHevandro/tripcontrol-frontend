@@ -1,8 +1,9 @@
 // components/dashboard/trip-header-card.tsx
-import Link from "next/link";
-import { Plane, Calendar, Users, MapPin, Plus } from "lucide-react";
+import { Plane, Calendar, Users, MapPin } from "lucide-react";
 import type { TripSummary } from "@/types/trip";
 import { formatDateRange } from "@/lib/format";
+import { ExpenseTrigger } from "@/components/expenses/expense-trigger";
+
 
 const STATUS_LABEL: Record<TripSummary["status"], string> = {
     planning: "Planejamento",
@@ -50,13 +51,7 @@ export function TripHeaderCard({ trip }: TripHeaderCardProps) {
                 >
                     {STATUS_LABEL[trip.status]}
                 </span>
-                <Link
-                    href={`/trips/${trip.id}/finances/new`}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Adicionar despesa
-                </Link>
+                <ExpenseTrigger tripId={trip.id} variant="button" label="Adicionar despesa" />
             </div>
         </div>
     );

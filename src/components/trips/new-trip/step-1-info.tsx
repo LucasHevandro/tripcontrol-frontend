@@ -40,7 +40,7 @@ export function Step1Info({ data, onChange }: Step1InfoProps) {
                 <p className="mb-1.5 text-sm font-medium text-neutral-700">
                     Ou escolha um tipo de destino
                 </p>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     {DESTINATION_TYPE_OPTIONS.map((opt) => (
                         <OptionCard
                             key={opt.value}

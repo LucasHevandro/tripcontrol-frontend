@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, use } from "react";
 import { Wallet, Receipt, Map, Hotel, Receipt as ReceiptIcon, MapIcon } from "lucide-react";
 import { getTripDashboardMock, getNewTripDashboardMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
@@ -11,14 +14,17 @@ import { BudgetProgressBar } from "@/components/dashboard/budget-progress-bar";
 import { RecentExpensesList } from "@/components/dashboard/recent-exprense-list";
 import { TodayItinerary } from "@/components/dashboard/today-itinerary";
 import { ParticipantsBalanceRow } from "@/components/dashboard/participants-balance-row";
+import { getTripParticipantsMock } from "@/lib/mock-trip";
+import { NewExpenseModal } from "@/components/expenses/new-expense-modal";
 
-export default async function DashboardPage({
+export default function DashboardPage({
     params,
 }: {
     params: Promise<{ tripId: string }>;
 }) {
-    const { tripId } = await params;
-
+    const { tripId } = use(params);
+    const [isOpen, setIsOpen] = useState(false);
+    const { participants } = getTripParticipantsMock(tripId);
     // TODO: trocar por uma única função getTripDashboard(tripId) real,
     // que sempre devolve newTripStatus — isNewTrip() decide a partir dela.
     // Por ora, simulando o caso "viagem nova" sempre que tripId === "new-trip-demo".
@@ -65,19 +71,21 @@ export default async function DashboardPage({
 
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     <EmptySectionCard
-                        icon={ReceiptIcon}
+                        icon={Receipt}
                         title="Despesas"
                         emptyMessage="Nenhuma despesa registrada ainda"
                         actionLabel="Adicionar primeira despesa"
                         actionHref={`/trips/${tripId}/finances`}
+                        onAction={() => setIsOpen(true)}
                     />
-                    <EmptySectionCard
-                        icon={MapIcon}
-                        title="Roteiro"
-                        emptyMessage="Roteiro ainda não planejado"
-                        actionLabel="Planejar roteiro"
-                        actionHref={`/trips/${tripId}/roadmap`}
-                    />
+                    {isOpen && (
+                        <NewExpenseModal
+                            tripId={tripId}
+                            participants={participants}
+                            currentUserId="lucas"
+                            onClose={() => setIsOpen(false)}
+                        />
+                    )}
                 </div>
             </div>
         );

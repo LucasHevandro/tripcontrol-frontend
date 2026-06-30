@@ -7,6 +7,7 @@ interface EmptySectionCardProps {
     emptyMessage: string;
     actionLabel: string;
     actionHref: string;
+    onAction?: () => void;
 }
 
 export function EmptySectionCard({
@@ -15,6 +16,7 @@ export function EmptySectionCard({
     emptyMessage,
     actionLabel,
     actionHref,
+    onAction,
 }: EmptySectionCardProps) {
     return (
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
@@ -28,12 +30,15 @@ export function EmptySectionCard({
                     <Icon className="h-5 w-5" />
                 </span>
                 <p className="text-sm text-neutral-400">{emptyMessage}</p>
-                <Link
-                    href={actionHref}
-                    className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
-                >
-                    + {actionLabel}
-                </Link>
+                {onAction ? (
+                    <button type="button" onClick={onAction} className="text-sm font-medium text-emerald-700">
+                        + {actionLabel}
+                    </button>
+                ) : (
+                    <Link href={actionHref} className="text-sm font-medium text-emerald-700">
+                        + {actionLabel}
+                    </Link>
+                )}
             </div>
         </div>
     );

@@ -22,8 +22,8 @@ export function TripCard({ trip }: TripCardProps) {
             href={`/trips/${trip.id}/dashboard`}
             className="block overflow-hidden rounded-xl border border-neutral-200 bg-white transition-shadow hover:shadow-md"
         >
-            <div className={`flex h-28 items-center justify-center ${trip.bannerClassName}`}>
-                <span className="text-5xl">{trip.emoji}</span>
+            <div className={`flex h-20 items-center justify-center sm:h-28 ${trip.bannerClassName}`}>
+                <span className="text-3xl sm:text-5xl">{trip.emoji}</span>
             </div>
 
             <div className="p-4">

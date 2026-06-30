@@ -27,7 +27,7 @@ export function TripsFilterTabs({ trips }: TripsFilterTabsProps) {
 
     return (
         <div>
-            <div className="flex gap-6 border-b border-neutral-200">
+            <div className="flex gap-4 overflow-x-auto border-b border-neutral-200 sm:gap-6">
                 {TABS.map((tab) => {
                     const isActive = activeTab === tab.value;
                     return (
@@ -35,7 +35,7 @@ export function TripsFilterTabs({ trips }: TripsFilterTabsProps) {
                             key={tab.value}
                             type="button"
                             onClick={() => setActiveTab(tab.value)}
-                            className={`relative pb-3 text-sm transition-colors ${isActive
+                            className={`relative shrink-0 whitespace-nowrap pb-3 text-sm transition-colors ${isActive
                                 ? "font-medium text-emerald-700"
                                 : "text-neutral-400 hover:text-neutral-600"
                                 }`}

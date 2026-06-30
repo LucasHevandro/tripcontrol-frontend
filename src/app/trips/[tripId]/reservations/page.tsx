@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
 import { getTripReservationsMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
 import { ReservationStatCard } from "@/components/reservations/reservation-stat-card";
 import { ReservationsGrid } from "@/components/reservations/reservations-grid";
+import { ReservationTrigger } from "@/components/reservations/reservation-trigger";
+
 
 export default async function ReservationsPage({
     params,
@@ -24,13 +24,7 @@ export default async function ReservationsPage({
                         {data.tripName} · {data.tripPeriod}
                     </p>
                 </div>
-                <Link
-                    href={`/trips/${tripId}/reservations/new`}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Nova reserva
-                </Link>
+                <ReservationTrigger tripId={tripId} variant="button" label="Nova reserva" />
             </div>
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CategoryFilter } from "./category-filter";
 import { ReservationCard } from "./reservation-card";
-import { AddReservationCard } from "./add-reservation-card";
+import { ReservationTrigger } from "./reservation-trigger";
 import type { ReservationDetail, ReservationCategory } from "@/types/trip";
 
 type FilterOption = ReservationCategory | "all";
@@ -29,7 +29,7 @@ export function ReservationsGrid({ tripId, reservations }: ReservationsGridProps
                 {filtered.map((res) => (
                     <ReservationCard key={res.id} reservation={res} />
                 ))}
-                {filter === "all" && <AddReservationCard tripId={tripId} />}
+                {filter === "all" && <ReservationTrigger tripId={tripId} variant="card" />}
             </div>
         </div>
     );

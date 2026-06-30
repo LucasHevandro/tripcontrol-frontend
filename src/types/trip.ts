@@ -284,3 +284,57 @@ export interface NewActivityFormData {
     costType: "total" | "per_person" | "free";
     note: string;
 }
+
+export interface ReservationFieldsHotel {
+    checkIn: string;
+    checkOut: string;
+    guestCount: string;
+    roomCount: string;
+    address: string;
+    reservationCode: string;
+}
+
+export interface ReservationFieldsFlight {
+    departureDate: string;
+    departureTime: string;
+    arrivalTime: string;
+    flightNumber: string;
+    returnDate: string;
+    returnTime: string;
+    returnFlightNumber: string;
+    passengerCount: string;
+    cabinClass: string;
+    locator: string;
+}
+
+export interface ReservationFieldsCar {
+    pickupDate: string;
+    pickupTime: string;
+    returnDate: string;
+    returnTime: string;
+    pickupLocation: string;
+    carModel: string;
+    reservationCode: string;
+}
+
+export interface ReservationFieldsTour {
+    date: string;
+    startTime: string;
+    endTime: string;
+    peopleCount: string;
+    meetingPoint: string;
+    warning: string;
+}
+
+export interface NewReservationFormData {
+    category: ReservationCategory | null;
+    title: string;
+    subtitle: string;
+    amount: string;
+    paidById: string;
+    notes: string;
+    hotel: ReservationFieldsHotel;
+    flight: ReservationFieldsFlight;
+    car: ReservationFieldsCar;
+    tour: ReservationFieldsTour;
+}

@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
 import { getMyTripsMock } from "@/lib/mock-trip";
 import { TripsFilterTabs } from "@/components/trips/trips-filter-tabs";
+import { NewTripTrigger } from "@/components/trips/new-trip-trigger";
 
 export default function MyTripsPage() {
     const data = getMyTripsMock();
@@ -17,13 +16,7 @@ export default function MyTripsPage() {
                         {data.activeTripCount} viagens ativas · {data.completedTripCount} concluída
                     </p>
                 </div>
-                <Link
-                    href="/trips/new"
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Nova viagem
-                </Link>
+                <NewTripTrigger variant="button" />
             </div>
 
             <TripsFilterTabs trips={data.trips} />

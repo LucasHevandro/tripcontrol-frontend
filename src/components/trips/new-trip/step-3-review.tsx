@@ -1,0 +1,63 @@
+import { Users } from "lucide-react";
+import { TRIP_TYPE_LABEL } from "@/lib/new-trip-options";
+import { formatCurrencyBRL, formatDateRange } from "@/lib/format";
+import type { NewTripFormData } from "@/types/trip";
+
+interface Step3ReviewProps {
+    data: NewTripFormData;
+}
+
+function getDurationDays(start: string, end: string): number {
+    if (!start || !end) return 0;
+    const diff = new Date(end).getTime() - new Date(start).getTime();
+    return Math.round(diff / (1000 * 60 * 60 * 24));
+}
+
+export function Step3Review({ data }: Step3ReviewProps) {
+    const durationDays = getDurationDays(data.startDate, data.endDate);
+    const budgetNumber = Number(data.budget) || 0;
+
+    const rows = [
+        { label: "Nome", value: data.name || "—" },
+        { label: "Destino", value: data.destination || "—" },
+        {
+            label: "Período",
+            value:
+                data.startDate && data.endDate
+                    ? formatDateRange(data.startDate, data.endDate).replace("–", " → ")
+                    : "—",
+        },
+        { label: "Duração", value: durationDays > 0 ? `${durationDays} dias` : "—" },
+        { label: "Tipo", value: data.tripType ? TRIP_TYPE_LABEL[data.tripType] : "—" },
+        {
+            label: "Orçamento",
+            value: budgetNumber > 0 ? formatCurrencyBRL(budgetNumber) : "Não definido",
+        },
+    ];
+
+    return (
+        <div className="space-y-4">
+            <p className="text-sm text-neutral-600">
+                Confira as informações antes de criar a viagem:
+            </p>
+
+            <div className="overflow-hidden rounded-lg border border-neutral-200">
+                {rows.map((row, i) => (
+                    <div
+                        key={row.label}
+                        className={`flex items-center justify-between px-4 py-2.5 text-sm ${i % 2 === 0 ? "bg-neutral-50" : "bg-white"
+                            }`}
+                    >
+                        <span className="text-neutral-500">{row.label}</span>
+                        <span className="font-medium text-neutral-900">{row.value}</span>
+                    </div>
+                ))}
+            </div>
+
+            <div className="flex items-start gap-2 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <Users className="mt-0.5 h-4 w-4 shrink-0" />
+                Após criar, você poderá convidar participantes via link ou e-mail.
+            </div>
+        </div>
+    );
+}

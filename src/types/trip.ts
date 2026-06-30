@@ -51,6 +51,7 @@ export interface TripDashboardData {
     todayLabel: string;
     todayActivities: Activity[];
     participants: TripParticipant[];
+    newTripStatus: NewTripStatus;
 }
 
 export interface CategoryBreakdown {
@@ -213,4 +214,25 @@ export interface MyTripsData {
     activeTripCount: number;
     completedTripCount: number;
     trips: TripCard[];
+}
+
+export type TripType = "friends" | "couple" | "family" | "work" | "tour" | "other";
+
+export type DestinationType = "beach" | "city" | "countryside" | "international";
+
+export interface NewTripFormData {
+    name: string;
+    destination: string;
+    destinationType: DestinationType | null;
+    startDate: string;
+    endDate: string;
+    tripType: TripType | null;
+    budget: string;
+    description: string;
+}
+
+export interface NewTripStatus {
+    hasInvitedParticipants: boolean;
+    hasRoadmapActivities: boolean;
+    hasExpenses: boolean;
 }

@@ -98,6 +98,11 @@ export function getTripDashboardMock(tripId: string): TripDashboardData {
             { id: "gustavo", name: "Gustavo", balance: -45 },
             { id: "carla", name: "Carla", balance: -50 },
         ],
+        newTripStatus: {
+            hasInvitedParticipants: true,
+            hasRoadmapActivities: true,
+            hasExpenses: true,
+        },
     };
 }
 
@@ -451,5 +456,35 @@ export function getMyTripsMock(): MyTripsData {
                 budget: 1800,
             },
         ],
+    };
+}
+
+export function getNewTripDashboardMock(tripId: string): TripDashboardData {
+    return {
+        trip: {
+            id: tripId,
+            name: "Serra Gaúcha 2026",
+            destination: "Rio Grande do Sul, BR",
+            startDate: "2026-03-14",
+            endDate: "2026-03-18",
+            status: "planning",
+            participantCount: 1,
+        },
+        totalSpent: 0,
+        budget: 0,
+        expenseCount: 0,
+        activityCount: 0,
+        completedActivityCount: 0,
+        reservationCount: 0,
+        allReservationsConfirmed: false,
+        recentExpenses: [],
+        todayLabel: "",
+        todayActivities: [],
+        participants: [],
+        newTripStatus: {
+            hasInvitedParticipants: false,
+            hasRoadmapActivities: false,
+            hasExpenses: false,
+        },
     };
 }

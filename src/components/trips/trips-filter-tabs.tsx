@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { TripStatus } from "@/types/trip";
 import type { TripCard as TripCardType } from "@/types/trip";
 import { TripCard } from "./trip-card";
-import { NewTripCard } from "./new-trip-card";
+import { NewTripTrigger } from "./new-trip-trigger";
 
 type FilterOption = TripStatus | "all";
 
@@ -36,8 +36,8 @@ export function TripsFilterTabs({ trips }: TripsFilterTabsProps) {
                             type="button"
                             onClick={() => setActiveTab(tab.value)}
                             className={`relative pb-3 text-sm transition-colors ${isActive
-                                    ? "font-medium text-emerald-700"
-                                    : "text-neutral-400 hover:text-neutral-600"
+                                ? "font-medium text-emerald-700"
+                                : "text-neutral-400 hover:text-neutral-600"
                                 }`}
                         >
                             {tab.label}
@@ -53,7 +53,7 @@ export function TripsFilterTabs({ trips }: TripsFilterTabsProps) {
                 {filtered.map((trip) => (
                     <TripCard key={trip.id} trip={trip} />
                 ))}
-                {activeTab === "all" && <NewTripCard />}
+                {activeTab === "all" && <NewTripTrigger variant="card" />}
             </div>
         </div>
     );

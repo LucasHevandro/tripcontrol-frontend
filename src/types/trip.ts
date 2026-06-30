@@ -272,3 +272,15 @@ export interface NewExpenseFormData {
     receiptFile: File | null;
     notes: string;
 }
+
+export interface NewActivityFormData {
+    emoji: string;
+    title: string;
+    date: string;
+    startTime: string;
+    duration: string;
+    location: string;
+    costAmount: string;
+    costType: "total" | "per_person" | "free";
+    note: string;
+}

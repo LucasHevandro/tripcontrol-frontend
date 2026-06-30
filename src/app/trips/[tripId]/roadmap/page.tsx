@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
 import { getTripRoadmapMock } from "@/lib/mock-trip";
 import { DaySelector } from "@/components/roadmap/day-selector";
 import { ActiveReservations } from "@/components/roadmap/active-reservations";
 import { DayChecklist } from "@/components/roadmap/day-checklist";
+import { ActivityTrigger } from "@/components/roadmap/activity-trigger";
 
 export default async function RoadmapPage({
     params,
@@ -28,26 +27,19 @@ export default async function RoadmapPage({
                         {data.tripName} · {data.tripPeriod} · {data.tripDurationDays} dias
                     </p>
                 </div>
-                <Link
-                    href={`/trips/${tripId}/roadmap/new`}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Nova atividade
-                </Link>
+                <ActivityTrigger
+                    tripId={tripId}
+                    defaultDate={data.days[defaultDayIndex]?.date}
+                    variant="button"
+                />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_280px]">
+            <div className="grid grid-cols-1 gap-4">
                 <div>
                     <DaySelector
                         days={data.days}
                         defaultSelectedIndex={defaultDayIndex >= 0 ? defaultDayIndex : 0}
                     />
-                </div>
-
-                <div className="space-y-4">
-                    <ActiveReservations reservations={data.activeReservations} />
-                    <DayChecklist items={data.todayChecklist} />
                 </div>
             </div>
         </div>

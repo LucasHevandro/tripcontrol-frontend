@@ -1,6 +1,7 @@
 // lib/mock-trip-data.ts
 import type { TripDashboardData } from "@/types/trip";
 import type { FinancesData } from "@/types/trip";
+import type { MyTripsData } from "@/types/trip";
 
 // MOCK: enquanto não há backend real, todo tripId retorna esta mesma viagem.
 // Quando a API NestJS existir, esta função será substituída por uma query
@@ -387,6 +388,68 @@ export function getTripParticipantsMock(tripId: string): ParticipantsData {
             { id: "set-2", fromParticipantId: "mariana", fromName: "Mariana", toParticipantId: "lucas", toName: "Lucas", amount: 80, description: "" },
             { id: "set-3", fromParticipantId: "gustavo", fromName: "Gustavo", toParticipantId: "pedro", toName: "Pedro", amount: 45, description: "" },
             { id: "set-4", fromParticipantId: "carla", fromName: "Carla", toParticipantId: "pedro", toName: "Pedro", amount: 50, description: "" },
+        ],
+    };
+}
+
+export function getMyTripsMock(): MyTripsData {
+    return {
+        activeTripCount: 3,
+        completedTripCount: 1,
+        trips: [
+            {
+                id: "florianopolis-2026",
+                name: "Florianópolis 2026",
+                destination: "Santa Catarina, BR",
+                startDate: "2026-01-10",
+                endDate: "2026-01-17",
+                status: "ongoing",
+                emoji: "🏖️",
+                bannerClassName: "bg-emerald-50",
+                participants: [
+                    { id: "lucas", name: "Lucas" },
+                    { id: "ana", name: "Ana" },
+                    { id: "pedro", name: "Pedro" },
+                ],
+                extraParticipantCount: 3,
+                totalSpent: 4320,
+                budget: 6000,
+            },
+            {
+                id: "serra-gaucha",
+                name: "Serra Gaúcha",
+                destination: "Rio Grande do Sul, BR",
+                startDate: "2026-03-14",
+                endDate: "2026-03-18",
+                status: "planning",
+                emoji: "🏔️",
+                bannerClassName: "bg-sky-50",
+                participants: [
+                    { id: "lucas", name: "Lucas" },
+                    { id: "carla", name: "Carla" },
+                ],
+                extraParticipantCount: 0,
+                totalSpent: 0,
+                budget: 2000,
+            },
+            {
+                id: "sao-paulo-evento",
+                name: "São Paulo — Evento",
+                destination: "São Paulo, BR",
+                startDate: "2025-12-02",
+                endDate: "2025-12-04",
+                status: "completed",
+                emoji: "🌆",
+                bannerClassName: "bg-neutral-100",
+                participants: [
+                    { id: "lucas", name: "Lucas" },
+                    { id: "ana", name: "Ana" },
+                    { id: "pedro", name: "Pedro" },
+                ],
+                extraParticipantCount: 0,
+                totalSpent: 1840,
+                budget: 1800,
+            },
         ],
     };
 }

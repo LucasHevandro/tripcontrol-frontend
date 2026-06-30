@@ -25,8 +25,6 @@ export type TripTab =
     | "roadmap"
     | "reservations"
     | "participants"
-    | "checklist";
-
 const TRIP_NAV_ITEMS: {
     key: TripTab;
     label: string;
@@ -38,7 +36,6 @@ const TRIP_NAV_ITEMS: {
         { key: "roadmap", label: "Roteiro", path: "roadmap", icon: Map },
         { key: "reservations", label: "Reservas", path: "reservations", icon: Building2 },
         { key: "participants", label: "Participantes", path: "participants", icon: Users },
-        { key: "checklist", label: "Checklist", path: "checklist", icon: CheckSquare },
     ];
 
 interface TripNavbarProps {

@@ -193,3 +193,24 @@ export interface ParticipantsData {
     participants: ParticipantDetail[];
     settlementSummary: Settlement[];
 }
+
+export interface TripCard {
+    id: string;
+    name: string;
+    destination: string;
+    startDate: string;
+    endDate: string;
+    status: TripStatus;
+    emoji: string;
+    bannerClassName: string;
+    participants: { id: string; name: string }[];
+    extraParticipantCount: number;
+    totalSpent: number;
+    budget: number;
+}
+
+export interface MyTripsData {
+    activeTripCount: number;
+    completedTripCount: number;
+    trips: TripCard[];
+}

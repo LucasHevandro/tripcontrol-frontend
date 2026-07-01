@@ -1,0 +1,37 @@
+export interface Participant {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl: string | null;
+    role: 'ORGANIZER' | 'MEMBER';
+    totalPaid: number;
+    individualQuota: number;
+    balance: number;
+}
+
+export interface Settlement {
+    id: string;
+    fromParticipantId: string;
+    fromName: string;
+    toParticipantId: string;
+    toName: string;
+    amount: number;
+    description: string;
+}
+
+export interface ParticipantsResponse {
+    tripName: string;
+    tripPeriod: string;
+    participantCount: number;
+    maxParticipants: number;
+    organizerCount: number;
+    totalSpent: number;
+    perPersonAverage: number;
+    pendingSettlementsCount: number;
+    pendingSettlementsAmount: number;
+    groupStatusLabel: string;
+    groupStatusSublabel: string;
+    inviteLink: string;
+    participants: Participant[];
+    settlementSummary: Settlement[];
+}

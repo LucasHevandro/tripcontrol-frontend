@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { UserPlus } from "lucide-react";
 import { getTripParticipantsMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
 import { ParticipantStatCard } from "@/components/participants/participant-stat-card";
 import { ParticipantCard } from "@/components/participants/participant-card";
 import { InvitePanel } from "@/components/participants/invite-panel";
 import { SettlementSummary } from "@/components/participants/settlement-summary";
+import { InviteTrigger } from "@/components/participants/invite-trigger";
+
 
 export default async function ParticipantsPage({
     params,
@@ -26,13 +26,11 @@ export default async function ParticipantsPage({
                         {data.tripName} · {data.tripPeriod}
                     </p>
                 </div>
-                <Link
-                    href={`/trips/${tripId}/participants/invite`}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                >
-                    <UserPlus className="h-4 w-4" />
-                    Convidar participante
-                </Link>
+                <InviteTrigger
+                    tripId={tripId}
+                    tripName={data.tripName}
+                    inviteLink={data.inviteLink}
+                />
             </div>
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

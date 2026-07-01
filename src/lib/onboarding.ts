@@ -1,4 +1,4 @@
-import type { TripDashboardData } from "@/types/trip";
+import type { TripDashboard } from "@/core/domain/trip/trip.types";
 
 export interface OnboardingStep {
     id: string;
@@ -10,13 +10,7 @@ export interface OnboardingStep {
     actionHref?: string;
 }
 
-/**
- * Uma viagem é considerada "recém-criada" enquanto não tiver
- * participantes convidados, roteiro montado, nem despesas registradas.
- * Assim que qualquer um desses existir, o dashboard completo é exibido
- * em vez da tela de onboarding.
- */
-export function isNewTrip(data: TripDashboardData): boolean {
+export function isNewTrip(data: TripDashboard): boolean {
     const { hasInvitedParticipants, hasRoadmapActivities, hasExpenses } =
         data.newTripStatus;
     return !hasInvitedParticipants && !hasRoadmapActivities && !hasExpenses;
@@ -24,7 +18,7 @@ export function isNewTrip(data: TripDashboardData): boolean {
 
 export function getOnboardingSteps(
     tripId: string,
-    status: TripDashboardData["newTripStatus"]
+    status: TripDashboard["newTripStatus"],
 ): OnboardingStep[] {
     return [
         {
@@ -32,7 +26,7 @@ export function getOnboardingSteps(
             number: 1,
             title: "Criar a viagem",
             subtitle: "Informações básicas definidas",
-            completed: true, // se chegou até aqui, a viagem já existe
+            completed: true,
         },
         {
             id: "invite",

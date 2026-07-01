@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Plane, Calendar, Users, MapPin, UserPlus } from "lucide-react";
-import type { TripSummary } from "@/types/trip";
+import type { TripDashboard } from "@/core/domain/trip/trip.types";
 import { formatDateRange } from "@/lib/format";
 
+type TripInfo = TripDashboard["trip"];
+
 interface NewTripHeaderCardProps {
-    trip: TripSummary;
+    trip: TripInfo;
 }
 
 export function NewTripHeaderCard({ trip }: NewTripHeaderCardProps) {

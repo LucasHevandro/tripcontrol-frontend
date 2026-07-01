@@ -1,24 +1,24 @@
-// components/dashboard/trip-header-card.tsx
 import { Plane, Calendar, Users, MapPin } from "lucide-react";
-import type { TripSummary } from "@/types/trip";
+import type { TripDashboard } from "@/core/domain/trip/trip.types";
 import { formatDateRange } from "@/lib/format";
 import { ExpenseTrigger } from "@/components/expenses/expense-trigger";
 
+type TripInfo = TripDashboard["trip"];
 
-const STATUS_LABEL: Record<TripSummary["status"], string> = {
-    planning: "Planejamento",
-    ongoing: "Em andamento",
-    completed: "Concluída",
+const STATUS_LABEL: Record<TripInfo["status"], string> = {
+    PLANNING: "Planejamento",
+    ONGOING: "Em andamento",
+    COMPLETED: "Concluída",
 };
 
-const STATUS_STYLE: Record<TripSummary["status"], string> = {
-    planning: "bg-amber-50 text-amber-700",
-    ongoing: "bg-emerald-50 text-emerald-700",
-    completed: "bg-neutral-100 text-neutral-500",
+const STATUS_STYLE: Record<TripInfo["status"], string> = {
+    PLANNING: "bg-amber-50 text-amber-700",
+    ONGOING: "bg-emerald-50 text-emerald-700",
+    COMPLETED: "bg-neutral-100 text-neutral-500",
 };
 
 interface TripHeaderCardProps {
-    trip: TripSummary;
+    trip: TripInfo;
 }
 
 export function TripHeaderCard({ trip }: TripHeaderCardProps) {

@@ -11,8 +11,8 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TripControl',
-  description: 'Organize sua viagem em grupo com facilidade',
+  title: "TripControl",
+  description: "Organize sua viagem em grupo com facilidade",
 };
 
 export default function RootLayout({

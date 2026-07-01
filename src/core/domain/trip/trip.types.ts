@@ -1,6 +1,7 @@
 export type TripStatus = 'PLANNING' | 'ONGOING' | 'COMPLETED';
 export type TripType = 'FRIENDS' | 'COUPLE' | 'FAMILY' | 'WORK' | 'TOUR' | 'OTHER';
 export type DestinationType = 'BEACH' | 'CITY' | 'COUNTRYSIDE' | 'INTERNATIONAL';
+export type ActivityStatus = 'completed' | 'current' | 'upcoming';
 
 export interface TripCard {
     id: string;
@@ -67,7 +68,7 @@ export interface TripDashboard {
         time: string;
         title: string;
         location: string;
-        status: string;
+        status: ActivityStatus;
     }[];
     participants: { id: string; name: string; balance: number }[];
     newTripStatus: {

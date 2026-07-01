@@ -1,6 +1,6 @@
 // types/trip.ts
 
-export type TripStatus = "planning" | "ongoing" | "completed";
+export type TripStatus = "PLANNING" | "ONGOING" | "COMPLETED";
 
 export interface TripParticipant {
     id: string;

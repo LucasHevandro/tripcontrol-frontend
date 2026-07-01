@@ -2,7 +2,6 @@ import { getTripParticipantsMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
 import { ParticipantStatCard } from "@/components/participants/participant-stat-card";
 import { ParticipantCard } from "@/components/participants/participant-card";
-import { InvitePanel } from "@/components/participants/invite-panel";
 import { SettlementSummary } from "@/components/participants/settlement-summary";
 import { InviteTrigger } from "@/components/participants/invite-trigger";
 
@@ -78,7 +77,6 @@ export default async function ParticipantsPage({
                 </div>
 
                 <div className="space-y-4">
-                    <InvitePanel inviteLink={data.inviteLink} />
                     <SettlementSummary settlements={data.settlementSummary} />
                 </div>
             </div>

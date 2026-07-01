@@ -96,12 +96,6 @@ export interface ActiveReservation {
     icon: "hotel" | "car" | "flight" | "boat";
 }
 
-export interface ChecklistItem {
-    id: string;
-    label: string;
-    checked: boolean;
-}
-
 export interface RoadmapActivity {
     id: string;
     time: string;
@@ -131,7 +125,6 @@ export interface RoadmapData {
     tripDurationDays: number;
     days: RoadmapDay[];
     activeReservations: ActiveReservation[];
-    todayChecklist: ChecklistItem[];
 }
 
 export type ReservationCategory = "hotel" | "flight" | "car" | "tour";

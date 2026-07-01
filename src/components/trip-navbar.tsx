@@ -12,7 +12,6 @@ import {
     Map,
     Building2,
     Users,
-    CheckSquare,
     LogOut,
     User as UserIcon,
 } from "lucide-react";

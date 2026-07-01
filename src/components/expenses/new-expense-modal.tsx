@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { X, Plus, Paperclip, Save, AlertCircle } from "lucide-react";
 import { getCategoryColor } from "@/lib/avatar-color";
 import { getAvatarColor } from "@/lib/avatar-color";
@@ -40,18 +40,19 @@ export function NewExpenseModal({
     onClose,
     onSave,
 }: NewExpenseModalProps) {
-    const [form, setForm] = useState<NewExpenseFormData>({
+    const initialForm = useMemo<NewExpenseFormData>(() => ({
         description: "",
         amount: "",
         date: getTodayISO(),
         category: null,
-        paidById: currentUserId,
+        paidById: currentUserId || participants[0]?.id || "",
         splitType: "equal",
         splitParticipantIds: participants.map((p) => p.id),
         receiptFile: null,
         notes: "",
-    });
+    }), [currentUserId, participants]);
 
+    const [form, setForm] = useState<NewExpenseFormData>(initialForm);
     const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,9 +79,11 @@ export function NewExpenseModal({
     }
 
     function toggleParticipant(id: string) {
+        // No modo igual, não permite alterar a seleção
+        if (form.splitType === "equal") return;
+
         setForm((prev) => {
             const already = prev.splitParticipantIds.includes(id);
-            // Garante que pelo menos 1 participante sempre está selecionado
             if (already && prev.splitParticipantIds.length === 1) return prev;
             return {
                 ...prev,
@@ -88,6 +91,18 @@ export function NewExpenseModal({
                     ? prev.splitParticipantIds.filter((p) => p !== id)
                     : [...prev.splitParticipantIds, id],
             };
+        });
+    }
+
+    function handleSplitTypeChange(value: string) {
+        const newSplitType = value as "equal" | "custom";
+        update({
+            splitType: newSplitType,
+            // Ao voltar pra igual, reseta para todos selecionados
+            splitParticipantIds:
+                newSplitType === "equal"
+                    ? participants.map((p) => p.id)
+                    : form.splitParticipantIds,
         });
     }
 
@@ -106,18 +121,22 @@ export function NewExpenseModal({
 
     function handleSubmit() {
         if (!isValid) return;
+
+        const isEqual = form.splitType === "equal";
+        const amount = Number(form.amount);
+        const selectedIds = form.splitParticipantIds;
+
         createExpense.mutate(
             {
                 description: form.description,
-                amount: Number(form.amount),
+                amount,
                 date: form.date,
                 category: form.category!,
                 paidById: form.paidById,
-                splitType: form.splitType === "equal" ? "EQUAL" : "CUSTOM",
-                splitParticipants:
-                    form.splitParticipantIds.length > 0
-                        ? form.splitParticipantIds.map((id) => ({ participantId: id }))
-                        : undefined,
+                // Se é EQUAL ou CUSTOM sem valores individuais → manda EQUAL sem splitParticipants
+                // O backend vai dividir igualmente entre todos automaticamente
+                splitType: "EQUAL",
+                splitParticipants: selectedIds.map((id) => ({ participantId: id })),
                 notes: form.notes || undefined,
             },
             { onSuccess: () => onClose() },
@@ -254,7 +273,7 @@ export function NewExpenseModal({
                             </label>
                             <select
                                 value={form.splitType}
-                                onChange={(e) => update({ splitType: e.target.value as "equal" | "custom" })}
+                                onChange={(e) => handleSplitTypeChange(e.target.value)}
                                 className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                             >
                                 {SPLIT_OPTIONS.map((o) => (
@@ -270,31 +289,31 @@ export function NewExpenseModal({
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                             {participants.map((p) => {
                                 const isSelected = form.splitParticipantIds.includes(p.id);
+                                const isEqual = form.splitType === "equal";
                                 const color = getAvatarColor(p.id);
                                 return (
                                     <button
                                         key={p.id}
                                         type="button"
                                         onClick={() => toggleParticipant(p.id)}
+                                        disabled={isEqual} // ← desabilita no modo igual
                                         className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${isSelected
-                                            ? "border-emerald-500 bg-emerald-50"
+                                            ? isEqual
+                                                ? "border-emerald-200 bg-emerald-50 cursor-default" // ← verde mais suave, sem pointer
+                                                : "border-emerald-500 bg-emerald-50"
                                             : "border-neutral-200 bg-white hover:border-neutral-300"
                                             }`}
                                     >
-                                        <span
-                                            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${color.bg} ${color.text}`}
-                                        >
+                                        <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${color.bg} ${color.text}`}>
                                             {getInitials(p.name)}
                                         </span>
                                         <span className="min-w-0 flex-1 truncate text-left text-sm text-neutral-900">
                                             {p.name}
                                         </span>
-                                        <span
-                                            className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${isSelected
-                                                ? "border-emerald-600 bg-emerald-600"
-                                                : "border-neutral-300"
-                                                }`}
-                                        >
+                                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${isSelected
+                                            ? "border-emerald-600 bg-emerald-600"
+                                            : "border-neutral-300"
+                                            }`}>
                                             {isSelected && (
                                                 <svg viewBox="0 0 10 8" fill="none" className="h-2.5 w-2.5 text-white">
                                                     <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -311,9 +330,14 @@ export function NewExpenseModal({
                             <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
                                 <span>💡</span>
                                 <span>
-                                    Valor por pessoa:{" "}
+                                    {form.splitType === "equal"
+                                        ? `Dividido igualmente: `
+                                        : `Valor por pessoa: `}
                                     <strong>{formatCurrencyBRL(perPerson)}</strong>{" "}
-                                    ({selectedCount} participante{selectedCount !== 1 ? "s" : ""} selecionado{selectedCount !== 1 ? "s" : ""})
+                                    ({form.splitType === "equal" ? participants.length : selectedCount} participante{form.splitType === "equal" ? participants.length : selectedCount !== 1 ? "s" : ""})
+                                    {form.splitType === "equal" && (
+                                        <span className="ml-1 text-amber-600">· todos incluídos</span>
+                                    )}
                                 </span>
                             </div>
                         )}
@@ -392,7 +416,7 @@ export function NewExpenseModal({
                         type="button"
                         onClick={handleSubmit}
                         disabled={!isValid || createExpense.isPending}
-                        className="..."
+                        className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {createExpense.isPending ? "Salvando..." : "Salvar despesa"}
                     </button>

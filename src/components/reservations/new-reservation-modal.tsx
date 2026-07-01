@@ -272,7 +272,7 @@ export function NewReservationModal({
                         type="button"
                         onClick={handleSubmit}
                         disabled={!isValid || createReservation.isPending}
-                        className="..."
+                        className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {createReservation.isPending ? "Salvando..." : "Salvar reserva"}
                     </button>

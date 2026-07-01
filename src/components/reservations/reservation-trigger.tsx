@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { NewReservationModal } from "./new-reservation-modal";
-import { getTripParticipantsMock } from "@/lib/mock-trip";
+import { useParticipants } from "@/hooks/participants/use-participants";
+import { useUser } from "@/contexts/user-context";
 
 interface ReservationTriggerProps {
     tripId: string;
@@ -17,9 +18,10 @@ export function ReservationTrigger({
     label = "Nova reserva",
 }: ReservationTriggerProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const { data: participantsData } = useParticipants(tripId);
+    const { user } = useUser();
 
-    const { participants } = getTripParticipantsMock(tripId);
-    const participantList = participants.map((p) => ({
+    const participants = (participantsData?.participants ?? []).map((p) => ({
         id: p.id,
         name: p.name,
     }));
@@ -36,7 +38,6 @@ export function ReservationTrigger({
                     {label}
                 </button>
             ) : (
-                // variant="card" → substitui o AddReservationCard
                 <button
                     type="button"
                     onClick={() => setIsOpen(true)}
@@ -53,8 +54,8 @@ export function ReservationTrigger({
             {isOpen && (
                 <NewReservationModal
                     tripId={tripId}
-                    participants={participantList}
-                    currentUserId="lucas"
+                    participants={participants}
+                    currentUserId={user?.id ?? ""}
                     onClose={() => setIsOpen(false)}
                 />
             )}

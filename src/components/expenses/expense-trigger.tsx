@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { NewExpenseModal } from "./new-expense-modal";
-import { getTripParticipantsMock } from "@/lib/mock-trip";
+import { useParticipants } from "@/hooks/participants/use-participants";
+import { useUser } from "@/contexts/user-context";
 
 interface ExpenseTriggerProps {
     tripId: string;
@@ -17,13 +18,15 @@ export function ExpenseTrigger({
     label = "Adicionar despesa",
 }: ExpenseTriggerProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const { data: participantsData, isLoading } = useParticipants(tripId);
+    const { user } = useUser();
 
-    // TODO: quando a API existir, buscar participantes reais via TanStack Query
-    const participantsData = getTripParticipantsMock(tripId);
-    const participants = participantsData.participants.map((p) => ({
+    const participants = (participantsData?.participants ?? []).map((p) => ({
         id: p.id,
         name: p.name,
     }));
+
+    const modalKey = `${user?.id ?? "loading"}-${participants.length}`;
 
     return (
         <>
@@ -48,9 +51,10 @@ export function ExpenseTrigger({
 
             {isOpen && (
                 <NewExpenseModal
+                    key={modalKey}
                     tripId={tripId}
                     participants={participants}
-                    currentUserId="lucas"
+                    currentUserId={user?.id ?? ""}
                     onClose={() => setIsOpen(false)}
                 />
             )}

@@ -16,12 +16,18 @@ export function formatBalance(balance: number): string {
 
 /** "2026-01-10" + "2026-01-17" → "10–17 jan 2026" */
 export function formatDateRange(startISO: string, endISO: string): string {
-    const start = new Date(`${startISO}T00:00:00`);
-    const end = new Date(`${endISO}T00:00:00`);
+    // Extrai só a parte da data se vier com horário
+    const startDate = startISO.split('T')[0];
+    const endDate = endISO.split('T')[0];
+
+    const start = new Date(`${startDate}T00:00:00`);
+    const end = new Date(`${endDate}T00:00:00`);
 
     const startDay = start.getDate();
     const endDay = end.getDate();
-    const month = end.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "");
+    const month = end
+        .toLocaleDateString('pt-BR', { month: 'short' })
+        .replace('.', '');
     const year = end.getFullYear();
 
     return `${startDay}–${endDay} ${month} ${year}`;

@@ -5,6 +5,7 @@ import { X, MapPin, Clock, Wallet, FileText, Calendar, Plus } from "lucide-react
 import { ACTIVITY_EMOJIS, DURATION_OPTIONS } from "@/lib/activity-options";
 import { formatCurrencyBRL } from "@/lib/format";
 import type { NewActivityFormData } from "@/types/trip";
+import { useToast } from "@/contexts/toast-context";
 
 interface NewActivityModalProps {
     tripId: string;
@@ -29,6 +30,7 @@ export function NewActivityModal({
     onClose,
     onSave,
 }: NewActivityModalProps) {
+    const { addToast } = useToast();
     const [form, setForm] = useState<NewActivityFormData>({
         emoji: "🎯",
         title: "",
@@ -72,8 +74,8 @@ export function NewActivityModal({
     function handleSubmit() {
         if (!isValid) return;
         // TODO: POST /trips/:tripId/roadmap { ...form }
-        console.log("Salvar atividade:", form);
         onSave?.(form);
+        addToast("Atividade adicionada com sucesso!");
         onClose();
     }
 
@@ -120,8 +122,8 @@ export function NewActivityModal({
                                     title={item.label}
                                     onClick={() => update({ emoji: item.emoji })}
                                     className={`flex h-9 w-full items-center justify-center rounded-lg border text-lg transition-colors ${form.emoji === item.emoji
-                                            ? "border-emerald-500 bg-emerald-50"
-                                            : "border-neutral-100 bg-neutral-50 hover:border-neutral-200"
+                                        ? "border-emerald-500 bg-emerald-50"
+                                        : "border-neutral-100 bg-neutral-50 hover:border-neutral-200"
                                         }`}
                                 >
                                     {item.emoji}
@@ -234,8 +236,8 @@ export function NewActivityModal({
                                                 });
                                             }}
                                             className={`flex-1 rounded-lg border py-2 text-xs font-medium transition-colors ${form.costType === opt.value
-                                                    ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                                                    : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
+                                                ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                                                : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
                                                 }`}
                                         >
                                             {opt.label}

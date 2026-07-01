@@ -8,6 +8,7 @@ import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 import type { NewExpenseFormData, ExpenseCategory } from "@/types/trip";
+import { useToast } from "@/contexts/toast-context";
 
 interface Participant {
     id: string;
@@ -53,6 +54,7 @@ export function NewExpenseModal({
     const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { addToast } = useToast();
 
     // Fecha com Esc
     useEffect(() => {
@@ -103,10 +105,7 @@ export function NewExpenseModal({
     function handleSubmit() {
         if (!form.description.trim() || !form.amount || !form.category) return;
         // TODO: POST /trips/:tripId/expenses { ...form, amount: Number(form.amount) }
-        console.log("Salvar despesa:", {
-            ...form,
-            amount: Number(form.amount),
-        });
+        addToast("Despesa adicionada com sucesso!");
         onSave?.(form);
         onClose();
     }

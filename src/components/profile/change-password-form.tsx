@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/contexts/toast-context";
 
 function getPasswordStrength(password: string) {
     if (password.length === 0) return { level: 0, label: "", barColor: "", textColor: "" };
@@ -19,6 +20,7 @@ function getPasswordStrength(password: string) {
 }
 
 export function ChangePasswordForm() {
+    const { addToast } = useToast();
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,7 +37,7 @@ export function ChangePasswordForm() {
         e.preventDefault();
         if (!canSubmit) return;
         // TODO: PATCH /users/me/password { currentPassword, newPassword }
-        console.log("Trocar senha");
+        addToast("Senha atualizada com sucesso!");
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
@@ -101,8 +103,8 @@ export function ChangePasswordForm() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={`w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:ring-2 ${passwordsMatch
-                            ? "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                            : "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                        ? "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20"
+                        : "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
                         }`}
                 />
                 {!passwordsMatch && (

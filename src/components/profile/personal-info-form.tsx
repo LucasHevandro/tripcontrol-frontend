@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import type { UserProfile } from "@/types/trip";
+import { useToast } from "@/contexts/toast-context";
 
 interface PersonalInfoFormProps {
     profile: UserProfile;
 }
 
 export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
+    const { addToast } = useToast();
     const [name, setName] = useState(profile.name);
     const [email, setEmail] = useState(profile.email);
     const [saved, setSaved] = useState(false);
@@ -17,7 +19,7 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
     function handleSave(e: React.FormEvent) {
         e.preventDefault();
         // TODO: PATCH /users/me { name, email }
-        console.log("Salvar dados pessoais:", { name, email });
+        addToast("Dados pessoais atualizados com sucesso!");
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
     }

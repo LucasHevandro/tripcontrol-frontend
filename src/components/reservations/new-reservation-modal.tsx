@@ -5,9 +5,8 @@ import { X, Plus, Save, AlertCircle } from "lucide-react";
 import { RESERVATION_CATEGORIES } from "@/lib/reservation-options";
 import { ReservationCategoryFields } from "./reservation-category-fields";
 import { formatCurrencyBRL } from "@/lib/format";
-import { getAvatarColor } from "@/lib/avatar-color";
-import { getInitials } from "@/lib/get-initials";
 import type { NewReservationFormData, ReservationCategory } from "@/types/trip";
+import { useToast } from "@/contexts/toast-context";
 
 interface Participant {
     id: string;
@@ -42,6 +41,7 @@ export function NewReservationModal({
     onClose,
     onSave,
 }: NewReservationModalProps) {
+    const { addToast } = useToast();
     const [form, setForm] = useState<NewReservationFormData>({
         ...EMPTY_FORM,
         paidById: currentUserId,
@@ -81,11 +81,8 @@ export function NewReservationModal({
     function handleSubmit() {
         if (!isValid) return;
         // TODO: POST /trips/:tripId/reservations { ...form, amount: Number(form.amount) }
-        console.log("Salvar reserva:", {
-            ...form,
-            amount: Number(form.amount),
-        });
         onSave?.(form);
+        addToast("Reserva adicionada com sucesso!");
         onClose();
     }
 
@@ -137,8 +134,8 @@ export function NewReservationModal({
                                         type="button"
                                         onClick={() => handleCategoryChange(cat.value)}
                                         className={`flex flex-col items-center gap-1.5 rounded-lg border py-3 text-sm transition-colors ${isSelected
-                                                ? "border-emerald-500 bg-emerald-50"
-                                                : "border-neutral-200 hover:border-neutral-300"
+                                            ? "border-emerald-500 bg-emerald-50"
+                                            : "border-neutral-200 hover:border-neutral-300"
                                             }`}
                                     >
                                         <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${cat.bg} ${cat.color}`}>

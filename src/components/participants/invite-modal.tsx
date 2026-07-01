@@ -12,6 +12,8 @@ import {
     Trash2,
     Users,
 } from "lucide-react";
+import { useToast } from "@/contexts/toast-context";
+
 
 interface InviteModalProps {
     tripId: string;
@@ -49,6 +51,7 @@ export function InviteModal({
     ]);
     const [isSending, setIsSending] = useState(false);
     const [allSent, setAllSent] = useState(false);
+    const { addToast } = useToast();
 
     // Fecha com Esc
     useEffect(() => {
@@ -111,14 +114,10 @@ export function InviteModal({
         try {
             // TODO: POST /trips/:tripId/invites { emails: emails.map(e => e.value) }
             await new Promise((r) => setTimeout(r, 800)); // simula latência de rede
-            console.log(
-                "Convites enviados para:",
-                emails.map((e) => e.value)
-            );
-
             // Marca todos como enviados
             setEmails((prev) => prev.map((e) => ({ ...e, sent: true, error: null })));
             setAllSent(true);
+            addToast("Convites enviados com sucesso!");
         } finally {
             setIsSending(false);
         }
@@ -192,8 +191,8 @@ export function InviteModal({
                                 type="button"
                                 onClick={handleCopyLink}
                                 className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-xs font-medium transition-colors ${copied
-                                        ? "bg-emerald-100 text-emerald-700"
-                                        : "bg-emerald-600 text-white hover:bg-emerald-700"
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : "bg-emerald-600 text-white hover:bg-emerald-700"
                                     }`}
                             >
                                 {copied ? (
@@ -275,8 +274,8 @@ export function InviteModal({
                                                     }}
                                                     placeholder="email@exemplo.com"
                                                     className={`w-full rounded-lg border py-2.5 pl-9 pr-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:ring-2 ${entry.error
-                                                            ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
-                                                            : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20"
+                                                        ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                                                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20"
                                                         }`}
                                                 />
                                             </div>

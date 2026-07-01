@@ -7,6 +7,7 @@ import { Step1Info } from "./step-1-info";
 import { Step2Details } from "./step-2-details";
 import { Step3Review } from "./step-3-review";
 import type { NewTripFormData } from "@/types/trip";
+import { useToast } from "@/contexts/toast-context";
 
 const INITIAL_DATA: NewTripFormData = {
     name: "",
@@ -24,6 +25,7 @@ interface NewTripModalProps {
 }
 
 export function NewTripModal({ onClose }: NewTripModalProps) {
+    const { addToast } = useToast();
     const [step, setStep] = useState(1);
     const [data, setData] = useState<NewTripFormData>(INITIAL_DATA);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -70,10 +72,7 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
 
     function handleCreate() {
         // TODO: quando a API existir → POST /trips { ...payload }
-        console.log("Criar viagem:", {
-            ...data,
-            budget: Number(data.budget) || 0,
-        });
+        addToast("Viagem criada! Convide os participantes para começar.");
     }
 
     return (

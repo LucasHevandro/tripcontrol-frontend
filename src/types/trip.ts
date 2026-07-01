@@ -159,7 +159,7 @@ export interface ReservationsData {
     reservations: ReservationDetail[];
 }
 
-export type ParticipantRole = "organizer" | "member";
+export type ParticipantRole = "ORGANIZER" | "MEMBER";
 
 export interface ParticipantDetail {
     id: string;

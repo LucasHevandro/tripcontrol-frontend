@@ -13,7 +13,7 @@ interface ParticipantCardProps {
 
 export function ParticipantCard({ participant: p, tripId }: ParticipantCardProps) {
     const color = getAvatarColor(p.id);
-    const isOrganizer = p.role === "organizer";
+    const isOrganizer = p.role === 'ORGANIZER';
     const isPositive = p.balance >= 0;
 
     return (
@@ -32,8 +32,8 @@ export function ParticipantCard({ participant: p, tripId }: ParticipantCardProps
                 </div>
                 <span
                     className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${isOrganizer
-                            ? "bg-emerald-50 text-emerald-700"
-                            : "bg-neutral-100 text-neutral-500"
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "bg-neutral-100 text-neutral-500"
                         }`}
                 >
                     {isOrganizer ? "Organizador" : "Membro"}

@@ -11,13 +11,18 @@ export function useLogin() {
     const router = useRouter();
     const { addToast } = useToast();
     const queryClient = useQueryClient();
+    const searchParams =
+        typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search)
+            : null;
+    const redirectTo = searchParams?.get('redirect') ?? '/trips';
 
     return useMutation({
         mutationFn: (credentials: LoginCredentials) => auth.login(credentials),
         onSuccess: (data) => {
             queryClient.setQueryData(['auth', 'me'], data.user);
             addToast('Login realizado com sucesso!');
-            router.push('/trips');
+            router.push(redirectTo);
         },
         onError: () => {
             addToast('E-mail ou senha incorretos', 'error');
@@ -30,6 +35,11 @@ export function useRegister() {
     const router = useRouter();
     const { addToast } = useToast();
     const queryClient = useQueryClient();
+    const searchParams =
+        typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search)
+            : null;
+    const redirectTo = searchParams?.get('redirect') ?? '/trips';
 
     return useMutation({
         mutationFn: (credentials: RegisterCredentials) => auth.register(credentials),

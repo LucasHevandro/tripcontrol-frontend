@@ -10,10 +10,13 @@ export interface Reservation {
     details: string[];
     amount: number;
     amountSublabel: string;
-    warning: string | null;
-    primaryAction: { label: string; icon: string; href: string } | null;
+    warning?: string;
+    primaryAction?: {
+        label: string;
+        icon: 'voucher' | 'tickets' | 'pay';
+        href: string;
+    };
 }
-
 export interface ReservationsResponse {
     tripName: string;
     tripPeriod: string;

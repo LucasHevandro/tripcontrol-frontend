@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users } from "lucide-react";
 import { useLogin, useRegister } from "@/hooks/auth/use-auth";
+import { useSearchParams } from 'next/navigation';
 
 const FEATURES = [
     { icon: Wallet, bg: "bg-amber-100", iconColor: "text-amber-700", text: "Controle financeiro compartilhado e acertos automáticos" },
@@ -46,6 +47,9 @@ export default function LoginPage() {
 
     const passwordStrength = getPasswordStrength(signupPassword);
     const passwordsMatch = confirmPassword.length === 0 || confirmPassword === signupPassword;
+
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get('redirect') ?? '/trips';
 
     function handleLogin(e: React.FormEvent) {
         e.preventDefault();

@@ -3,11 +3,12 @@ export interface Participant {
     name: string;
     email: string;
     avatarUrl: string | null;
-    role: 'ORGANIZER' | 'MEMBER';
+    role: ParticipantRole;
     totalPaid: number;
     individualQuota: number;
     balance: number;
 }
+export type ParticipantRole = 'ORGANIZER' | 'MEMBER';
 
 export interface Settlement {
     id: string;

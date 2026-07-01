@@ -21,11 +21,20 @@ export class LocalStorageTokenAdapter implements ITokenStorage {
         if (typeof window === 'undefined') return;
         localStorage.setItem(this.ACCESS_KEY, accessToken);
         localStorage.setItem(this.REFRESH_KEY, refreshToken);
+
+        // Salva também em cookie pra o middleware conseguir ler no servidor
+        // SameSite=Lax protege contra CSRF sem bloquear navegação normal
+        document.cookie = `${this.ACCESS_KEY}=${accessToken}; path=/; SameSite=Lax; max-age=${60 * 15}`;
+        document.cookie = `${this.REFRESH_KEY}=${refreshToken}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}`;
     }
 
     clearTokens(): void {
         if (typeof window === 'undefined') return;
         localStorage.removeItem(this.ACCESS_KEY);
         localStorage.removeItem(this.REFRESH_KEY);
+
+        // Remove os cookies também
+        document.cookie = `${this.ACCESS_KEY}=; path=/; max-age=0`;
+        document.cookie = `${this.REFRESH_KEY}=; path=/; max-age=0`;
     }
 }

@@ -79,7 +79,13 @@ export default function ReservationsPage({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {filtered.map((res) => (
-                    <ReservationCard key={res.id} reservation={res} />
+                    <ReservationCard
+                        key={res.id}
+                        reservation={{
+                            ...res,
+                            warning: res.warning ?? undefined,
+                        }}
+                    />
                 ))}
                 {filter === "all" && (
                     <ReservationTrigger tripId={tripId} variant="card" />

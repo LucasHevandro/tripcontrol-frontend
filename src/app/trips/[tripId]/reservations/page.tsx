@@ -1,17 +1,42 @@
-import { getTripReservationsMock } from "@/lib/mock-trip";
+"use client";
+
+import { use, useState } from "react";
 import { formatCurrencyBRL } from "@/lib/format";
+import { useReservations } from "@/hooks/reservations/use-reservations";
 import { ReservationStatCard } from "@/components/reservations/reservation-stat-card";
-import { ReservationsGrid } from "@/components/reservations/reservations-grid";
+import { ReservationCard } from "@/components/reservations/reservation-card";
+import { CategoryFilter } from "@/components/reservations/category-filter";
 import { ReservationTrigger } from "@/components/reservations/reservation-trigger";
+import type { ReservationCategory } from "@/core/domain/reservation/reservation.types";
 
+type FilterOption = ReservationCategory | "all";
 
-export default async function ReservationsPage({
+export default function ReservationsPage({
     params,
 }: {
     params: Promise<{ tripId: string }>;
 }) {
-    const { tripId } = await params;
-    const data = getTripReservationsMock(tripId);
+    const { tripId } = use(params);
+    const [filter, setFilter] = useState<FilterOption>("all");
+    const { data, isLoading } = useReservations(tripId);
+
+    if (isLoading) {
+        return (
+            <div className="space-y-1">
+                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200" />
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="h-24 animate-pulse rounded-xl bg-neutral-200" />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    const filtered =
+        filter === "all"
+            ? (data?.reservations ?? [])
+            : (data?.reservations ?? []).filter((r) => r.category === filter);
 
     return (
         <div className="space-y-1">
@@ -21,7 +46,7 @@ export default async function ReservationsPage({
                         Gerenciamento de reservas
                     </h1>
                     <p className="text-sm text-neutral-400">
-                        {data.tripName} · {data.tripPeriod}
+                        {data?.tripName} · {data?.tripPeriod}
                     </p>
                 </div>
                 <ReservationTrigger tripId={tripId} variant="button" label="Nova reserva" />
@@ -30,27 +55,36 @@ export default async function ReservationsPage({
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <ReservationStatCard
                     label="Total de reservas"
-                    value={String(data.totalReservations)}
-                    sublabel={`${data.confirmedCount} confirmadas`}
+                    value={String(data?.totalReservations ?? 0)}
+                    sublabel={`${data?.confirmedCount ?? 0} confirmadas`}
                 />
                 <ReservationStatCard
                     label="Total investido"
-                    value={formatCurrencyBRL(data.totalInvested)}
+                    value={formatCurrencyBRL(data?.totalInvested ?? 0)}
                     sublabel="em reservas"
                 />
                 <ReservationStatCard
                     label="Próximo check-in"
-                    value={data.nextCheckinLabel}
-                    sublabel={data.nextCheckinSublabel}
+                    value={data?.nextCheckinLabel ?? "N/A"}
+                    sublabel=""
                 />
                 <ReservationStatCard
                     label="Próximo voo"
-                    value={data.nextFlightLabel}
-                    sublabel={data.nextFlightSublabel}
+                    value={data?.nextFlightLabel ?? "N/A"}
+                    sublabel=""
                 />
             </div>
 
-            <ReservationsGrid tripId={tripId} reservations={data.reservations} />
+            <CategoryFilter activeFilter={filter} onChange={setFilter} />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {filtered.map((res) => (
+                    <ReservationCard key={res.id} reservation={res} />
+                ))}
+                {filter === "all" && (
+                    <ReservationTrigger tripId={tripId} variant="card" />
+                )}
+            </div>
         </div>
     );
 }

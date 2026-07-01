@@ -6,6 +6,7 @@ import { ACTIVITY_EMOJIS, DURATION_OPTIONS } from "@/lib/activity-options";
 import { formatCurrencyBRL } from "@/lib/format";
 import type { NewActivityFormData } from "@/types/trip";
 import { useToast } from "@/contexts/toast-context";
+import { useCreateActivity } from "@/hooks/roadmap/use-roadmap";
 
 interface NewActivityModalProps {
     tripId: string;
@@ -42,6 +43,7 @@ export function NewActivityModal({
         costType: "free",
         note: "",
     });
+    const createActivity = useCreateActivity(tripId);
 
     function update(updates: Partial<NewActivityFormData>) {
         setForm((prev) => ({ ...prev, ...updates }));
@@ -73,10 +75,22 @@ export function NewActivityModal({
 
     function handleSubmit() {
         if (!isValid) return;
-        // TODO: POST /trips/:tripId/roadmap { ...form }
-        onSave?.(form);
-        addToast("Atividade adicionada com sucesso!");
-        onClose();
+        createActivity.mutate(
+            {
+                emoji: form.emoji,
+                title: form.title,
+                date: form.date,
+                startTime: form.startTime,
+                duration: form.duration || undefined,
+                location: form.location || undefined,
+                costAmount: form.costType !== "free" && form.costAmount
+                    ? Number(form.costAmount)
+                    : undefined,
+                costType: form.costType.toUpperCase() as any,
+                note: form.note || undefined,
+            },
+            { onSuccess: () => onClose() },
+        );
     }
 
     return (
@@ -305,11 +319,10 @@ export function NewActivityModal({
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!isValid}
-                        className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={!isValid || createActivity.isPending}
+                        className="..."
                     >
-                        <Calendar className="h-4 w-4" />
-                        Salvar atividade
+                        {createActivity.isPending ? "Salvando..." : "Salvar atividade"}
                     </button>
                 </div>
             </div>

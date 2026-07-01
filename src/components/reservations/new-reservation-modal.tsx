@@ -7,6 +7,7 @@ import { ReservationCategoryFields } from "./reservation-category-fields";
 import { formatCurrencyBRL } from "@/lib/format";
 import type { NewReservationFormData, ReservationCategory } from "@/types/trip";
 import { useToast } from "@/contexts/toast-context";
+import { useCreateReservation } from "@/hooks/reservations/use-reservations";
 
 interface Participant {
     id: string;
@@ -46,6 +47,7 @@ export function NewReservationModal({
         ...EMPTY_FORM,
         paidById: currentUserId,
     });
+    const createReservation = useCreateReservation(tripId);
 
     function update(updates: Partial<NewReservationFormData>) {
         setForm((prev) => ({ ...prev, ...updates }));
@@ -80,10 +82,18 @@ export function NewReservationModal({
 
     function handleSubmit() {
         if (!isValid) return;
-        // TODO: POST /trips/:tripId/reservations { ...form, amount: Number(form.amount) }
-        onSave?.(form);
-        addToast("Reserva adicionada com sucesso!");
-        onClose();
+        createReservation.mutate(
+            {
+                category: form.category!.toUpperCase() as any,
+                title: form.title,
+                subtitle: form.subtitle || undefined,
+                amount: Number(form.amount),
+                paidById: form.paidById || undefined,
+                notes: form.notes || undefined,
+                details: form.category ? (form[form.category] as any) : undefined,
+            },
+            { onSuccess: () => onClose() },
+        );
     }
 
     const selectedCategory = RESERVATION_CATEGORIES.find(
@@ -261,11 +271,10 @@ export function NewReservationModal({
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!isValid}
-                        className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={!isValid || createReservation.isPending}
+                        className="..."
                     >
-                        <Save className="h-4 w-4" />
-                        Salvar reserva
+                        {createReservation.isPending ? "Salvando..." : "Salvar reserva"}
                     </button>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/contexts/toast-context";
+import { useUpdatePassword } from "@/hooks/user/use-user-profile";
 
 function getPasswordStrength(password: string) {
     if (password.length === 0) return { level: 0, label: "", barColor: "", textColor: "" };
@@ -25,7 +26,7 @@ export function ChangePasswordForm() {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPasswords, setShowPasswords] = useState(false);
-
+    const updatePassword = useUpdatePassword();
     const strength = getPasswordStrength(newPassword);
     const passwordsMatch = confirmPassword.length === 0 || confirmPassword === newPassword;
     const canSubmit =
@@ -36,11 +37,16 @@ export function ChangePasswordForm() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (!canSubmit) return;
-        // TODO: PATCH /users/me/password { currentPassword, newPassword }
-        addToast("Senha atualizada com sucesso!");
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+        updatePassword.mutate(
+            { currentPassword, newPassword },
+            {
+                onSuccess: () => {
+                    setCurrentPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                },
+            },
+        );
     }
 
     return (
@@ -114,10 +120,10 @@ export function ChangePasswordForm() {
 
             <button
                 type="submit"
-                disabled={!canSubmit}
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={!canSubmit || updatePassword.isPending}
+                className="..."
             >
-                Atualizar senha
+                {updatePassword.isPending ? "Atualizando..." : "Atualizar senha"}
             </button>
         </form>
     );

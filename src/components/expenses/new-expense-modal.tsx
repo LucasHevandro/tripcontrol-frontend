@@ -9,6 +9,7 @@ import { formatCurrencyBRL } from "@/lib/format";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";
 import type { NewExpenseFormData, ExpenseCategory } from "@/types/trip";
 import { useToast } from "@/contexts/toast-context";
+import { useCreateExpense } from "@/hooks/expenses/use-expenses";
 
 interface Participant {
     id: string;
@@ -55,6 +56,7 @@ export function NewExpenseModal({
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { addToast } = useToast();
+    const createExpense = useCreateExpense(tripId);
 
     // Fecha com Esc
     useEffect(() => {
@@ -103,11 +105,23 @@ export function NewExpenseModal({
     }
 
     function handleSubmit() {
-        if (!form.description.trim() || !form.amount || !form.category) return;
-        // TODO: POST /trips/:tripId/expenses { ...form, amount: Number(form.amount) }
-        addToast("Despesa adicionada com sucesso!");
-        onSave?.(form);
-        onClose();
+        if (!isValid) return;
+        createExpense.mutate(
+            {
+                description: form.description,
+                amount: Number(form.amount),
+                date: form.date,
+                category: form.category!,
+                paidById: form.paidById,
+                splitType: form.splitType === "equal" ? "EQUAL" : "CUSTOM",
+                splitParticipants:
+                    form.splitParticipantIds.length > 0
+                        ? form.splitParticipantIds.map((id) => ({ participantId: id }))
+                        : undefined,
+                notes: form.notes || undefined,
+            },
+            { onSuccess: () => onClose() },
+        );
     }
 
     const amountNumber = Number(form.amount) || 0;
@@ -377,11 +391,10 @@ export function NewExpenseModal({
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!isValid}
-                        className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={!isValid || createExpense.isPending}
+                        className="..."
                     >
-                        <Save className="h-4 w-4" />
-                        Salvar despesa
+                        {createExpense.isPending ? "Salvando..." : "Salvar despesa"}
                     </button>
                 </div>
             </div>

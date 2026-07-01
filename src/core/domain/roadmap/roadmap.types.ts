@@ -1,3 +1,5 @@
+import type { ReservationStatus } from '../reservation/reservation.types';
+
 export type ActivityStatus = 'UPCOMING' | 'CURRENT' | 'COMPLETED';
 export type CostType = 'FREE' | 'TOTAL' | 'PER_PERSON';
 
@@ -33,8 +35,8 @@ export interface RoadmapResponse {
         id: string;
         title: string;
         subtitle: string;
-        status: string;
-        icon: string;
+        status: ReservationStatus;
+        icon: 'hotel' | 'car' | 'flight' | 'boat';
     }[];
 }
 

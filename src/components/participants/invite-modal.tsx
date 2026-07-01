@@ -13,7 +13,7 @@ import {
     Users,
 } from "lucide-react";
 import { useToast } from "@/contexts/toast-context";
-
+import { useInviteByEmail } from "@/hooks/participants/use-participants";
 
 interface InviteModalProps {
     tripId: string;
@@ -52,6 +52,7 @@ export function InviteModal({
     const [isSending, setIsSending] = useState(false);
     const [allSent, setAllSent] = useState(false);
     const { addToast } = useToast();
+    const inviteByEmail = useInviteByEmail(tripId);
 
     // Fecha com Esc
     useEffect(() => {
@@ -100,27 +101,22 @@ export function InviteModal({
     }
 
     async function handleSendInvites() {
-        // Valida todos os campos antes de enviar
         const validated = emails.map((e) => ({
             ...e,
             error: validateEmail(e.value),
         }));
         setEmails(validated);
+        if (validated.some((e) => e.error !== null)) return;
 
-        const hasErrors = validated.some((e) => e.error !== null);
-        if (hasErrors) return;
-
-        setIsSending(true);
-        try {
-            // TODO: POST /trips/:tripId/invites { emails: emails.map(e => e.value) }
-            await new Promise((r) => setTimeout(r, 800)); // simula latência de rede
-            // Marca todos como enviados
-            setEmails((prev) => prev.map((e) => ({ ...e, sent: true, error: null })));
-            setAllSent(true);
-            addToast("Convites enviados com sucesso!");
-        } finally {
-            setIsSending(false);
-        }
+        inviteByEmail.mutate(
+            emails.map((e) => e.value),
+            {
+                onSuccess: () => {
+                    setEmails((prev) => prev.map((e) => ({ ...e, sent: true })));
+                    setAllSent(true);
+                },
+            },
+        );
     }
 
     const hasAnyEmail = emails.some((e) => e.value.trim() !== "");
@@ -322,10 +318,10 @@ export function InviteModal({
                         <button
                             type="button"
                             onClick={handleSendInvites}
-                            disabled={!hasAnyEmail || isSending}
-                            className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled={!hasAnyEmail || inviteByEmail.isPending}
+                            className="..."
                         >
-                            {isSending ? (
+                            {inviteByEmail.isPending ? (
                                 <>
                                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                     Enviando...

@@ -1,11 +1,27 @@
-import { getUserProfileMock } from "@/lib/mock-trip";
+"use client";
+
+import { useUserProfile } from "@/hooks/user/use-user-profile";
 import { ProfileAvatarUpload } from "@/components/profile/profile-avatar-upload";
 import { PersonalInfoForm } from "@/components/profile/personal-info-form";
 import { ChangePasswordForm } from "@/components/profile/change-password-form";
 import { PreferencesForm } from "@/components/profile/preferences-form";
 
 export default function ProfilePage() {
-    const profile = getUserProfileMock();
+    const { data: profile, isLoading } = useUserProfile();
+
+    if (isLoading) {
+        return (
+            <div className="space-y-1">
+                <div className="h-6 w-24 animate-pulse rounded bg-neutral-200" />
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
+                    <div className="h-96 animate-pulse rounded-xl bg-neutral-200" />
+                    <div className="h-64 animate-pulse rounded-xl bg-neutral-200" />
+                </div>
+            </div>
+        );
+    }
+
+    if (!profile) return null;
 
     return (
         <div className="space-y-1">

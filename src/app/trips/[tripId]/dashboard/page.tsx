@@ -1,29 +1,41 @@
+"use client";
+
+import { use } from "react";
 import { Wallet, Receipt, Map, Hotel, Receipt as ReceiptIcon, Map as MapIcon } from "lucide-react";
-import { getTripDashboardMock, getNewTripDashboardMock } from "@/lib/mock-trip";
 import { formatCurrencyBRL } from "@/lib/format";
 import { isNewTrip, getOnboardingSteps } from "@/lib/onboarding";
+import { useTripDashboard } from "@/hooks/trips/use-trip-dashboard";
 import { TripHeaderCard } from "@/components/dashboard/trip-header-card";
 import { NewTripHeaderCard } from "@/components/dashboard/new-trip-header-card";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
-import { EmptySectionCard } from "@/components/dashboard/empty-section-card";
 import { EmptyExpensesSection } from "@/components/dashboard/empty-expenses-section";
+import { EmptySectionCard } from "@/components/dashboard/empty-section-card";
 import { StatCard } from "@/components/dashboard/start-card";
 import { BudgetProgressBar } from "@/components/dashboard/budget-progress-bar";
 import { RecentExpensesList } from "@/components/dashboard/recent-exprense-list";
 import { TodayItinerary } from "@/components/dashboard/today-itinerary";
 import { ParticipantsBalanceRow } from "@/components/dashboard/participants-balance-row";
+import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 
-export default async function DashboardPage({
+export default function DashboardPage({
     params,
 }: {
     params: Promise<{ tripId: string }>;
 }) {
-    const { tripId } = await params;
+    const { tripId } = use(params);
+    const { data, isLoading, isError } = useTripDashboard(tripId);
 
-    const data =
-        tripId === "new-trip-demo"
-            ? getNewTripDashboardMock(tripId)
-            : getTripDashboardMock(tripId);
+    if (isLoading) return <DashboardSkeleton />;
+
+    if (isError || !data) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-sm text-neutral-500">
+                    Erro ao carregar dashboard. Tente novamente.
+                </p>
+            </div>
+        );
+    }
 
     if (isNewTrip(data)) {
         const steps = getOnboardingSteps(tripId, data.newTripStatus);

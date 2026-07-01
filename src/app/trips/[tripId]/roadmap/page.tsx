@@ -1,20 +1,41 @@
-import { getTripRoadmapMock } from "@/lib/mock-trip";
+"use client";
+
+import { use } from "react";
+import { useRoadmap } from "@/hooks/roadmap/use-roadmap";
 import { DaySelector } from "@/components/roadmap/day-selector";
 import { ActiveReservations } from "@/components/roadmap/active-reservations";
 import { DayChecklist } from "@/components/roadmap/day-checklist";
 import { ActivityTrigger } from "@/components/roadmap/activity-trigger";
 
-export default async function RoadmapPage({
+export default function RoadmapPage({
     params,
 }: {
     params: Promise<{ tripId: string }>;
 }) {
-    const { tripId } = await params;
-    const data = getTripRoadmapMock(tripId);
+    const { tripId } = use(params);
+    const { data, isLoading, isError } = useRoadmap(tripId);
 
-    // Índice do dia com atividades no mock (14/01 = index 4).
-    // Quando a API existir, calcule com base na data atual vs. datas da viagem.
-    const defaultDayIndex = data.days.findIndex((d) => d.activities.length > 0);
+    if (isLoading) {
+        return (
+            <div className="space-y-1">
+                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200" />
+                <div className="h-64 w-full animate-pulse rounded-xl bg-neutral-200" />
+            </div>
+        );
+    }
+
+    if (isError || !data) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-sm text-neutral-500">Erro ao carregar roteiro.</p>
+            </div>
+        );
+    }
+
+    const defaultDayIndex = Math.max(
+        data.days.findIndex((d) => d.activities.length > 0),
+        0,
+    );
 
     return (
         <div className="space-y-1">
@@ -34,11 +55,11 @@ export default async function RoadmapPage({
                 />
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_280px]">
                 <div>
                     <DaySelector
                         days={data.days}
-                        defaultSelectedIndex={defaultDayIndex >= 0 ? defaultDayIndex : 0}
+                        defaultSelectedIndex={defaultDayIndex}
                     />
                 </div>
             </div>

@@ -8,6 +8,7 @@ import { Step2Details } from "./step-2-details";
 import { Step3Review } from "./step-3-review";
 import type { NewTripFormData } from "@/types/trip";
 import { useToast } from "@/contexts/toast-context";
+import { useCreateTrip } from "@/hooks/trips/use-trips";
 
 const INITIAL_DATA: NewTripFormData = {
     name: "",
@@ -25,6 +26,7 @@ interface NewTripModalProps {
 }
 
 export function NewTripModal({ onClose }: NewTripModalProps) {
+    const createTrip = useCreateTrip();
     const { addToast } = useToast();
     const [step, setStep] = useState(1);
     const [data, setData] = useState<NewTripFormData>(INITIAL_DATA);
@@ -71,8 +73,26 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
     }
 
     function handleCreate() {
-        // TODO: quando a API existir → POST /trips { ...payload }
-        addToast("Viagem criada! Convide os participantes para começar.");
+        createTrip.mutate({
+            name: data.name,
+            destination: data.destination,
+            destinationType: data.destinationType
+                ? (data.destinationType.toUpperCase() as any)
+                : undefined,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            tripType: data.tripType
+                ? (data.tripType.toUpperCase() as any)
+                : undefined,
+            budget: data.budget ? Number(data.budget) : undefined,
+            description: data.description || undefined,
+            emoji:
+                data.destinationType === "beach" ? "🏖️"
+                    : data.destinationType === "countryside" ? "🏔️"
+                        : data.destinationType === "city" ? "🌆"
+                            : data.destinationType === "international" ? "✈️"
+                                : "✈️",
+        });
     }
 
     return (
@@ -140,9 +160,10 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                         <button
                             type="button"
                             onClick={handleCreate}
-                            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+                            disabled={createTrip.isPending}
+                            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
                         >
-                            ✓ Criar viagem
+                            {createTrip.isPending ? "Criando..." : "✓ Criar viagem"}
                         </button>
                     )}
                 </div>

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Camera } from "lucide-react";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
+import { useUpdateAvatar } from "@/hooks/user/use-user-profile";
 
 interface ProfileAvatarUploadProps {
     userId: string;
@@ -15,15 +16,14 @@ export function ProfileAvatarUpload({ userId, name, avatarUrl }: ProfileAvatarUp
     const [preview, setPreview] = useState<string | null>(avatarUrl);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const color = getAvatarColor(userId);
+    const updateAvatar = useUpdateAvatar();
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
-
-        // Preview local imediato. TODO: quando a API existir, fazer upload real
-        // (ex: POST /users/me/avatar com FormData) e usar a URL retornada.
         const objectUrl = URL.createObjectURL(file);
         setPreview(objectUrl);
+        updateAvatar.mutate(file);
     }
 
     return (

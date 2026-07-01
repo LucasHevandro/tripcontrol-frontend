@@ -2,9 +2,7 @@ import { getCategoryColor } from "@/lib/avatar-color";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
-import type { FinancesData } from "@/types/trip";
-
-type Expense = FinancesData["expenses"][number];
+import type { Expense } from "@/core/domain/expense/expense.types";
 
 interface ExpensesTableProps {
     expenses: Expense[];
@@ -27,7 +25,7 @@ export function ExpensesTable({ expenses }: ExpensesTableProps) {
                 </div>
 
                 {expenses.map((expense) => {
-                    const avatarColor = getAvatarColor(expense.paidByParticipantId);
+                    const avatarColor = getAvatarColor(expense.paidById);
                     const categoryColor = getCategoryColor(expense.category);
                     return (
                         <div

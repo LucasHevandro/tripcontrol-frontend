@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { UserProfile } from "@/types/trip";
+import type { UserProfile } from "@/core/domain/user/user.types";
+import { useUpdatePreferences } from "@/hooks/user/use-user-profile";
 
 const LANGUAGES = [
     { value: "pt-BR", label: "Português (Brasil)" },
@@ -16,15 +17,15 @@ const CURRENCIES = [
 ];
 
 interface Toggle {
-    key: keyof UserProfile["notifications"];
+    key: "notifyEmail" | "notifyExpenseAlerts" | "notifyRoadmapReminders";
     label: string;
     description: string;
 }
 
 const TOGGLES: Toggle[] = [
-    { key: "email", label: "Notificações por e-mail", description: "Receber resumos e avisos importantes" },
-    { key: "expenseAlerts", label: "Alertas de despesas", description: "Quando alguém registra um novo gasto" },
-    { key: "roadmapReminders", label: "Lembretes de roteiro", description: "Avisos sobre atividades programadas" },
+    { key: "notifyEmail", label: "Notificações por e-mail", description: "Receber resumos e avisos importantes" },
+    { key: "notifyExpenseAlerts", label: "Alertas de despesas", description: "Quando alguém registra um novo gasto" },
+    { key: "notifyRoadmapReminders", label: "Lembretes de roteiro", description: "Avisos sobre atividades programadas" },
 ];
 
 interface PreferencesFormProps {
@@ -34,19 +35,23 @@ interface PreferencesFormProps {
 export function PreferencesForm({ profile }: PreferencesFormProps) {
     const [language, setLanguage] = useState(profile.language);
     const [currency, setCurrency] = useState(profile.currency);
-    const [notifications, setNotifications] = useState(profile.notifications);
+    const [notifications, setNotifications] = useState({
+        notifyEmail: profile.notifyEmail,
+        notifyExpenseAlerts: profile.notifyExpenseAlerts,
+        notifyRoadmapReminders: profile.notifyRoadmapReminders,
+    });
+    const updatePreferences = useUpdatePreferences();
 
     function toggleNotification(key: Toggle["key"]) {
-        setNotifications((prev) => {
-            const updated = { ...prev, [key]: !prev[key] };
-            // TODO: PATCH /users/me/preferences { notifications: updated }
-            return updated;
-        });
+        const newValue = !notifications[key];
+        const updated = { ...notifications, [key]: newValue };
+        setNotifications(updated);
+        updatePreferences.mutate({ [key]: newValue });
     }
 
     function handleLanguageChange(value: string) {
         setLanguage(value);
-        // TODO: PATCH /users/me/preferences { language: value }
+        updatePreferences.mutate({ language: value });
     }
 
     function handleCurrencyChange(value: string) {

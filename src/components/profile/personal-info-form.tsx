@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { UserProfile } from "@/types/trip";
+import type { UserProfile } from "@/core/domain/user/user.types";
 import { useToast } from "@/contexts/toast-context";
+import { useUpdateProfile } from "@/hooks/user/use-user-profile";
 
 interface PersonalInfoFormProps {
     profile: UserProfile;
@@ -13,15 +14,21 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
     const [name, setName] = useState(profile.name);
     const [email, setEmail] = useState(profile.email);
     const [saved, setSaved] = useState(false);
+    const updateProfile = useUpdateProfile();
 
     const hasChanges = name !== profile.name || email !== profile.email;
 
     function handleSave(e: React.FormEvent) {
         e.preventDefault();
-        // TODO: PATCH /users/me { name, email }
-        addToast("Dados pessoais atualizados com sucesso!");
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
+        updateProfile.mutate(
+            { name, email },
+            {
+                onSuccess: () => {
+                    setSaved(true);
+                    setTimeout(() => setSaved(false), 2000);
+                },
+            },
+        );
     }
 
     return (
@@ -53,10 +60,10 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             <div className="flex items-center gap-3">
                 <button
                     type="submit"
-                    disabled={!hasChanges}
-                    className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={!hasChanges || updateProfile.isPending}
+                    className="..."
                 >
-                    Salvar alterações
+                    {updateProfile.isPending ? "Salvando..." : "Salvar alterações"}
                 </button>
                 {saved && (
                     <span className="text-xs font-medium text-emerald-600">

@@ -1,18 +1,43 @@
-import { getTripParticipantsMock } from "@/lib/mock-trip";
+"use client";
+
+import { use } from "react";
 import { formatCurrencyBRL } from "@/lib/format";
+import { useParticipants } from "@/hooks/participants/use-participants";
 import { ParticipantStatCard } from "@/components/participants/participant-stat-card";
 import { ParticipantCard } from "@/components/participants/participant-card";
 import { SettlementSummary } from "@/components/participants/settlement-summary";
 import { InviteTrigger } from "@/components/participants/invite-trigger";
 
-
-export default async function ParticipantsPage({
+export default function ParticipantsPage({
     params,
 }: {
     params: Promise<{ tripId: string }>;
 }) {
-    const { tripId } = await params;
-    const data = getTripParticipantsMock(tripId);
+    const { tripId } = use(params);
+    const { data, isLoading, isError } = useParticipants(tripId);
+
+    if (isLoading) {
+        return (
+            <div className="space-y-1">
+                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200" />
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="h-24 animate-pulse rounded-xl bg-neutral-200" />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    if (isError || !data) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-sm text-neutral-500">
+                    Erro ao carregar participantes.
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-1">
@@ -76,9 +101,7 @@ export default async function ParticipantsPage({
                     ))}
                 </div>
 
-                <div className="space-y-4">
-                    <SettlementSummary settlements={data.settlementSummary} />
-                </div>
+                <SettlementSummary settlements={data.settlementSummary} />
             </div>
         </div>
     );

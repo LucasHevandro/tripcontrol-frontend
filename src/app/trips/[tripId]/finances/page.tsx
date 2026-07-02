@@ -18,11 +18,17 @@ export default function FinancesPage({
     params: Promise<{ tripId: string }>;
 }) {
     const { tripId } = use(params);
-    const { data: summary, isLoading: loadingSummary } = useExpenseSummary(tripId);
+    const { data: summary, isLoading: loadingSummary, isError } = useExpenseSummary(tripId);
     const { data: expensesData, isLoading: loadingExpenses } = useExpenses(tripId);
-    const { data: participantsData } = useParticipants(tripId);
+    const { data: participantsData, isError: isParticipantsError } = useParticipants(tripId);
 
     if (loadingSummary || loadingExpenses) return <FinancesSkeleton />;
+
+    if (isError || isParticipantsError) return (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-sm text-neutral-500">Erro ao carregar dados.</p>
+        </div>
+    );
 
     const settlements = participantsData?.settlementSummary ?? [];
     const participants = participantsData?.participants ?? [];

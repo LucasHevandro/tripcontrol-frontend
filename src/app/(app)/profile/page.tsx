@@ -7,7 +7,7 @@ import { ChangePasswordForm } from "@/components/profile/change-password-form";
 import { PreferencesForm } from "@/components/profile/preferences-form";
 
 export default function ProfilePage() {
-    const { data: profile, isLoading } = useUserProfile();
+    const { data: profile, isLoading, isError } = useUserProfile();
 
     if (isLoading) {
         return (
@@ -20,6 +20,12 @@ export default function ProfilePage() {
             </div>
         );
     }
+
+    if (isError) return (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-sm text-neutral-500">Erro ao carregar perfil.</p>
+        </div>
+    );
 
     if (!profile) return null;
 

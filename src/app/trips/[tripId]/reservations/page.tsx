@@ -18,7 +18,7 @@ export default function ReservationsPage({
 }) {
     const { tripId } = use(params);
     const [filter, setFilter] = useState<FilterOption>("all");
-    const { data, isLoading } = useReservations(tripId);
+    const { data, isLoading, isError } = useReservations(tripId);
 
     if (isLoading) {
         return (
@@ -32,6 +32,12 @@ export default function ReservationsPage({
             </div>
         );
     }
+
+    if (isError) return (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-sm text-neutral-500">Erro ao carregar Reservas.</p>
+        </div>
+    );
 
     const filtered =
         filter === "all"

@@ -12,16 +12,13 @@ export function DayChecklist({ items: initialItems }: DayChecklistProps) {
 
     function toggle(id: string) {
         setItems((prev) =>
-            prev.map((item) =>
-                item.id === id ? { ...item, checked: !item.checked } : item
-            )
+            prev.map((item) => item.id === id ? { ...item, checked: !item.checked } : item)
         );
-        // TODO: quando a API existir → PATCH /trips/:tripId/checklist/:id { checked }
     }
 
     return (
-        <div className="rounded-xl border border-neutral-200 bg-white p-4">
-            <h2 className="text-sm font-semibold text-neutral-900">
+        <div className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
+            <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 ✅ Checklist do dia
             </h2>
 
@@ -33,35 +30,21 @@ export function DayChecklist({ items: initialItems }: DayChecklistProps) {
                             onClick={() => toggle(item.id)}
                             className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${item.checked
                                     ? "border-emerald-600 bg-emerald-600"
-                                    : "border-neutral-300 bg-white"
+                                    : "border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800"
                                 }`}
                             aria-label={item.checked ? `Desmarcar ${item.label}` : `Marcar ${item.label}`}
                             aria-pressed={item.checked}
                         >
                             {item.checked && (
-                                <svg
-                                    width="10"
-                                    height="8"
-                                    viewBox="0 0 10 8"
-                                    fill="none"
-                                    className="text-white"
-                                >
-                                    <path
-                                        d="M1 4L3.5 6.5L9 1"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
+                                <svg width="10" height="8" viewBox="0 0 10 8" fill="none" className="text-white">
+                                    <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             )}
                         </button>
-                        <span
-                            className={`text-sm transition-colors ${item.checked
-                                    ? "text-neutral-400 line-through"
-                                    : "text-neutral-700"
-                                }`}
-                        >
+                        <span className={`text-sm transition-colors ${item.checked
+                                ? "text-neutral-400 line-through dark:text-neutral-500"
+                                : "text-neutral-700 dark:text-neutral-300"
+                            }`}>
                             {item.label}
                         </span>
                     </li>

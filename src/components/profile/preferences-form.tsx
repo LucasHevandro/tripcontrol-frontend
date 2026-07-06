@@ -28,6 +28,9 @@ const TOGGLES: Toggle[] = [
     { key: "notifyRoadmapReminders", label: "Lembretes de roteiro", description: "Avisos sobre atividades programadas" },
 ];
 
+const selectClass = "w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100";
+const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
+
 interface PreferencesFormProps {
     profile: UserProfile;
 }
@@ -56,60 +59,52 @@ export function PreferencesForm({ profile }: PreferencesFormProps) {
 
     function handleCurrencyChange(value: string) {
         setCurrency(value);
-        // TODO: PATCH /users/me/preferences { currency: value }
+        updatePreferences.mutate({ currency: value });
     }
 
     return (
         <div className="space-y-5">
             <div>
-                <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                    Idioma
-                </label>
+                <label className={labelClass}>Idioma</label>
                 <select
                     value={language}
                     onChange={(e) => handleLanguageChange(e.target.value)}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                    className={selectClass}
                 >
                     {LANGUAGES.map((l) => (
-                        <option key={l.value} value={l.value}>
-                            {l.label}
-                        </option>
+                        <option key={l.value} value={l.value}>{l.label}</option>
                     ))}
                 </select>
             </div>
 
             <div>
-                <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                    Moeda padrão
-                </label>
+                <label className={labelClass}>Moeda padrão</label>
                 <select
                     value={currency}
                     onChange={(e) => handleCurrencyChange(e.target.value)}
-                    className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                    className={selectClass}
                 >
                     {CURRENCIES.map((c) => (
-                        <option key={c.value} value={c.value}>
-                            {c.label}
-                        </option>
+                        <option key={c.value} value={c.value}>{c.label}</option>
                     ))}
                 </select>
             </div>
 
             <div>
-                <p className="mb-2 text-sm font-medium text-neutral-700">Notificações</p>
+                <p className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">Notificações</p>
                 <div className="space-y-3">
                     {TOGGLES.map((toggle) => {
                         const isOn = notifications[toggle.key];
                         return (
                             <div key={toggle.key} className="flex items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-sm text-neutral-900">{toggle.label}</p>
-                                    <p className="text-xs text-neutral-400">{toggle.description}</p>
+                                    <p className="text-sm text-neutral-900 dark:text-neutral-100">{toggle.label}</p>
+                                    <p className="text-xs text-neutral-400 dark:text-neutral-500">{toggle.description}</p>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => toggleNotification(toggle.key)}
-                                    className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${isOn ? "bg-emerald-600" : "bg-neutral-200"
+                                    className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${isOn ? "bg-emerald-600" : "bg-neutral-200 dark:bg-neutral-700"
                                         }`}
                                     role="switch"
                                     aria-checked={isOn}

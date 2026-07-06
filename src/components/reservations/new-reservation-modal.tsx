@@ -5,9 +5,11 @@ import { X, Plus, Save, AlertCircle } from "lucide-react";
 import { RESERVATION_CATEGORIES } from "@/lib/reservation-options";
 import { ReservationCategoryFields } from "./reservation-category-fields";
 import { formatCurrencyBRL } from "@/lib/format";
-import type { NewReservationFormData, ReservationCategory } from "@/types/trip";
+import type { NewReservationFormData } from "@/types/trip";
 import { useToast } from "@/contexts/toast-context";
 import { useCreateReservation } from "@/hooks/reservations/use-reservations";
+import { toUpperEnum } from "@/lib/utils";
+import type { ReservationCategory, ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
 
 interface Participant {
     id: string;
@@ -84,7 +86,7 @@ export function NewReservationModal({
         if (!isValid) return;
         createReservation.mutate(
             {
-                category: form.category!.toUpperCase() as any,
+                category: toUpperEnum<ReservationCategoryUpper>(form.category!),
                 title: form.title,
                 subtitle: form.subtitle || undefined,
                 amount: Number(form.amount),

@@ -7,6 +7,8 @@ import { formatCurrencyBRL } from "@/lib/format";
 import type { NewActivityFormData } from "@/types/trip";
 import { useToast } from "@/contexts/toast-context";
 import { useCreateActivity } from "@/hooks/roadmap/use-roadmap";
+import { toUpperEnum } from "@/lib/utils";
+import { CostType } from "@/core/domain/roadmap/roadmap.types";
 
 interface NewActivityModalProps {
     tripId: string;
@@ -86,7 +88,7 @@ export function NewActivityModal({
                 costAmount: form.costType !== "free" && form.costAmount
                     ? Number(form.costAmount)
                     : undefined,
-                costType: form.costType.toUpperCase() as any,
+                costType: toUpperEnum<CostType>(form.costType),
                 note: form.note || undefined,
             },
             { onSuccess: () => onClose() },

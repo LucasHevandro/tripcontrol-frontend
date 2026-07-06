@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { BedDouble, Plane, Car, Ship } from "lucide-react";
 import type { ReservationCategory } from "@/types/trip";
 
@@ -31,7 +30,7 @@ export function CategoryFilter({ activeFilter, onChange }: CategoryFilterProps) 
                         onClick={() => onChange(f.value)}
                         className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${isActive
                                 ? "border-emerald-600 bg-emerald-600 text-white"
-                                : "border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300"
+                                : "border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600"
                             }`}
                     >
                         {f.icon}

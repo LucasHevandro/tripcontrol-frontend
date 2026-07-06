@@ -14,27 +14,23 @@ interface TripCardProps {
 }
 
 const BANNER_CLASSES = [
-    "bg-emerald-50",
-    "bg-sky-50",
-    "bg-neutral-100",
-    "bg-amber-50",
-    "bg-indigo-50",
-    "bg-rose-50"
+    "bg-emerald-50 dark:bg-emerald-950",
+    "bg-sky-50 dark:bg-sky-950",
+    "bg-neutral-100 dark:bg-neutral-800",
+    "bg-amber-50 dark:bg-amber-950",
+    "bg-indigo-50 dark:bg-indigo-950",
+    "bg-rose-50 dark:bg-rose-950",
 ];
 
 function getBannerClassName(tripId: string): string {
     let sum = 0;
-    for (let i = 0; i < tripId.length; i++) {
-        sum += tripId.charCodeAt(i);
-    }
+    for (let i = 0; i < tripId.length; i++) sum += tripId.charCodeAt(i);
     return BANNER_CLASSES[sum % BANNER_CLASSES.length];
 }
 
 export function TripCard({ trip }: TripCardProps) {
     const hasBudgetData = trip.budget > 0;
-    const percentage = hasBudgetData
-        ? Math.min((trip.totalSpent / trip.budget) * 100, 100)
-        : 0;
+    const percentage = hasBudgetData ? Math.min((trip.totalSpent / trip.budget) * 100, 100) : 0;
     const isOverBudget = trip.totalSpent > trip.budget;
     const bannerClassName = "bannerClassName" in trip ? trip.bannerClassName : getBannerClassName(trip.id);
     const emoji = trip.emoji || "✈️";
@@ -42,7 +38,7 @@ export function TripCard({ trip }: TripCardProps) {
     return (
         <Link
             href={`/trips/${trip.id}/dashboard`}
-            className="block overflow-hidden rounded-xl border border-neutral-200 bg-white transition-shadow hover:shadow-md"
+            className="block overflow-hidden rounded-xl border border-neutral-200 bg-white transition-shadow hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:shadow-neutral-800"
         >
             <div className={`flex h-20 items-center justify-center sm:h-28 ${bannerClassName}`}>
                 <span className="text-3xl sm:text-5xl">{emoji}</span>
@@ -50,16 +46,16 @@ export function TripCard({ trip }: TripCardProps) {
 
             <div className="p-4">
                 <div className="flex items-start justify-between gap-2">
-                    <p className="font-semibold text-neutral-900">{trip.name}</p>
+                    <p className="font-semibold text-neutral-900 dark:text-neutral-100">{trip.name}</p>
                     <TripStatusBadge status={trip.status} />
                 </div>
 
-                <p className="mt-1 flex items-center gap-1 text-xs text-neutral-400">
+                <p className="mt-1 flex items-center gap-1 text-xs text-neutral-400 dark:text-neutral-500">
                     <MapPin className="h-3 w-3" />
                     {trip.destination}
                 </p>
 
-                <p className="mt-2 text-xs text-neutral-400">
+                <p className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">
                     {formatDateRange(trip.startDate, trip.endDate)}
                 </p>
 
@@ -70,7 +66,7 @@ export function TripCard({ trip }: TripCardProps) {
                             return (
                                 <span
                                     key={p.id}
-                                    className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-[10px] font-semibold ${color.bg} ${color.text}`}
+                                    className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-[10px] font-semibold dark:border-neutral-900 ${color.bg} ${color.text}`}
                                     title={p.name}
                                 >
                                     {getInitials(p.name)}
@@ -78,7 +74,7 @@ export function TripCard({ trip }: TripCardProps) {
                             );
                         })}
                         {trip.extraParticipantCount > 0 && (
-                            <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-neutral-100 text-[10px] font-semibold text-neutral-500">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-neutral-100 text-[10px] font-semibold text-neutral-500 dark:border-neutral-900 dark:bg-neutral-700 dark:text-neutral-400">
                                 +{trip.extraParticipantCount}
                             </span>
                         )}
@@ -86,16 +82,12 @@ export function TripCard({ trip }: TripCardProps) {
 
                     {hasBudgetData && (
                         <div className="text-right">
-                            <p
-                                className={`text-xs font-medium ${isOverBudget ? "text-rose-600" : "text-neutral-600"
-                                    }`}
-                            >
+                            <p className={`text-xs font-medium ${isOverBudget ? "text-rose-600" : "text-neutral-600 dark:text-neutral-400"}`}>
                                 {formatCurrencyBRL(trip.totalSpent)} / {formatCurrencyBRL(trip.budget)}
                             </p>
-                            <div className="mt-1 h-1 w-24 overflow-hidden rounded-full bg-neutral-100">
+                            <div className="mt-1 h-1 w-24 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-700">
                                 <div
-                                    className={`h-full rounded-full ${isOverBudget ? "bg-rose-500" : "bg-emerald-600"
-                                        }`}
+                                    className={`h-full rounded-full ${isOverBudget ? "bg-rose-500" : "bg-emerald-600"}`}
                                     style={{ width: `${percentage}%` }}
                                 />
                             </div>

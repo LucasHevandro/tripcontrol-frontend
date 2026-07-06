@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { X, Plus, Paperclip, Save, AlertCircle } from "lucide-react";
-import { getCategoryColor } from "@/lib/avatar-color";
-import { getAvatarColor } from "@/lib/avatar-color";
+import { getCategoryColor, getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
 import { EXPENSE_CATEGORIES } from "@/lib/expense-categories";

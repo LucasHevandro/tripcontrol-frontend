@@ -1,4 +1,5 @@
 export type ReservationCategory = 'hotel' | 'flight' | 'car' | 'tour';
+export type ReservationCategoryUpper = 'HOTEL' | 'FLIGHT' | 'CAR' | 'TOUR';
 export type ReservationStatus = 'confirmed' | 'pending' | 'cancelled';
 
 export interface Reservation {

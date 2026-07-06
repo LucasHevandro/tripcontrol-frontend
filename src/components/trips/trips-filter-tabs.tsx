@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { TripStatus } from "@/core/domain/trip/trip.types";
-import type { TripCard } from "@/core/domain/trip/trip.types";
+import type { TripStatus, TripCard } from "@/core/domain/trip/trip.types";
 import { TripCard as TripCardComponent } from "./trip-card";
 import { NewTripTrigger } from "./new-trip-trigger";
 
@@ -23,13 +22,11 @@ export function TripsFilterTabs({ trips }: TripsFilterTabsProps) {
     const [activeTab, setActiveTab] = useState<FilterOption>("all");
 
     const filtered =
-        activeTab === "all"
-            ? trips
-            : trips.filter((t) => t.status === activeTab);
+        activeTab === "all" ? trips : trips.filter((t) => t.status === activeTab);
 
     return (
         <div>
-            <div className="flex gap-4 overflow-x-auto border-b border-neutral-200 sm:gap-6">
+            <div className="flex gap-4 overflow-x-auto border-b border-neutral-200 dark:border-neutral-700 sm:gap-6">
                 {TABS.map((tab) => {
                     const isActive = activeTab === tab.value;
                     return (
@@ -37,11 +34,14 @@ export function TripsFilterTabs({ trips }: TripsFilterTabsProps) {
                             key={tab.value}
                             type="button"
                             onClick={() => setActiveTab(tab.value)}
-                            className={`relative shrink-0 whitespace-nowrap pb-3 text-sm transition-colors ${isActive ? "font-medium text-emerald-700" : "text-neutral-400 hover:text-neutral-600"}`}
+                            className={`relative shrink-0 whitespace-nowrap pb-3 text-sm transition-colors ${isActive
+                                    ? "font-medium text-emerald-700 dark:text-emerald-400"
+                                    : "text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300"
+                                }`}
                         >
                             {tab.label}
                             {isActive && (
-                                <span className="absolute -bottom-px left-0 h-[2px] w-full bg-emerald-600" />
+                                <span className="absolute -bottom-px left-0 h-[2px] w-full bg-emerald-600 dark:bg-emerald-400" />
                             )}
                         </button>
                     );

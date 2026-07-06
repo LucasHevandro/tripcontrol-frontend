@@ -1,4 +1,3 @@
-// components/dashboard/budget-progress-bar.tsx
 import { formatCurrencyBRL } from "@/lib/format";
 
 interface BudgetProgressBarProps {
@@ -18,20 +17,20 @@ export function BudgetProgressBar({ totalSpent, budget }: BudgetProgressBarProps
     const remaining = budget - totalSpent;
 
     return (
-        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+        <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
             <div className="flex items-center justify-between text-sm">
-                <span className="text-neutral-600">Orçamento utilizado</span>
-                <span className="font-semibold text-neutral-900">{percentage}%</span>
+                <span className="text-neutral-600 dark:text-neutral-400">Orçamento utilizado</span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">{percentage}%</span>
             </div>
 
-            <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
+            <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-700">
                 <div
                     className={`h-full rounded-full ${getBarColor(rawPercentage)}`}
                     style={{ width: `${Math.min(rawPercentage, 100)}%` }}
                 />
             </div>
 
-            <div className="mt-2 flex items-center justify-between text-xs text-neutral-400">
+            <div className="mt-2 flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
                 <span>{formatCurrencyBRL(totalSpent)} gastos</span>
                 <span>
                     {remaining >= 0

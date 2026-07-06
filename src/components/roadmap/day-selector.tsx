@@ -15,7 +15,6 @@ export function DaySelector({ days, defaultSelectedIndex = 4 }: DaySelectorProps
 
     return (
         <div>
-            {/* Seletor de dias */}
             <div className="flex gap-2 overflow-x-auto pb-1">
                 {days.map((day, index) => {
                     const isSelected = index === selectedIndex;
@@ -25,8 +24,8 @@ export function DaySelector({ days, defaultSelectedIndex = 4 }: DaySelectorProps
                             type="button"
                             onClick={() => setSelectedIndex(index)}
                             className={`shrink-0 rounded-full border px-4 py-1.5 text-sm transition-colors ${isSelected
-                                ? "border-emerald-600 bg-emerald-600 font-medium text-white"
-                                : "border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50"
+                                    ? "border-emerald-600 bg-emerald-600 font-medium text-white"
+                                    : "border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600"
                                 }`}
                         >
                             {day.label}
@@ -35,7 +34,6 @@ export function DaySelector({ days, defaultSelectedIndex = 4 }: DaySelectorProps
                 })}
             </div>
 
-            {/* Timeline do dia selecionado */}
             {selectedDay && (
                 <div className="mt-3">
                     <DayTimeline day={selectedDay} />

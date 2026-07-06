@@ -7,8 +7,9 @@ import { Step1Info } from "./step-1-info";
 import { Step2Details } from "./step-2-details";
 import { Step3Review } from "./step-3-review";
 import type { NewTripFormData } from "@/types/trip";
-import { useToast } from "@/contexts/toast-context";
 import { useCreateTrip } from "@/hooks/trips/use-trips";
+import { toUpperEnum } from "@/lib/utils";
+import type { DestinationType, TripType } from "@/core/domain/trip/trip.types";
 
 const INITIAL_DATA: NewTripFormData = {
     name: "",
@@ -27,7 +28,6 @@ interface NewTripModalProps {
 
 export function NewTripModal({ onClose }: NewTripModalProps) {
     const createTrip = useCreateTrip();
-    const { addToast } = useToast();
     const [step, setStep] = useState(1);
     const [data, setData] = useState<NewTripFormData>(INITIAL_DATA);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -36,7 +36,6 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
         setData((prev) => ({ ...prev, ...updates }));
     }
 
-    // Fecha com Esc
     useEffect(() => {
         function handleKeyDown(e: KeyboardEvent) {
             if (e.key === "Escape") onClose();
@@ -45,12 +44,9 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose]);
 
-    // Bloqueia scroll do body enquanto o modal está aberto
     useEffect(() => {
         document.body.style.overflow = "hidden";
-        return () => {
-            document.body.style.overflow = "";
-        };
+        return () => { document.body.style.overflow = ""; };
     }, []);
 
     function handleOverlayClick(e: React.MouseEvent) {
@@ -76,22 +72,17 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
         createTrip.mutate({
             name: data.name,
             destination: data.destination,
-            destinationType: data.destinationType
-                ? (data.destinationType.toUpperCase() as any)
-                : undefined,
+            destinationType: data.destinationType ? toUpperEnum<DestinationType>(data.destinationType) : undefined,
             startDate: data.startDate,
             endDate: data.endDate,
-            tripType: data.tripType
-                ? (data.tripType.toUpperCase() as any)
-                : undefined,
+            tripType: data.tripType ? toUpperEnum<TripType>(data.tripType) : undefined,
             budget: data.budget ? Number(data.budget) : undefined,
             description: data.description || undefined,
             emoji:
                 data.destinationType === "beach" ? "🏖️"
                     : data.destinationType === "countryside" ? "🏔️"
                         : data.destinationType === "city" ? "🌆"
-                            : data.destinationType === "international" ? "✈️"
-                                : "✈️",
+                            : "✈️",
         });
     }
 
@@ -105,24 +96,24 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Criar nova viagem"
-                className="w-full max-w-[520px] rounded-xl bg-white shadow-xl"
+                className="w-full max-w-[520px] rounded-xl bg-white shadow-xl dark:bg-neutral-900"
             >
-                <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-3.5 sm:px-6 sm:py-4">
-                    <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900">
+                <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-3.5 dark:border-neutral-800 sm:px-6 sm:py-4">
+                    <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
                         <Sparkles className="h-4 w-4" />
                         Criar nova viagem
                     </h2>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800"
                         aria-label="Fechar"
                     >
                         <X className="h-4 w-4" />
                     </button>
                 </div>
 
-                <div className="border-b border-neutral-100 px-4 py-3.5 sm:px-6 sm:py-4">
+                <div className="border-b border-neutral-100 px-4 py-3.5 dark:border-neutral-800 sm:px-6 sm:py-4">
                     <StepIndicator currentStep={step} />
                 </div>
 
@@ -132,12 +123,12 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                     {step === 3 && <Step3Review data={data} />}
                 </div>
 
-                <div className="flex items-center justify-between border-t border-neutral-100 px-4 py-3.5 sm:px-6 sm:py-4">
+                <div className="flex items-center justify-between border-t border-neutral-100 px-4 py-3.5 dark:border-neutral-800 sm:px-6 sm:py-4">
                     {step > 1 ? (
                         <button
                             type="button"
                             onClick={handleBack}
-                            className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+                            className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                         >
                             ← Voltar
                         </button>
@@ -145,7 +136,9 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
                         <span />
                     )}
 
-                    <span className="hidden text-sm text-neutral-400 sm:inline">Passo {step} de 3</span>
+                    <span className="hidden text-sm text-neutral-400 dark:text-neutral-500 sm:inline">
+                        Passo {step} de 3
+                    </span>
 
                     {step < 3 ? (
                         <button

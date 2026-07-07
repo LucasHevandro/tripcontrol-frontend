@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 "use client";
 
 import { use } from "react";
@@ -87,14 +86,6 @@ export default function DashboardPage({
             </div>
 
             <ParticipantsBalanceRow participants={data.participants} />
-=======
-export default function DashboardPage() {
-    return (
-        <div className="min-h-screen bg-[#f7f6f1]">
-            <main className="px-6 py-8">
-                {/* Lista de cards de viagens (Florianópolis, Serra Gaúcha, etc.) entra aqui */}
-            </main>
->>>>>>> origin/main
         </div>
     );
 }

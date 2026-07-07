@@ -5,11 +5,12 @@ import type { RoadmapDay } from "@/types/trip";
 import { DayTimeline } from "./day-timeline";
 
 interface DaySelectorProps {
+    tripId: string;
     days: RoadmapDay[];
     defaultSelectedIndex?: number;
 }
 
-export function DaySelector({ days, defaultSelectedIndex = 4 }: DaySelectorProps) {
+export function DaySelector({ tripId, days, defaultSelectedIndex = 4 }: DaySelectorProps) {
     const [selectedIndex, setSelectedIndex] = useState(defaultSelectedIndex);
     const selectedDay = days[selectedIndex];
 
@@ -36,7 +37,7 @@ export function DaySelector({ days, defaultSelectedIndex = 4 }: DaySelectorProps
 
             {selectedDay && (
                 <div className="mt-3">
-                    <DayTimeline day={selectedDay} />
+                    <DayTimeline tripId={tripId} day={selectedDay} />
                 </div>
             )}
         </div>

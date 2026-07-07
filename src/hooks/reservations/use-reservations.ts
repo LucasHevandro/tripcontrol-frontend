@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
+import { getErrorMessage } from '@/lib/utils';
 import type {
     CreateReservationPayload,
     ReservationCategory,
@@ -35,8 +36,33 @@ export function useCreateReservation(tripId: string) {
             });
             addToast('Reserva salva com sucesso!');
         },
-        onError: () => {
-            addToast('Erro ao salvar reserva', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao salvar reserva'), 'error');
+        },
+    });
+}
+
+export function useUpdateReservation(tripId: string) {
+    const { reservation } = useRepositories();
+    const queryClient = useQueryClient();
+    const { addToast } = useToast();
+
+    return useMutation({
+        mutationFn: ({
+            reservationId,
+            payload,
+        }: {
+            reservationId: string;
+            payload: Partial<CreateReservationPayload>;
+        }) => reservation.update(tripId, reservationId, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['trips', tripId, 'reservations'],
+            });
+            addToast('Reserva atualizada com sucesso!');
+        },
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao atualizar reserva'), 'error');
         },
     });
 }
@@ -55,8 +81,8 @@ export function useDeleteReservation(tripId: string) {
             });
             addToast('Reserva removida com sucesso');
         },
-        onError: () => {
-            addToast('Erro ao remover reserva', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao remover reserva'), 'error');
         },
     });
 }

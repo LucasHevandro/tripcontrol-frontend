@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
+import { getErrorMessage } from '@/lib/utils';
 import type { LoginCredentials, RegisterCredentials } from '@/core/domain/auth/auth.types';
 
 export function useLogin() {
@@ -24,8 +25,8 @@ export function useLogin() {
             addToast('Login realizado com sucesso!');
             router.push(redirectTo);
         },
-        onError: () => {
-            addToast('E-mail ou senha incorretos', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'E-mail ou senha incorretos'), 'error');
         },
     });
 }
@@ -48,10 +49,8 @@ export function useRegister() {
             addToast('Conta criada com sucesso!');
             router.push('/trips');
         },
-        onError: (error: any) => {
-            const message =
-                error?.response?.data?.message ?? 'Erro ao criar conta';
-            addToast(message, 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao criar conta'), 'error');
         },
     });
 }

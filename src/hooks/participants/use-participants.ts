@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
+import { getErrorMessage } from '@/lib/utils';
 
 export function useParticipants(tripId: string) {
     const { participant } = useRepositories();
@@ -28,8 +29,8 @@ export function useInviteByEmail(tripId: string) {
             });
             addToast(data.message);
         },
-        onError: () => {
-            addToast('Erro ao enviar convites', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao enviar convites'), 'error');
         },
     });
 }
@@ -48,8 +49,8 @@ export function useRemoveParticipant(tripId: string) {
             });
             addToast('Participante removido com sucesso');
         },
-        onError: () => {
-            addToast('Erro ao remover participante', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao remover participante'), 'error');
         },
     });
 }
@@ -63,8 +64,8 @@ export function useNotifyDebtors(tripId: string) {
         onSuccess: () => {
             addToast('Devedores notificados com sucesso!');
         },
-        onError: () => {
-            addToast('Erro ao notificar devedores', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao notificar devedores'), 'error');
         },
     });
 }

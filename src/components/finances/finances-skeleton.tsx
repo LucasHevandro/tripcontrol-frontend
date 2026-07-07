@@ -22,17 +22,17 @@ export function FinancesSkeleton() {
 
             {/* Duas colunas */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_380px]">
-                <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-6">
+                <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-6 dark:border-neutral-700 dark:bg-neutral-900">
                     {/* Tabela de despesas */}
                     <div>
                         <Skeleton className="h-5 w-40 mb-4" />
-                        <div className="grid grid-cols-5 gap-4 pb-2 border-b border-neutral-100">
+                        <div className="grid grid-cols-5 gap-4 pb-2 border-b border-neutral-100 dark:border-neutral-700">
                             {["w-24", "w-16", "w-20", "w-12", "w-14"].map((w, i) => (
                                 <Skeleton key={i} className={`h-3 ${w}`} />
                             ))}
                         </div>
                         {Array.from({ length: 5 }).map((_, i) => (
-                            <div key={i} className="grid grid-cols-5 items-center gap-4 py-3 border-b border-neutral-100">
+                            <div key={i} className="grid grid-cols-5 items-center gap-4 py-3 border-b border-neutral-100 dark:border-neutral-700">
                                 <Skeleton className="h-4 w-32" />
                                 <div className="flex items-center gap-2">
                                     <Skeleton className="h-6 w-6 rounded-full" />
@@ -60,13 +60,13 @@ export function FinancesSkeleton() {
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-4">
+                <div className="rounded-xl border border-neutral-200 bg-white p-5 space-y-4 dark:border-neutral-700 dark:bg-neutral-900">
                     {/* Acertos */}
                     <div>
                         <Skeleton className="h-5 w-36 mb-1" />
                         <Skeleton className="h-3.5 w-44 mb-4" />
                         {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="pb-4 mb-1 border-b border-neutral-100">
+                            <div key={i} className="pb-4 mb-1 border-b border-neutral-100 dark:border-neutral-700">
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2">
                                         <Skeleton className="h-7 w-7 rounded-full" />

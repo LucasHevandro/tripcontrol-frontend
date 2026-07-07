@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Plus, AlertCircle } from "lucide-react";
+import { X, Plus, AlertCircle, Pencil } from "lucide-react";
 import { RESERVATION_CATEGORIES } from "@/lib/reservation-options";
 import { ReservationCategoryFields } from "./reservation-category-fields";
 import { formatCurrencyBRL } from "@/lib/format";
-import type { NewReservationFormData, ReservationCategory } from "@/types/trip";
-import { useCreateReservation } from "@/hooks/reservations/use-reservations";
+import type { NewReservationFormData, ReservationCategory, ReservationDetail } from "@/types/trip";
+import { useCreateReservation, useUpdateReservation } from "@/hooks/reservations/use-reservations";
 import { toUpperEnum } from "@/lib/utils";
 import type { ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
 
@@ -19,6 +19,7 @@ interface NewReservationModalProps {
     tripId: string;
     participants: Participant[];
     currentUserId: string;
+    editingReservation?: ReservationDetail | null;
     onClose: () => void;
     onSave?: (data: NewReservationFormData) => void;
 }
@@ -45,14 +46,34 @@ export function NewReservationModal({
     tripId,
     participants,
     currentUserId,
+    editingReservation,
     onClose,
     onSave,
 }: NewReservationModalProps) {
-    const [form, setForm] = useState<NewReservationFormData>({
-        ...EMPTY_FORM,
-        paidById: currentUserId,
+    const isEditing = !!editingReservation;
+
+    const [form, setForm] = useState<NewReservationFormData>(() => {
+        if (editingReservation) {
+            const cat = editingReservation.category;
+            const raw = editingReservation.rawDetails ?? {};
+            return {
+                ...EMPTY_FORM,
+                category: cat,
+                title: editingReservation.title,
+                subtitle: editingReservation.subtitle,
+                amount: String(editingReservation.amount),
+                paidById: editingReservation.paidById ?? currentUserId,
+                notes: editingReservation.notes ?? "",
+                // Preenche apenas o bloco da categoria da reserva editada
+                [cat]: { ...EMPTY_FORM[cat], ...raw },
+            } as NewReservationFormData;
+        }
+        return { ...EMPTY_FORM, paidById: currentUserId };
     });
+
     const createReservation = useCreateReservation(tripId);
+    const updateReservation = useUpdateReservation(tripId);
+    const isPending = createReservation.isPending || updateReservation.isPending;
 
     function update(updates: Partial<NewReservationFormData>) {
         setForm((prev) => ({ ...prev, ...updates }));
@@ -81,18 +102,24 @@ export function NewReservationModal({
 
     function handleSubmit() {
         if (!isValid) return;
-        createReservation.mutate(
-            {
-                category: toUpperEnum<ReservationCategoryUpper>(form.category!),
-                title: form.title,
-                subtitle: form.subtitle || undefined,
-                amount: Number(form.amount),
-                paidById: form.paidById || undefined,
-                notes: form.notes || undefined,
-                details: form.category ? (form[form.category] as any) : undefined,
-            },
-            { onSuccess: () => onClose() },
-        );
+        const payload = {
+            category: toUpperEnum<ReservationCategoryUpper>(form.category!),
+            title: form.title,
+            subtitle: form.subtitle || undefined,
+            amount: Number(form.amount),
+            paidById: form.paidById || undefined,
+            notes: form.notes || undefined,
+            details: form.category ? (form[form.category] as any) : undefined,
+        };
+
+        if (isEditing && editingReservation) {
+            updateReservation.mutate(
+                { reservationId: editingReservation.id, payload },
+                { onSuccess: () => onClose() },
+            );
+        } else {
+            createReservation.mutate(payload, { onSuccess: () => onClose() });
+        }
     }
 
     const selectedCategory = RESERVATION_CATEGORIES.find((c) => c.value === form.category);
@@ -105,14 +132,14 @@ export function NewReservationModal({
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-label="Adicionar nova reserva"
+                aria-label={isEditing ? "Editar reserva" : "Adicionar nova reserva"}
                 className="w-full max-w-[560px] rounded-xl bg-white shadow-xl dark:bg-neutral-900"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-4 dark:border-neutral-800 sm:px-5">
                     <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                        <Plus className="h-4 w-4" />
-                        Nova reserva
+                        {isEditing ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                        {isEditing ? "Editar reserva" : "Nova reserva"}
                     </h2>
                     <button
                         type="button"
@@ -267,10 +294,10 @@ export function NewReservationModal({
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!isValid || createReservation.isPending}
+                        disabled={!isValid || isPending}
                         className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {createReservation.isPending ? "Salvando..." : "Salvar reserva"}
+                        {isPending ? "Salvando..." : isEditing ? "Salvar alterações" : "Salvar reserva"}
                     </button>
                 </div>
             </div>

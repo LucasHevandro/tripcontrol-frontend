@@ -23,10 +23,10 @@ export default function ReservationsPage({
     if (isLoading) {
         return (
             <div className="space-y-1">
-                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200" />
+                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-700" />
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     {Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} className="h-24 animate-pulse rounded-xl bg-neutral-200" />
+                        <div key={i} className="h-24 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700" />
                     ))}
                 </div>
             </div>
@@ -35,7 +35,7 @@ export default function ReservationsPage({
 
     if (isError) return (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-neutral-500">Erro ao carregar Reservas.</p>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar Reservas.</p>
         </div>
     );
 
@@ -48,7 +48,7 @@ export default function ReservationsPage({
         <div className="space-y-1">
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-lg font-semibold text-neutral-900">
+                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                         Gerenciamento de reservas
                     </h1>
                     <p className="text-sm text-neutral-400">
@@ -87,6 +87,7 @@ export default function ReservationsPage({
                 {filtered.map((res) => (
                     <ReservationCard
                         key={res.id}
+                        tripId={tripId}
                         reservation={{
                             ...res,
                             warning: res.warning ?? undefined,

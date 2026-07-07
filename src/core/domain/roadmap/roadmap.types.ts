@@ -1,6 +1,6 @@
 import type { ReservationStatus } from '../reservation/reservation.types';
 
-export type ActivityStatus = 'UPCOMING' | 'CURRENT' | 'COMPLETED';
+export type ActivityStatus = 'upcoming' | 'current' | 'completed';
 export type CostType = 'FREE' | 'TOTAL' | 'PER_PERSON';
 
 export interface RoadmapActivity {

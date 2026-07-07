@@ -4,7 +4,6 @@ import { use } from "react";
 import { useRoadmap } from "@/hooks/roadmap/use-roadmap";
 import { DaySelector } from "@/components/roadmap/day-selector";
 import { ActiveReservations } from "@/components/roadmap/active-reservations";
-import { DayChecklist } from "@/components/roadmap/day-checklist";
 import { ActivityTrigger } from "@/components/roadmap/activity-trigger";
 
 export default function RoadmapPage({
@@ -18,8 +17,8 @@ export default function RoadmapPage({
     if (isLoading) {
         return (
             <div className="space-y-1">
-                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200" />
-                <div className="h-64 w-full animate-pulse rounded-xl bg-neutral-200" />
+                <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+                <div className="h-64 w-full animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700" />
             </div>
         );
     }
@@ -27,7 +26,7 @@ export default function RoadmapPage({
     if (isError || !data) {
         return (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-sm text-neutral-500">Erro ao carregar roteiro.</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar roteiro.</p>
             </div>
         );
     }
@@ -41,7 +40,7 @@ export default function RoadmapPage({
         <div className="space-y-1">
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-lg font-semibold text-neutral-900">
+                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                         Planejamento de roteiro
                     </h1>
                     <p className="text-sm text-neutral-400">
@@ -58,6 +57,7 @@ export default function RoadmapPage({
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_280px]">
                 <div>
                     <DaySelector
+                        tripId={tripId}
                         days={data.days}
                         defaultSelectedIndex={defaultDayIndex}
                     />

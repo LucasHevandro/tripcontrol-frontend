@@ -1,13 +1,30 @@
+"use client";
+
+import { useState } from "react";
+import { Trash2 } from "lucide-react";
 import { getCategoryColor, getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
+import { useDeleteExpense } from "@/hooks/expenses/use-expenses";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { Expense } from "@/core/domain/expense/expense.types";
 
 interface ExpensesTableProps {
+    tripId: string;
     expenses: Expense[];
 }
 
-export function ExpensesTable({ expenses }: ExpensesTableProps) {
+export function ExpensesTable({ tripId, expenses }: ExpensesTableProps) {
+    const deleteExpense = useDeleteExpense(tripId);
+    const [toDelete, setToDelete] = useState<Expense | null>(null);
+
+    function handleConfirmDelete() {
+        if (!toDelete) return;
+        deleteExpense.mutate(toDelete.id, {
+            onSuccess: () => setToDelete(null),
+        });
+    }
+
     return (
         <div>
             <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
@@ -15,14 +32,15 @@ export function ExpensesTable({ expenses }: ExpensesTableProps) {
             </h2>
 
             <div className="-mx-5 mt-3 overflow-x-auto px-5">
-                <div className="min-w-[480px]">
+                <div className="min-w-[520px]">
                     {/* Cabeçalho */}
-                    <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-x-4 border-b border-neutral-100 pb-2 text-xs text-neutral-400 dark:border-neutral-700 dark:text-neutral-500">
+                    <div className="grid grid-cols-[1fr_auto_auto_auto_auto_32px] gap-x-4 border-b border-neutral-100 pb-2 text-xs text-neutral-400 dark:border-neutral-700 dark:text-neutral-500">
                         <span>Descrição</span>
                         <span>Pago por</span>
                         <span>Categoria</span>
                         <span>Data</span>
                         <span className="text-right">Valor</span>
+                        <span aria-hidden="true" />
                     </div>
 
                     {expenses.length === 0 ? (
@@ -36,7 +54,7 @@ export function ExpensesTable({ expenses }: ExpensesTableProps) {
                             return (
                                 <div
                                     key={expense.id}
-                                    className="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-x-4 border-b border-neutral-100 py-3 text-sm dark:border-neutral-700"
+                                    className="group grid grid-cols-[1fr_auto_auto_auto_auto_32px] items-center gap-x-4 border-b border-neutral-100 py-3 text-sm dark:border-neutral-700"
                                 >
                                     <span className="font-medium text-neutral-900 dark:text-neutral-100">
                                         {expense.description}
@@ -60,12 +78,36 @@ export function ExpensesTable({ expenses }: ExpensesTableProps) {
                                     <span className="text-right font-semibold text-neutral-900 dark:text-neutral-100">
                                         {formatCurrencyBRL(expense.amount)}
                                     </span>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setToDelete(expense)}
+                                        aria-label={`Excluir despesa ${expense.description}`}
+                                        className="flex h-7 w-7 items-center justify-center rounded-lg text-neutral-300 transition-colors hover:bg-rose-50 hover:text-rose-500 dark:text-neutral-600 dark:hover:bg-rose-950 dark:hover:text-rose-400"
+                                    >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                    </button>
                                 </div>
                             );
                         })
                     )}
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={toDelete !== null}
+                title="Excluir despesa"
+                message={
+                    toDelete
+                        ? `Tem certeza que deseja excluir "${toDelete.description}"? Esta ação não pode ser desfeita.`
+                        : ""
+                }
+                confirmLabel="Excluir"
+                variant="danger"
+                isLoading={deleteExpense.isPending}
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setToDelete(null)}
+            />
         </div>
     );
 }

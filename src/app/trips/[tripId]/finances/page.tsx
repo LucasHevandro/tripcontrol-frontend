@@ -3,7 +3,7 @@
 import { use } from "react";
 import { formatCurrencyBRL } from "@/lib/format";
 import { useExpenses, useExpenseSummary } from "@/hooks/expenses/use-expenses";
-import { FinanceStatCard } from "@/components/finances/finance-start-card";
+import { FinanceStatCard } from "@/components/finances/finance-stat-card";
 import { ExpensesTable } from "@/components/finances/expenses-table";
 import { CategoryBreakdownList } from "@/components/finances/category-breakdown";
 import { SettlementsList } from "@/components/finances/settlements-list";
@@ -79,7 +79,7 @@ export default function FinancesPage({
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_380px]">
                 <div className="space-y-6 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
-                    <ExpensesTable expenses={expensesData?.data ?? []} />
+                    <ExpensesTable tripId={tripId} expenses={expensesData?.data ?? []} />
                     <CategoryBreakdownList categories={summary?.categoryBreakdown ?? []} />
                 </div>
 

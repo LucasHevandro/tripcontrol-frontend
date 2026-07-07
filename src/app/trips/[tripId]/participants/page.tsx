@@ -117,7 +117,7 @@ export default function ParticipantsPage({
                     ))}
                 </div>
 
-                <SettlementSummary settlements={data.settlementSummary} />
+                <SettlementSummary tripId={tripId} settlements={data.settlementSummary} />
             </div>
         </div>
     );

@@ -107,6 +107,11 @@ export interface RoadmapActivity {
     note: string;
     status: ActivityStatus;
     badge?: string;
+    // Campos crus para edição
+    date?: string;
+    startTime?: string;
+    costAmount?: number | null;
+    costType?: string;
 }
 
 export interface RoadmapDay {
@@ -144,6 +149,10 @@ export interface ReservationDetail {
         icon: "voucher" | "tickets" | "pay";
         href: string;
     };
+    // Campos crus para edição
+    notes?: string;
+    rawDetails?: Record<string, string>;
+    paidById?: string | null;
 }
 
 export interface ReservationsData {

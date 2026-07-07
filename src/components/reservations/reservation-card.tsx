@@ -1,10 +1,18 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import {
-    Pencil, Ticket, CreditCard, FileText,
+    Pencil, Trash2, Ticket, CreditCard, FileText,
     AlertTriangle, type LucideIcon,
 } from "lucide-react";
 import type { ReservationDetail } from "@/types/trip";
 import { formatCurrencyBRL } from "@/lib/format";
+import { useDeleteReservation } from "@/hooks/reservations/use-reservations";
+import { useParticipants } from "@/hooks/participants/use-participants";
+import { useUser } from "@/contexts/user-context";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { NewReservationModal } from "./new-reservation-modal";
 
 const BANNER: Record<ReservationDetail["category"], { bg: string; emoji: string }> = {
     hotel: { bg: "bg-emerald-50 dark:bg-emerald-950", emoji: "🏨" },
@@ -33,16 +41,35 @@ const ACTION_ICON: Record<string, LucideIcon> = {
 };
 
 interface ReservationCardProps {
+    tripId: string;
     reservation: ReservationDetail;
 }
 
-export function ReservationCard({ reservation: res }: ReservationCardProps) {
+export function ReservationCard({ tripId, reservation: res }: ReservationCardProps) {
+    const deleteReservation = useDeleteReservation(tripId);
+    const { data: participantsData } = useParticipants(tripId);
+    const { user } = useUser();
+    const [isEditing, setIsEditing] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+
+    const participants = (participantsData?.participants ?? []).map((p) => ({
+        id: p.id,
+        name: p.name,
+    }));
+
+    function handleDelete() {
+        deleteReservation.mutate(res.id, {
+            onSuccess: () => setConfirmDelete(false),
+        });
+    }
+
     const banner = BANNER[res.category];
     const statusBadge = STATUS_BADGE[res.status];
     const detailIcons = DETAIL_ICONS[res.category];
     const ActionIcon = res.primaryAction ? ACTION_ICON[res.primaryAction.icon] : null;
 
     return (
+        <>
         <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
             <div className={`flex h-28 items-center justify-center ${banner.bg}`}>
                 <span className="text-5xl">{banner.emoji}</span>
@@ -98,14 +125,45 @@ export function ReservationCard({ reservation: res }: ReservationCardProps) {
                         )}
                         <button
                             type="button"
+                            onClick={() => setIsEditing(true)}
                             className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                         >
                             <Pencil className="h-3.5 w-3.5" />
                             Editar
                         </button>
+                        <button
+                            type="button"
+                            onClick={() => setConfirmDelete(true)}
+                            aria-label={`Excluir reserva ${res.title}`}
+                            className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200 text-neutral-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-500 dark:border-neutral-700 dark:hover:border-rose-800 dark:hover:bg-rose-950 dark:hover:text-rose-400"
+                        >
+                            <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        {isEditing && (
+            <NewReservationModal
+                tripId={tripId}
+                participants={participants}
+                currentUserId={user?.id ?? ""}
+                editingReservation={res}
+                onClose={() => setIsEditing(false)}
+            />
+        )}
+
+        <ConfirmDialog
+            open={confirmDelete}
+            title="Excluir reserva"
+            message={`Tem certeza que deseja excluir "${res.title}"? Esta ação não pode ser desfeita.`}
+            confirmLabel="Excluir"
+            variant="danger"
+            isLoading={deleteReservation.isPending}
+            onConfirm={handleDelete}
+            onCancel={() => setConfirmDelete(false)}
+        />
+        </>
     );
 }

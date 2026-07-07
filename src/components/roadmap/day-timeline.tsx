@@ -2,6 +2,7 @@ import type { RoadmapDay } from "@/types/trip";
 import { ActivityCard } from "./activity-card";
 
 interface DayTimelineProps {
+    tripId: string;
     day: RoadmapDay;
 }
 
@@ -11,7 +12,7 @@ const STATUS_DOT: Record<string, string> = {
     upcoming: "bg-neutral-300 dark:bg-neutral-600",
 };
 
-export function DayTimeline({ day }: DayTimelineProps) {
+export function DayTimeline({ tripId, day }: DayTimelineProps) {
     return (
         <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
             <div className="flex items-center justify-between text-sm text-neutral-500 dark:text-neutral-400">
@@ -35,7 +36,7 @@ export function DayTimeline({ day }: DayTimelineProps) {
                                 <div className="w-px flex-1 bg-neutral-100 dark:bg-neutral-700" />
                             </div>
                             <div className="flex-1 pb-4 pt-2">
-                                <ActivityCard activity={activity} />
+                                <ActivityCard tripId={tripId} activity={activity} />
                             </div>
                         </li>
                     ))}

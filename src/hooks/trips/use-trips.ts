@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
+import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import type { CreateTripPayload } from '@/core/domain/trip/trip.types';
 
@@ -28,8 +29,8 @@ export function useCreateTrip() {
             addToast('Viagem criada! Convide os participantes para começar.');
             router.push(`/trips/${data.id}/dashboard`);
         },
-        onError: () => {
-            addToast('Erro ao criar viagem', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao criar viagem'), 'error');
         },
     });
 }
@@ -45,8 +46,8 @@ export function useDeleteTrip() {
             queryClient.invalidateQueries({ queryKey: ['trips'] });
             addToast('Viagem removida com sucesso');
         },
-        onError: () => {
-            addToast('Erro ao remover viagem', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao remover viagem'), 'error');
         },
     });
 }

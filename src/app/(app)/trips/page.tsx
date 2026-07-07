@@ -24,7 +24,7 @@ export default function MyTripsPage() {
         <div className="space-y-1">
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-lg font-semibold text-neutral-900">
+                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                         Minhas viagens
                     </h1>
                     <p className="text-sm text-neutral-400">

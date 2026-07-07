@@ -186,12 +186,6 @@ export default function LoginPage() {
                                 </div>
                             </div>
 
-                            <div className="flex justify-end">
-                                <a href="/esqueci-senha" className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
-                                    Esqueci minha senha
-                                </a>
-                            </div>
-
                             <button
                                 type="submit"
                                 disabled={loginMutation.isPending}

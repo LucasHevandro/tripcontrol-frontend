@@ -1,17 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, MapPin, Clock, Wallet, FileText, Plus } from "lucide-react";
+import { X, MapPin, Clock, Wallet, FileText, Plus, Pencil } from "lucide-react";
 import { ACTIVITY_EMOJIS, DURATION_OPTIONS } from "@/lib/activity-options";
 import { formatCurrencyBRL } from "@/lib/format";
-import type { NewActivityFormData } from "@/types/trip";
-import { useCreateActivity } from "@/hooks/roadmap/use-roadmap";
+import type { NewActivityFormData, RoadmapActivity } from "@/types/trip";
+import { useCreateActivity, useUpdateActivity } from "@/hooks/roadmap/use-roadmap";
 import { toUpperEnum } from "@/lib/utils";
 import { CostType } from "@/core/domain/roadmap/roadmap.types";
 
 interface NewActivityModalProps {
     tripId: string;
     defaultDate?: string;
+    editingActivity?: RoadmapActivity | null;
     onClose: () => void;
     onSave?: (data: NewActivityFormData) => void;
 }
@@ -38,21 +39,31 @@ function getTodayISO() {
 export function NewActivityModal({
     tripId,
     defaultDate,
+    editingActivity,
     onClose,
     onSave,
 }: NewActivityModalProps) {
+    const isEditing = !!editingActivity;
+
     const [form, setForm] = useState<NewActivityFormData>({
-        emoji: "🎯",
-        title: "",
-        date: defaultDate ?? getTodayISO(),
-        startTime: "",
-        duration: "1h",
-        location: "",
-        costAmount: "",
-        costType: "free",
-        note: "",
+        emoji: editingActivity?.emoji ?? "🎯",
+        title: editingActivity?.title ?? "",
+        date: editingActivity?.date ?? defaultDate ?? getTodayISO(),
+        startTime: editingActivity?.startTime ?? editingActivity?.time ?? "",
+        duration: editingActivity?.duration || "1h",
+        location: editingActivity?.location ?? "",
+        costAmount:
+            editingActivity?.costAmount != null
+                ? String(editingActivity.costAmount)
+                : "",
+        costType:
+            (editingActivity?.costType?.toLowerCase() as NewActivityFormData["costType"]) ??
+            "free",
+        note: editingActivity?.note ?? "",
     });
     const createActivity = useCreateActivity(tripId);
+    const updateActivity = useUpdateActivity(tripId);
+    const isPending = createActivity.isPending || updateActivity.isPending;
 
     function update(updates: Partial<NewActivityFormData>) {
         setForm((prev) => ({ ...prev, ...updates }));
@@ -80,22 +91,28 @@ export function NewActivityModal({
 
     function handleSubmit() {
         if (!isValid) return;
-        createActivity.mutate(
-            {
-                emoji: form.emoji,
-                title: form.title,
-                date: form.date,
-                startTime: form.startTime,
-                duration: form.duration || undefined,
-                location: form.location || undefined,
-                costAmount: form.costType !== "free" && form.costAmount
-                    ? Number(form.costAmount)
-                    : undefined,
-                costType: toUpperEnum<CostType>(form.costType),
-                note: form.note || undefined,
-            },
-            { onSuccess: () => onClose() },
-        );
+        const payload = {
+            emoji: form.emoji,
+            title: form.title,
+            date: form.date,
+            startTime: form.startTime,
+            duration: form.duration || undefined,
+            location: form.location || undefined,
+            costAmount: form.costType !== "free" && form.costAmount
+                ? Number(form.costAmount)
+                : undefined,
+            costType: toUpperEnum<CostType>(form.costType),
+            note: form.note || undefined,
+        };
+
+        if (isEditing && editingActivity) {
+            updateActivity.mutate(
+                { activityId: editingActivity.id, payload },
+                { onSuccess: () => onClose() },
+            );
+        } else {
+            createActivity.mutate(payload, { onSuccess: () => onClose() });
+        }
     }
 
     return (
@@ -106,14 +123,14 @@ export function NewActivityModal({
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-label="Adicionar nova atividade"
+                aria-label={isEditing ? "Editar atividade" : "Adicionar nova atividade"}
                 className="w-full max-w-[520px] rounded-xl bg-white shadow-xl dark:bg-neutral-900"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-4 dark:border-neutral-800 sm:px-5">
                     <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                        <Plus className="h-4 w-4" />
-                        Nova atividade
+                        {isEditing ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                        {isEditing ? "Editar atividade" : "Nova atividade"}
                     </h2>
                     <button
                         type="button"
@@ -316,10 +333,10 @@ export function NewActivityModal({
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!isValid || createActivity.isPending}
+                        disabled={!isValid || isPending}
                         className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {createActivity.isPending ? "Salvando..." : "Salvar atividade"}
+                        {isPending ? "Salvando..." : isEditing ? "Salvar alterações" : "Salvar atividade"}
                     </button>
                 </div>
             </div>

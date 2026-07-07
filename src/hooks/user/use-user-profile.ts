@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
+import { getErrorMessage } from '@/lib/utils';
 import type {
     UpdateProfilePayload,
     UpdatePasswordPayload,
@@ -66,8 +67,8 @@ export function useUpdateAvatar() {
             queryClient.setQueryData(['user', 'profile'], data);
             addToast('Foto atualizada com sucesso!');
         },
-        onError: () => {
-            addToast('Erro ao atualizar foto', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao atualizar foto'), 'error');
         },
     });
 }
@@ -84,8 +85,8 @@ export function useUpdatePreferences() {
             queryClient.setQueryData(['user', 'profile'], data);
             addToast('Preferências salvas!');
         },
-        onError: () => {
-            addToast('Erro ao salvar preferências', 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao salvar preferências'), 'error');
         },
     });
 }

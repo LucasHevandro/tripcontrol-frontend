@@ -47,7 +47,7 @@ export function useRegister() {
         onSuccess: (data) => {
             queryClient.setQueryData(['auth', 'me'], data.user);
             addToast('Conta criada com sucesso!');
-            router.push('/trips');
+            router.push(redirectTo);
         },
         onError: (error) => {
             addToast(getErrorMessage(error, 'Erro ao criar conta'), 'error');

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users } from "lucide-react";
 import { useLogin, useRegister } from "@/hooks/auth/use-auth";
 import { useSearchParams } from "next/navigation";
@@ -32,7 +32,7 @@ function getPasswordStrength(password: string) {
     return { level: 4, label: "Senha forte", barColor: "bg-emerald-500", textColor: "text-emerald-600" };
 }
 
-export default function LoginPage() {
+function LoginContent() {
     const [tab, setTab] = useState<"entrar" | "criar">("entrar");
 
     // Login
@@ -365,6 +365,18 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen w-full items-center justify-center bg-[#f7f6f1] dark:bg-neutral-950 text-neutral-500">
+                <span className="text-sm font-medium">Carregando...</span>
+            </div>
+        }>
+            <LoginContent />
+        </Suspense>
     );
 }
 

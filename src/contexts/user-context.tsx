@@ -1,8 +1,14 @@
-// contexts/user-context.tsx
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    type ReactNode,
+} from "react";
+import { tokenStorage } from "@/infrastructure/http/api-client";
+import { HttpAuthRepository } from "@/infrastructure/repositories/auth.repository";
 
 export interface User {
     id: string;
@@ -14,32 +20,47 @@ interface UserContextValue {
     user: User | null;
     isLoading: boolean;
     logout: () => void;
+    setUser: (user: User | null) => void;
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
 
-const MOCK_USER: User = {
-    id: "mock-user-1",
-    name: "Lucas Hevandro",
-    email: "lucas@email.com",
-};
+const authRepository = new HttpAuthRepository();
 
 export function UserProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(MOCK_USER);
-    const [isLoading] = useState(false);
-    const router = useRouter();
+    const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    function logout() {
-        // TODO: quando a autenticação real existir, troque por:
-        // - limpar o token (cookie httpOnly idealmente é limpo pelo backend
-        //   via POST /auth/logout; se for localStorage, limpar aqui)
-        // - invalidar cache do TanStack Query se estiver usando
-        setUser(null);
-        router.push("/login");
+    // Ao montar, verifica se há token válido e busca o usuário
+    useEffect(() => {
+        const token = tokenStorage.getAccessToken();
+        if (!token) {
+            setIsLoading(false);
+            return;
+        }
+
+        authRepository
+            .me()
+            .then((userData) => setUser(userData))
+            .catch(() => {
+                // Token inválido ou expirado — limpa e deixa sem usuário
+                tokenStorage.clearTokens();
+            })
+            .finally(() => setIsLoading(false));
+    }, []);
+
+    async function logout() {
+        try {
+            await authRepository.logout();
+        } finally {
+            setUser(null);
+            tokenStorage.clearTokens();
+            window.location.href = '/login';
+        }
     }
 
     return (
-        <UserContext.Provider value={{ user, isLoading, logout }}>
+        <UserContext.Provider value={{ user, isLoading, logout, setUser }}>
             {children}
         </UserContext.Provider>
     );

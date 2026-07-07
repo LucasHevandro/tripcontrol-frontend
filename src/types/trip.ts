@@ -1,0 +1,342 @@
+// types/trip.ts
+
+export type TripStatus = "PLANNING" | "ONGOING" | "COMPLETED";
+
+export interface TripParticipant {
+    id: string;
+    name: string;
+    /** Saldo em reais. Positivo = a receber, negativo = a pagar. */
+    balance: number;
+}
+
+export interface Expense {
+    id: string;
+    description: string;
+    category: string;
+    paidByParticipantId: string;
+    paidByName: string;
+    amount: number;
+}
+
+export type ActivityStatus = "completed" | "current" | "upcoming";
+
+export interface Activity {
+    id: string;
+    time: string;
+    title: string;
+    location: string;
+    status: ActivityStatus;
+}
+
+export interface TripSummary {
+    id: string;
+    name: string;
+    destination: string;
+    startDate: string;
+    endDate: string;
+    status: TripStatus;
+    participantCount: number;
+}
+
+export interface TripDashboardData {
+    trip: TripSummary;
+    totalSpent: number;
+    budget: number;
+    expenseCount: number;
+    activityCount: number;
+    completedActivityCount: number;
+    reservationCount: number;
+    allReservationsConfirmed: boolean;
+    recentExpenses: Expense[];
+    todayLabel: string;
+    todayActivities: Activity[];
+    participants: TripParticipant[];
+    newTripStatus: NewTripStatus;
+}
+
+export interface CategoryBreakdown {
+    category: string;
+    total: number;
+    percentage: number;
+}
+
+export interface Settlement {
+    id: string;
+    fromParticipantId: string;
+    fromName: string;
+    toParticipantId: string;
+    toName: string;
+    amount: number;
+    description: string;
+}
+
+export interface FinancesData {
+    tripName: string;
+    tripPeriod: string;
+    totalSpent: number;
+    expenseCount: number;
+    perPersonAverage: number;
+    participantCount: number;
+    largestExpenseAmount: number;
+    largestExpenseDescription: string;
+    groupBalanceLabel: string;
+    expenses: (Expense & { date: string })[];
+    categoryBreakdown: CategoryBreakdown[];
+    settlements: Settlement[];
+    participants: TripParticipant[];
+}
+
+export type ReservationStatus = "confirmed" | "pending" | "cancelled";
+
+export interface ActiveReservation {
+    id: string;
+    title: string;
+    subtitle: string;
+    status: ReservationStatus;
+    icon: "hotel" | "car" | "flight" | "boat";
+}
+
+export interface RoadmapActivity {
+    id: string;
+    time: string;
+    title: string;
+    emoji: string;
+    duration: string;
+    location: string;
+    costLabel: string;
+    note: string;
+    status: ActivityStatus;
+    badge?: string;
+    // Campos crus para edição
+    date?: string;
+    startTime?: string;
+    costAmount?: number | null;
+    costType?: string;
+}
+
+export interface RoadmapDay {
+    date: string;
+    label: string;
+    shortLabel: string;
+    fullLabel: string;
+    activityCount: number;
+    participantCount: number;
+    activities: RoadmapActivity[];
+}
+
+export interface RoadmapData {
+    tripName: string;
+    tripPeriod: string;
+    tripDurationDays: number;
+    days: RoadmapDay[];
+    activeReservations: ActiveReservation[];
+}
+
+export type ReservationCategory = "hotel" | "flight" | "car" | "tour";
+
+export interface ReservationDetail {
+    id: string;
+    category: ReservationCategory;
+    status: ReservationStatus;
+    title: string;
+    subtitle: string;
+    details: string[];
+    amount: number;
+    amountSublabel: string;
+    warning?: string;
+    primaryAction?: {
+        label: string;
+        icon: "voucher" | "tickets" | "pay";
+        href: string;
+    };
+    // Campos crus para edição
+    notes?: string;
+    rawDetails?: Record<string, string>;
+    paidById?: string | null;
+}
+
+export interface ReservationsData {
+    tripName: string;
+    tripPeriod: string;
+    totalReservations: number;
+    confirmedCount: number;
+    totalInvested: number;
+    nextCheckinLabel: string;
+    nextCheckinSublabel: string;
+    nextFlightLabel: string;
+    nextFlightSublabel: string;
+    reservations: ReservationDetail[];
+}
+
+export type ParticipantRole = "ORGANIZER" | "MEMBER";
+
+export interface ParticipantDetail {
+    id: string;
+    name: string;
+    email: string;
+    role: ParticipantRole;
+    totalPaid: number;
+    individualQuota: number;
+    balance: number;
+}
+
+export interface ParticipantsData {
+    tripName: string;
+    tripPeriod: string;
+    participantCount: number;
+    maxParticipants: number;
+    organizerCount: number;
+    totalSpent: number;
+    perPersonAverage: number;
+    pendingSettlementsCount: number;
+    pendingSettlementsAmount: number;
+    groupStatusLabel: string;
+    groupStatusSublabel: string;
+    inviteLink: string;
+    participants: ParticipantDetail[];
+    settlementSummary: Settlement[];
+}
+
+export interface TripCard {
+    id: string;
+    name: string;
+    destination: string;
+    startDate: string;
+    endDate: string;
+    status: TripStatus;
+    emoji: string;
+    bannerClassName: string;
+    participants: { id: string; name: string }[];
+    extraParticipantCount: number;
+    totalSpent: number;
+    budget: number;
+}
+
+export interface MyTripsData {
+    activeTripCount: number;
+    completedTripCount: number;
+    trips: TripCard[];
+}
+
+export type TripType = "friends" | "couple" | "family" | "work" | "tour" | "other";
+
+export type DestinationType = "beach" | "city" | "countryside" | "international";
+
+export interface NewTripFormData {
+    name: string;
+    destination: string;
+    destinationType: DestinationType | null;
+    startDate: string;
+    endDate: string;
+    tripType: TripType | null;
+    budget: string;
+    description: string;
+}
+
+export interface NewTripStatus {
+    hasInvitedParticipants: boolean;
+    hasRoadmapActivities: boolean;
+    hasExpenses: boolean;
+}
+
+export interface UserProfile {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl: string | null;
+    language: string;
+    currency: string;
+    notifications: {
+        email: boolean;
+        expenseAlerts: boolean;
+        roadmapReminders: boolean;
+    };
+}
+
+export type ExpenseCategory =
+    | "Hospedagem"
+    | "Alimentação"
+    | "Transporte"
+    | "Lazer"
+    | "Compras"
+    | "Outro";
+
+export type ExpenseSplitType = "equal" | "custom";
+
+export interface NewExpenseFormData {
+    description: string;
+    amount: string;
+    date: string;
+    category: ExpenseCategory | null;
+    paidById: string;
+    splitType: ExpenseSplitType;
+    splitParticipantIds: string[];
+    receiptFile: File | null;
+    notes: string;
+}
+
+export interface NewActivityFormData {
+    emoji: string;
+    title: string;
+    date: string;
+    startTime: string;
+    duration: string;
+    location: string;
+    costAmount: string;
+    costType: "total" | "per_person" | "free";
+    note: string;
+}
+
+export interface ReservationFieldsHotel {
+    checkIn: string;
+    checkOut: string;
+    guestCount: string;
+    roomCount: string;
+    address: string;
+    reservationCode: string;
+}
+
+export interface ReservationFieldsFlight {
+    departureDate: string;
+    departureTime: string;
+    arrivalTime: string;
+    flightNumber: string;
+    returnDate: string;
+    returnTime: string;
+    returnFlightNumber: string;
+    passengerCount: string;
+    cabinClass: string;
+    locator: string;
+}
+
+export interface ReservationFieldsCar {
+    pickupDate: string;
+    pickupTime: string;
+    returnDate: string;
+    returnTime: string;
+    pickupLocation: string;
+    carModel: string;
+    reservationCode: string;
+}
+
+export interface ReservationFieldsTour {
+    date: string;
+    startTime: string;
+    endTime: string;
+    peopleCount: string;
+    meetingPoint: string;
+    warning: string;
+}
+
+export interface NewReservationFormData {
+    category: ReservationCategory | null;
+    title: string;
+    subtitle: string;
+    amount: string;
+    paidById: string;
+    notes: string;
+    hotel: ReservationFieldsHotel;
+    flight: ReservationFieldsFlight;
+    car: ReservationFieldsCar;
+    tour: ReservationFieldsTour;
+}

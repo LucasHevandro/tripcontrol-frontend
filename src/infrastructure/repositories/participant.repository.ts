@@ -1,5 +1,5 @@
 import { apiClient } from '../http/api-client';
-import type { IParticipantRepository } from '@/core/domain/participant/participant.repository.interface';
+import type { IParticipantRepository, JoinResult } from '@/core/domain/participant/participant.repository.interface';
 import type {
     ParticipantsResponse,
     Settlement,
@@ -31,8 +31,9 @@ export class HttpParticipantRepository implements IParticipantRepository {
         return data;
     }
 
-    async joinByToken(token: string): Promise<void> {
-        await apiClient.post(`/trips/join/${token}`);
+    async joinByToken(token: string): Promise<JoinResult> {
+        const { data } = await apiClient.post<JoinResult>(`/trips/join/${token}`);
+        return data;
     }
 
     async remove(tripId: string, participantId: string): Promise<void> {

@@ -69,3 +69,15 @@ export function useNotifyDebtors(tripId: string) {
         },
     });
 }
+
+export function useJoinTrip() {
+    const { participant } = useRepositories();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (token: string) => participant.joinByToken(token),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['trips'] });
+        },
+    });
+}

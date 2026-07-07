@@ -26,8 +26,12 @@ const themeScript = `
       var resolved = theme === 'system'
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         : theme;
-      if (resolved === 'dark') document.documentElement.classList.add('dark');
-    } catch(e) {}
+      if (resolved === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (e) { }
   })();
 `;
 

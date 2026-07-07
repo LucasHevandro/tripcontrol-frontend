@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users } from "lucide-react";
 import { useLogin, useRegister } from "@/hooks/auth/use-auth";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const FEATURES = [
     { icon: Wallet, bg: "bg-amber-100", iconColor: "text-amber-700", text: "Controle financeiro compartilhado e acertos automáticos" },
@@ -11,6 +12,11 @@ const FEATURES = [
     { icon: Building2, bg: "bg-rose-100", iconColor: "text-rose-700", text: "Gerenciamento de reservas e checklist integrados" },
     { icon: Users, bg: "bg-violet-100", iconColor: "text-violet-700", text: "Convide participantes e gerencie a viagem juntos" },
 ];
+
+const inputClass =
+    "w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500";
+
+const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
 
 function getPasswordStrength(password: string) {
     if (password.length === 0) return { level: 0, label: "", barColor: "", textColor: "" };
@@ -49,7 +55,7 @@ export default function LoginPage() {
     const passwordsMatch = confirmPassword.length === 0 || confirmPassword === signupPassword;
 
     const searchParams = useSearchParams();
-    const redirectTo = searchParams.get('redirect') ?? '/trips';
+    const redirectTo = searchParams.get("redirect") ?? "/trips";
 
     function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -75,9 +81,13 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen w-full flex bg-[#f7f6f1]">
-            {/* Coluna esquerda */}
-            <div className="hidden md:flex md:w-1/2 lg:w-[40%] flex-col justify-between bg-[#1f9d6f] px-10 py-12 text-white">
+        <div className="relative flex min-h-screen w-full bg-[#f7f6f1] dark:bg-neutral-950">
+            {/* Toggle de tema — canto superior direito */}
+            <div className="absolute right-4 top-4 z-10">
+                <ThemeToggle />
+            </div>
+            {/* Coluna esquerda — sempre verde, igual em ambos os temas */}
+            <div className="hidden flex-col justify-between bg-[#1f9d6f] px-10 py-12 text-white md:flex md:w-1/2 lg:w-[40%]">
                 <div>
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/15">
@@ -108,26 +118,33 @@ export default function LoginPage() {
             </div>
 
             {/* Coluna direita */}
-            <div className="flex w-full md:w-1/2 lg:w-[60%] items-center justify-center px-6 py-12">
+            <div className="flex w-full items-center justify-center px-6 py-12 dark:bg-neutral-950 md:w-1/2 lg:w-[60%]">
                 <div className="w-full max-w-[380px]">
-                    <h2 className="text-2xl font-bold text-neutral-900">
+                    <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
                         {tab === "entrar" ? "Bem-vindo de volta" : "Crie sua conta"}
                     </h2>
-                    <p className="mt-1 text-sm text-neutral-500">
-                        {tab === "entrar" ? "Entre na sua conta para continuar" : "Comece a planejar sua próxima viagem em grupo"}
+                    <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                        {tab === "entrar"
+                            ? "Entre na sua conta para continuar"
+                            : "Comece a planejar sua próxima viagem em grupo"}
                     </p>
 
                     {/* Tabs */}
-                    <div className="mt-6 flex gap-6 border-b border-neutral-200">
+                    <div className="mt-6 flex gap-6 border-b border-neutral-200 dark:border-neutral-700">
                         {["entrar", "criar"].map((t) => (
                             <button
                                 key={t}
                                 type="button"
                                 onClick={() => setTab(t as "entrar" | "criar")}
-                                className={`relative pb-3 text-sm font-medium transition-colors ${tab === t ? "text-emerald-700" : "text-neutral-400 hover:text-neutral-600"}`}
+                                className={`relative pb-3 text-sm font-medium transition-colors ${tab === t
+                                    ? "text-emerald-700 dark:text-emerald-400"
+                                    : "text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300"
+                                    }`}
                             >
                                 {t === "entrar" ? "Entrar" : "Criar conta"}
-                                {tab === t && <span className="absolute bottom-0 left-0 h-[2px] w-full bg-emerald-600" />}
+                                {tab === t && (
+                                    <span className="absolute bottom-0 left-0 h-[2px] w-full bg-emerald-600 dark:bg-emerald-400" />
+                                )}
                             </button>
                         ))}
                     </div>
@@ -135,7 +152,7 @@ export default function LoginPage() {
                     {tab === "entrar" ? (
                         <form onSubmit={handleLogin} className="mt-6 space-y-4">
                             <div>
-                                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-neutral-700">E-mail</label>
+                                <label htmlFor="email" className={labelClass}>E-mail</label>
                                 <input
                                     id="email"
                                     type="email"
@@ -143,12 +160,12 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="seu@email.com"
-                                    className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                    className={inputClass}
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-neutral-700">Senha</label>
+                                <label htmlFor="password" className={labelClass}>Senha</label>
                                 <div className="relative">
                                     <input
                                         id="password"
@@ -157,16 +174,22 @@ export default function LoginPage() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                        className={`${inputClass} pr-10`}
                                     />
-                                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((v) => !v)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
+                                    >
                                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </button>
                                 </div>
                             </div>
 
                             <div className="flex justify-end">
-                                <a href="/esqueci-senha" className="text-sm font-medium text-emerald-700">Esqueci minha senha</a>
+                                <a href="/esqueci-senha" className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
+                                    Esqueci minha senha
+                                </a>
                             </div>
 
                             <button
@@ -178,19 +201,26 @@ export default function LoginPage() {
                             </button>
 
                             <div className="relative my-2 flex items-center">
-                                <div className="h-px flex-1 bg-neutral-200" />
-                                <span className="px-3 text-xs text-neutral-400">ou</span>
-                                <div className="h-px flex-1 bg-neutral-200" />
+                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
+                                <span className="px-3 text-xs text-neutral-400 dark:text-neutral-500">ou</span>
+                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
                             </div>
 
-                            <button type="button" className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50">
+                            <button
+                                type="button"
+                                className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                            >
                                 <GoogleIcon className="h-4 w-4" />
                                 Continuar com Google
                             </button>
 
-                            <p className="pt-1 text-center text-sm text-neutral-500">
+                            <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
                                 Não tem conta?{" "}
-                                <button type="button" onClick={() => setTab("criar")} className="font-medium text-emerald-700">
+                                <button
+                                    type="button"
+                                    onClick={() => setTab("criar")}
+                                    className="font-medium text-emerald-700 dark:text-emerald-400"
+                                >
                                     Cadastre-se grátis
                                 </button>
                             </p>
@@ -198,7 +228,7 @@ export default function LoginPage() {
                     ) : (
                         <form onSubmit={handleRegister} className="mt-6 space-y-4">
                             <div>
-                                <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium text-neutral-700">Nome completo</label>
+                                <label htmlFor="fullName" className={labelClass}>Nome completo</label>
                                 <input
                                     id="fullName"
                                     type="text"
@@ -206,12 +236,12 @@ export default function LoginPage() {
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     placeholder="Seu nome completo"
-                                    className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                    className={inputClass}
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="signupEmail" className="mb-1.5 block text-sm font-medium text-neutral-700">E-mail</label>
+                                <label htmlFor="signupEmail" className={labelClass}>E-mail</label>
                                 <input
                                     id="signupEmail"
                                     type="email"
@@ -219,24 +249,24 @@ export default function LoginPage() {
                                     value={signupEmail}
                                     onChange={(e) => setSignupEmail(e.target.value)}
                                     placeholder="seu@email.com"
-                                    className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                    className={inputClass}
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-neutral-700">Telefone</label>
+                                <label htmlFor="phone" className={labelClass}>Telefone</label>
                                 <input
                                     id="phone"
                                     type="tel"
                                     value={phone}
                                     onChange={(e) => setPhone(formatPhone(e.target.value))}
                                     placeholder="(00) 00000-0000"
-                                    className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                    className={inputClass}
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="signupPassword" className="mb-1.5 block text-sm font-medium text-neutral-700">Senha</label>
+                                <label htmlFor="signupPassword" className={labelClass}>Senha</label>
                                 <div className="relative">
                                     <input
                                         id="signupPassword"
@@ -246,9 +276,13 @@ export default function LoginPage() {
                                         value={signupPassword}
                                         onChange={(e) => setSignupPassword(e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                        className={`${inputClass} pr-10`}
                                     />
-                                    <button type="button" onClick={() => setShowSignupPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowSignupPassword((v) => !v)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
+                                    >
                                         {showSignupPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </button>
                                 </div>
@@ -256,16 +290,24 @@ export default function LoginPage() {
                                     <div className="mt-2">
                                         <div className="flex gap-1.5">
                                             {[0, 1, 2, 3].map((i) => (
-                                                <div key={i} className={`h-1 flex-1 rounded-full ${i < passwordStrength.level ? passwordStrength.barColor : "bg-neutral-200"}`} />
+                                                <div
+                                                    key={i}
+                                                    className={`h-1 flex-1 rounded-full ${i < passwordStrength.level
+                                                        ? passwordStrength.barColor
+                                                        : "bg-neutral-200 dark:bg-neutral-700"
+                                                        }`}
+                                                />
                                             ))}
                                         </div>
-                                        <p className={`mt-1.5 text-xs ${passwordStrength.textColor}`}>{passwordStrength.label}</p>
+                                        <p className={`mt-1.5 text-xs ${passwordStrength.textColor}`}>
+                                            {passwordStrength.label}
+                                        </p>
                                     </div>
                                 )}
                             </div>
 
                             <div>
-                                <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-neutral-700">Confirmar senha</label>
+                                <label htmlFor="confirmPassword" className={labelClass}>Confirmar senha</label>
                                 <div className="relative">
                                     <input
                                         id="confirmPassword"
@@ -274,13 +316,22 @@ export default function LoginPage() {
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder="••••••••"
-                                        className={`w-full rounded-lg border bg-white px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:ring-2 ${passwordsMatch ? "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20" : "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"}`}
+                                        className={`w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:ring-2 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500 ${passwordsMatch
+                                            ? "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:border-neutral-700"
+                                            : "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                                            }`}
                                     />
-                                    <button type="button" onClick={() => setShowConfirmPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword((v) => !v)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
+                                    >
                                         {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </button>
                                 </div>
-                                {!passwordsMatch && <p className="mt-1.5 text-xs text-rose-600">As senhas não coincidem</p>}
+                                {!passwordsMatch && (
+                                    <p className="mt-1.5 text-xs text-rose-600">As senhas não coincidem</p>
+                                )}
                             </div>
 
                             <button
@@ -292,19 +343,26 @@ export default function LoginPage() {
                             </button>
 
                             <div className="relative my-2 flex items-center">
-                                <div className="h-px flex-1 bg-neutral-200" />
-                                <span className="px-3 text-xs text-neutral-400">ou</span>
-                                <div className="h-px flex-1 bg-neutral-200" />
+                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
+                                <span className="px-3 text-xs text-neutral-400 dark:text-neutral-500">ou</span>
+                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
                             </div>
 
-                            <button type="button" className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50">
+                            <button
+                                type="button"
+                                className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                            >
                                 <GoogleIcon className="h-4 w-4" />
                                 Continuar com Google
                             </button>
 
-                            <p className="pt-1 text-center text-sm text-neutral-500">
+                            <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
                                 Já tem conta?{" "}
-                                <button type="button" onClick={() => setTab("entrar")} className="font-medium text-emerald-700">
+                                <button
+                                    type="button"
+                                    onClick={() => setTab("entrar")}
+                                    className="font-medium text-emerald-700 dark:text-emerald-400"
+                                >
                                     Entrar
                                 </button>
                             </p>

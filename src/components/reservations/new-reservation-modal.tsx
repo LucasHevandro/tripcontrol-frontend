@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Plus, Save, AlertCircle } from "lucide-react";
+import { X, Plus, AlertCircle } from "lucide-react";
 import { RESERVATION_CATEGORIES } from "@/lib/reservation-options";
 import { ReservationCategoryFields } from "./reservation-category-fields";
 import { formatCurrencyBRL } from "@/lib/format";
-import type { NewReservationFormData } from "@/types/trip";
-import { useToast } from "@/contexts/toast-context";
+import type { NewReservationFormData, ReservationCategory } from "@/types/trip";
 import { useCreateReservation } from "@/hooks/reservations/use-reservations";
 import { toUpperEnum } from "@/lib/utils";
-import type { ReservationCategory, ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
+import type { ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
 
 interface Participant {
     id: string;
@@ -37,6 +36,11 @@ const EMPTY_FORM: NewReservationFormData = {
     tour: { date: "", startTime: "", endTime: "", peopleCount: "", meetingPoint: "", warning: "" },
 };
 
+const inputClass =
+    "w-full rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500";
+
+const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
+
 export function NewReservationModal({
     tripId,
     participants,
@@ -44,7 +48,6 @@ export function NewReservationModal({
     onClose,
     onSave,
 }: NewReservationModalProps) {
-    const { addToast } = useToast();
     const [form, setForm] = useState<NewReservationFormData>({
         ...EMPTY_FORM,
         paidById: currentUserId,
@@ -56,9 +59,7 @@ export function NewReservationModal({
     }
 
     useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") onClose();
-        };
+        const handleKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose]);
@@ -68,13 +69,9 @@ export function NewReservationModal({
         return () => { document.body.style.overflow = ""; };
     }, []);
 
-    // Quando muda de categoria, preenche subtitle e title com sugestão
     function handleCategoryChange(category: ReservationCategory) {
         const found = RESERVATION_CATEGORIES.find((c) => c.value === category);
-        update({
-            category,
-            subtitle: found?.label ?? "",
-        });
+        update({ category, subtitle: found?.label ?? "" });
     }
 
     const isValid =
@@ -98,9 +95,7 @@ export function NewReservationModal({
         );
     }
 
-    const selectedCategory = RESERVATION_CATEGORIES.find(
-        (c) => c.value === form.category
-    );
+    const selectedCategory = RESERVATION_CATEGORIES.find((c) => c.value === form.category);
 
     return (
         <div
@@ -111,18 +106,18 @@ export function NewReservationModal({
                 role="dialog"
                 aria-modal="true"
                 aria-label="Adicionar nova reserva"
-                className="w-full max-w-[560px] rounded-xl bg-white shadow-xl"
+                className="w-full max-w-[560px] rounded-xl bg-white shadow-xl dark:bg-neutral-900"
             >
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-4 sm:px-5">
-                    <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900">
+                <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-4 dark:border-neutral-800 sm:px-5">
+                    <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
                         <Plus className="h-4 w-4" />
                         Nova reserva
                     </h2>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800"
                         aria-label="Fechar"
                     >
                         <X className="h-4 w-4" />
@@ -133,7 +128,7 @@ export function NewReservationModal({
 
                     {/* Seleção de categoria */}
                     <div>
-                        <p className="mb-2 text-sm font-medium text-neutral-700">
+                        <p className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                             Tipo de reserva <span className="text-rose-500">*</span>
                         </p>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -146,14 +141,17 @@ export function NewReservationModal({
                                         type="button"
                                         onClick={() => handleCategoryChange(cat.value)}
                                         className={`flex flex-col items-center gap-1.5 rounded-lg border py-3 text-sm transition-colors ${isSelected
-                                            ? "border-emerald-500 bg-emerald-50"
-                                            : "border-neutral-200 hover:border-neutral-300"
+                                                ? "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-950"
+                                                : "border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600 dark:hover:bg-neutral-750"
                                             }`}
                                     >
                                         <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${cat.bg} ${cat.color}`}>
                                             <Icon className="h-4 w-4" />
                                         </span>
-                                        <span className={`text-xs font-medium ${isSelected ? "text-emerald-700" : "text-neutral-600"}`}>
+                                        <span className={`text-xs font-medium ${isSelected
+                                                ? "text-emerald-700 dark:text-emerald-300"
+                                                : "text-neutral-600 dark:text-neutral-400"
+                                            }`}>
                                             {cat.label}
                                         </span>
                                     </button>
@@ -162,9 +160,9 @@ export function NewReservationModal({
                         </div>
                     </div>
 
-                    {/* Campos comuns */}
+                    {/* Nome da reserva */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                        <label className={labelClass}>
                             Nome da reserva <span className="text-rose-500">*</span>
                         </label>
                         <input
@@ -178,14 +176,14 @@ export function NewReservationModal({
                                             form.category === "tour" ? "Ex: Passeio de escuna" :
                                                 "Nome da reserva"
                             }
-                            className="w-full rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                            className={inputClass}
                         />
                     </div>
 
                     {/* Campos dinâmicos da categoria */}
                     {form.category && (
-                        <div className="rounded-lg bg-neutral-50 p-4">
-                            <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                        <div className="rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800">
+                            <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
                                 <span>{selectedCategory?.emoji}</span>
                                 Detalhes da {selectedCategory?.label}
                             </p>
@@ -200,7 +198,7 @@ export function NewReservationModal({
                     {/* Valor + Quem pagou */}
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                            <label className={labelClass}>
                                 Valor total (R$) <span className="text-rose-500">*</span>
                             </label>
                             <input
@@ -211,22 +209,20 @@ export function NewReservationModal({
                                 value={form.amount}
                                 onChange={(e) => update({ amount: e.target.value })}
                                 placeholder="0,00"
-                                className="w-full rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                className={inputClass}
                             />
                             {Number(form.amount) > 0 && (
-                                <p className="mt-1 text-xs text-neutral-400">
+                                <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">
                                     {formatCurrencyBRL(Number(form.amount))}
                                 </p>
                             )}
                         </div>
                         <div>
-                            <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                Pago por
-                            </label>
+                            <label className={labelClass}>Pago por</label>
                             <select
                                 value={form.paidById}
                                 onChange={(e) => update({ paidById: e.target.value })}
-                                className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                                className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
                             >
                                 {participants.map((p) => (
                                     <option key={p.id} value={p.id}>{p.name}</option>
@@ -238,23 +234,21 @@ export function NewReservationModal({
 
                     {/* Observações */}
                     <div>
-                        <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                            Observações (opcional)
-                        </label>
+                        <label className={labelClass}>Observações (opcional)</label>
                         <textarea
                             value={form.notes}
                             onChange={(e) => update({ notes: e.target.value })}
                             rows={2}
                             placeholder="Informações adicionais sobre a reserva..."
-                            className="w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                            className="w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500"
                         />
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-end gap-3 border-t border-neutral-100 px-4 py-4 sm:px-5">
+                <div className="flex items-center justify-end gap-3 border-t border-neutral-100 px-4 py-4 dark:border-neutral-800 sm:px-5">
                     {!isValid && (
-                        <p className="mr-auto flex items-center gap-1.5 text-xs text-neutral-400">
+                        <p className="mr-auto flex items-center gap-1.5 text-xs text-neutral-400 dark:text-neutral-500">
                             <AlertCircle className="h-3.5 w-3.5" />
                             {!form.category
                                 ? "Selecione o tipo de reserva"
@@ -266,7 +260,7 @@ export function NewReservationModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+                        className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                     >
                         Cancelar
                     </button>

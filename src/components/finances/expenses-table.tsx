@@ -14,8 +14,9 @@ export function ExpensesTable({ expenses }: ExpensesTableProps) {
                 Despesas registradas
             </h2>
 
-            <div className="mt-3 overflow-x-auto -mx-5 px-5">
+            <div className="-mx-5 mt-3 overflow-x-auto px-5">
                 <div className="min-w-[480px]">
+                    {/* Cabeçalho */}
                     <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-x-4 border-b border-neutral-100 pb-2 text-xs text-neutral-400 dark:border-neutral-700 dark:text-neutral-500">
                         <span>Descrição</span>
                         <span>Pago por</span>
@@ -40,16 +41,22 @@ export function ExpensesTable({ expenses }: ExpensesTableProps) {
                                     <span className="font-medium text-neutral-900 dark:text-neutral-100">
                                         {expense.description}
                                     </span>
+
                                     <span className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
                                         <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${avatarColor.bg} ${avatarColor.text}`}>
                                             {getInitials(expense.paidByName)}
                                         </span>
                                         <span className="max-w-[80px] truncate">{expense.paidByName}</span>
                                     </span>
+
                                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColor.badge}`}>
                                         {expense.category}
                                     </span>
-                                    <span className="text-neutral-400 dark:text-neutral-500">{expense.date}</span>
+
+                                    <span className="text-neutral-400 dark:text-neutral-500">
+                                        {expense.date}
+                                    </span>
+
                                     <span className="text-right font-semibold text-neutral-900 dark:text-neutral-100">
                                         {formatCurrencyBRL(expense.amount)}
                                     </span>

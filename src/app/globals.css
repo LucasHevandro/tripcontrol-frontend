@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
+/* Configura dark mode por classe em vez de prefers-color-scheme */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
-  /* Tema claro */
   --background: #f7f6f1;
   --surface: #ffffff;
   --surface-secondary: #f7f6f1;
@@ -12,7 +14,6 @@
 }
 
 .dark {
-  /* Tema escuro */
   --background: #0f0f0f;
   --surface: #1a1a1a;
   --surface-secondary: #242424;

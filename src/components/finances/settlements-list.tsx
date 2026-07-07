@@ -25,31 +25,48 @@ export function SettlementsList({ settlements, perPersonAverage }: SettlementsLi
                 <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
                     Acertos financeiros
                 </h2>
-                <span className="text-xs text-emerald-600 dark:text-emerald-400">calculado automaticamente</span>
+                <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                    calculado automaticamente
+                </span>
             </div>
             <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">
                 Cada pessoa deve pagar {formatCurrencyBRL(perPersonAverage)}
             </p>
 
-            <ul className="mt-4 space-y-4">
-                {settlements.map((s) => (
-                    <li key={s.id} className="border-b border-neutral-100 pb-4 last:border-0 dark:border-neutral-700">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <Avatar id={s.fromParticipantId} name={s.fromName} />
-                                <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{s.fromName}</span>
-                                <ArrowRight className="h-3.5 w-3.5 text-neutral-400" />
-                                <Avatar id={s.toParticipantId} name={s.toName} />
-                                <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{s.toName}</span>
+            {settlements.length === 0 ? (
+                <p className="mt-4 text-sm text-neutral-400 dark:text-neutral-500">
+                    Nenhum acerto pendente 🎉
+                </p>
+            ) : (
+                <ul className="mt-4 space-y-4">
+                    {settlements.map((s) => (
+                        <li
+                            key={s.id}
+                            className="border-b border-neutral-100 pb-4 last:border-0 last:pb-0 dark:border-neutral-700"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <Avatar id={s.fromParticipantId} name={s.fromName} />
+                                    <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                        {s.fromName}
+                                    </span>
+                                    <ArrowRight className="h-3.5 w-3.5 text-neutral-400 dark:text-neutral-500" />
+                                    <Avatar id={s.toParticipantId} name={s.toName} />
+                                    <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                        {s.toName}
+                                    </span>
+                                </div>
+                                <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                    {formatCurrencyBRL(s.amount)}
+                                </span>
                             </div>
-                            <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                                {formatCurrencyBRL(s.amount)}
-                            </span>
-                        </div>
-                        <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">{s.description}</p>
-                    </li>
-                ))}
-            </ul>
+                            <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">
+                                {s.description}
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }

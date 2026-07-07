@@ -28,7 +28,8 @@ const TOGGLES: Toggle[] = [
     { key: "notifyRoadmapReminders", label: "Lembretes de roteiro", description: "Avisos sobre atividades programadas" },
 ];
 
-const selectClass = "w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100";
+const selectClass =
+    "w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100";
 const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
 
 interface PreferencesFormProps {
@@ -47,8 +48,7 @@ export function PreferencesForm({ profile }: PreferencesFormProps) {
 
     function toggleNotification(key: Toggle["key"]) {
         const newValue = !notifications[key];
-        const updated = { ...notifications, [key]: newValue };
-        setNotifications(updated);
+        setNotifications((prev) => ({ ...prev, [key]: newValue }));
         updatePreferences.mutate({ [key]: newValue });
     }
 
@@ -91,27 +91,36 @@ export function PreferencesForm({ profile }: PreferencesFormProps) {
             </div>
 
             <div>
-                <p className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">Notificações</p>
-                <div className="space-y-3">
+                <p className="mb-3 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    Notificações
+                </p>
+                <div className="space-y-4">
                     {TOGGLES.map((toggle) => {
                         const isOn = notifications[toggle.key];
                         return (
-                            <div key={toggle.key} className="flex items-center justify-between gap-3">
-                                <div>
-                                    <p className="text-sm text-neutral-900 dark:text-neutral-100">{toggle.label}</p>
-                                    <p className="text-xs text-neutral-400 dark:text-neutral-500">{toggle.description}</p>
+                            <div key={toggle.key} className="flex items-center justify-between gap-4">
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                                        {toggle.label}
+                                    </p>
+                                    <p className="text-xs text-neutral-400 dark:text-neutral-500">
+                                        {toggle.description}
+                                    </p>
                                 </div>
+
+                                {/* Toggle switch */}
                                 <button
                                     type="button"
                                     onClick={() => toggleNotification(toggle.key)}
-                                    className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${isOn ? "bg-emerald-600" : "bg-neutral-200 dark:bg-neutral-700"
-                                        }`}
                                     role="switch"
                                     aria-checked={isOn}
                                     aria-label={toggle.label}
+                                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 ${isOn ? "bg-emerald-600" : "bg-neutral-200 dark:bg-neutral-700"
+                                        }`}
                                 >
                                     <span
-                                        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${isOn ? "translate-x-[22px]" : "translate-x-0.5"
+                                        aria-hidden="true"
+                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${isOn ? "translate-x-5" : "translate-x-0"
                                             }`}
                                     />
                                 </button>

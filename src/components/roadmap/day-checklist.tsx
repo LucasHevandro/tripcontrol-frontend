@@ -29,8 +29,8 @@ export function DayChecklist({ items: initialItems }: DayChecklistProps) {
                             type="button"
                             onClick={() => toggle(item.id)}
                             className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${item.checked
-                                    ? "border-emerald-600 bg-emerald-600"
-                                    : "border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800"
+                                ? "border-emerald-600 bg-emerald-600"
+                                : "border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-800"
                                 }`}
                             aria-label={item.checked ? `Desmarcar ${item.label}` : `Marcar ${item.label}`}
                             aria-pressed={item.checked}
@@ -42,8 +42,8 @@ export function DayChecklist({ items: initialItems }: DayChecklistProps) {
                             )}
                         </button>
                         <span className={`text-sm transition-colors ${item.checked
-                                ? "text-neutral-400 line-through dark:text-neutral-500"
-                                : "text-neutral-700 dark:text-neutral-300"
+                            ? "text-neutral-400 line-through dark:text-neutral-500"
+                            : "text-neutral-700 dark:text-neutral-300"
                             }`}>
                             {item.label}
                         </span>

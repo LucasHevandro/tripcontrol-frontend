@@ -7,7 +7,9 @@ interface CategoryBreakdownListProps {
 }
 
 export function CategoryBreakdownList({ categories }: CategoryBreakdownListProps) {
-    const maxTotal = Math.max(...categories.map((c) => c.total));
+    const maxTotal = Math.max(...categories.map((c) => c.total), 1);
+
+    if (categories.length === 0) return null;
 
     return (
         <div>
@@ -17,17 +19,22 @@ export function CategoryBreakdownList({ categories }: CategoryBreakdownListProps
             <ul className="mt-3 space-y-3">
                 {categories.map((cat) => {
                     const color = getCategoryColor(cat.category);
-                    const barWidth = maxTotal > 0 ? (cat.total / maxTotal) * 100 : 0;
+                    const barWidth = (cat.total / maxTotal) * 100;
                     return (
                         <li key={cat.category}>
                             <div className="flex items-center justify-between text-sm">
-                                <span className="text-neutral-600 dark:text-neutral-400">{cat.category}</span>
+                                <span className="text-neutral-600 dark:text-neutral-400">
+                                    {cat.category}
+                                </span>
                                 <span className="text-neutral-400 dark:text-neutral-500">
                                     {formatCurrencyBRL(cat.total)} · {cat.percentage}%
                                 </span>
                             </div>
                             <div className="mt-1.5 h-1.5 w-full rounded-full bg-neutral-100 dark:bg-neutral-700">
-                                <div className={`h-full rounded-full ${color.bar}`} style={{ width: `${barWidth}%` }} />
+                                <div
+                                    className={`h-full rounded-full ${color.bar}`}
+                                    style={{ width: `${barWidth}%` }}
+                                />
                             </div>
                         </li>
                     );

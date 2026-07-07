@@ -18,15 +18,21 @@ export default function FinancesPage({
     params: Promise<{ tripId: string }>;
 }) {
     const { tripId } = use(params);
-    const { data: summary, isLoading: loadingSummary, isError } = useExpenseSummary(tripId);
+    const { data: summary, isLoading: loadingSummary, isError, refetch: refetchSummary } = useExpenseSummary(tripId);
     const { data: expensesData, isLoading: loadingExpenses } = useExpenses(tripId);
-    const { data: participantsData, isError: isParticipantsError } = useParticipants(tripId);
+    const { data: participantsData } = useParticipants(tripId);
 
     if (loadingSummary || loadingExpenses) return <FinancesSkeleton />;
 
-    if (isError || isParticipantsError) return (
+    if (isError) return (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-neutral-500">Erro ao carregar dados.</p>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar dados.</p>
+            <button
+                onClick={() => refetchSummary()}
+                className="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-400"
+            >
+                Tentar novamente
+            </button>
         </div>
     );
 
@@ -34,13 +40,13 @@ export default function FinancesPage({
     const participants = participantsData?.participants ?? [];
 
     return (
-        <div className="space-y-1">
+        <div className="space-y-4">
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-lg font-semibold text-neutral-900">
+                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                         Controle financeiro
                     </h1>
-                    <p className="text-sm text-neutral-400">
+                    <p className="text-sm text-neutral-400 dark:text-neutral-500">
                         {summary?.tripName} · {summary?.tripPeriod}
                     </p>
                 </div>
@@ -67,17 +73,17 @@ export default function FinancesPage({
                     label="Saldo do grupo"
                     value={summary?.groupBalanceLabel ?? ""}
                     sublabel="acertos calculados"
-                    valueClassName="text-emerald-600"
+                    valueClassName="text-emerald-600 dark:text-emerald-400"
                 />
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_380px]">
-                <div className="space-y-6 rounded-xl border border-neutral-200 bg-white p-5">
+                <div className="space-y-6 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
                     <ExpensesTable expenses={expensesData?.data ?? []} />
                     <CategoryBreakdownList categories={summary?.categoryBreakdown ?? []} />
                 </div>
 
-                <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5">
+                <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
                     <SettlementsList
                         settlements={settlements}
                         perPersonAverage={summary?.perPersonAverage ?? 0}

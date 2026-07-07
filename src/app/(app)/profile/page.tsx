@@ -11,11 +11,17 @@ export default function ProfilePage() {
 
     if (isLoading) {
         return (
-            <div className="space-y-1">
-                <div className="h-6 w-24 animate-pulse rounded bg-neutral-200" />
+            <div className="space-y-4">
+                <div className="space-y-1.5">
+                    <div className="h-6 w-24 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700" />
+                    <div className="h-4 w-56 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700" />
+                </div>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
-                    <div className="h-96 animate-pulse rounded-xl bg-neutral-200" />
-                    <div className="h-64 animate-pulse rounded-xl bg-neutral-200" />
+                    <div className="space-y-4">
+                        <div className="h-64 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700" />
+                        <div className="h-48 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700" />
+                    </div>
+                    <div className="h-64 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-700" />
                 </div>
             </div>
         );
@@ -23,25 +29,28 @@ export default function ProfilePage() {
 
     if (isError) return (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-neutral-500">Erro ao carregar perfil.</p>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar perfil.</p>
         </div>
     );
 
     if (!profile) return null;
 
     return (
-        <div className="space-y-1">
+        <div className="space-y-4">
             <div>
-                <h1 className="text-lg font-semibold text-neutral-900">Perfil</h1>
-                <p className="text-sm text-neutral-400">
+                <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                    Perfil
+                </h1>
+                <p className="text-sm text-neutral-400 dark:text-neutral-500">
                     Gerencie seus dados pessoais e preferências
                 </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
                 <div className="space-y-4">
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                        <h2 className="text-sm font-semibold text-neutral-900">
+                    {/* Dados pessoais */}
+                    <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                        <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                             Dados pessoais
                         </h2>
                         <div className="mt-4">
@@ -56,8 +65,9 @@ export default function ProfilePage() {
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                        <h2 className="text-sm font-semibold text-neutral-900">
+                    {/* Alterar senha */}
+                    <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                        <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                             Alterar senha
                         </h2>
                         <div className="mt-4">
@@ -66,8 +76,9 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-neutral-200 bg-white p-5">
-                    <h2 className="text-sm font-semibold text-neutral-900">
+                {/* Preferências */}
+                <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                    <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                         Preferências
                     </h2>
                     <div className="mt-4">

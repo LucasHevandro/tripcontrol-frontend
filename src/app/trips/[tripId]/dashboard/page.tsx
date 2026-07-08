@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { Wallet, Receipt, Map, Hotel, Receipt as ReceiptIcon, Map as MapIcon } from "lucide-react";
+import { Wallet, Receipt, Map, Hotel, Users, Receipt as ReceiptIcon, Map as MapIcon } from "lucide-react";
 import { formatCurrencyBRL } from "@/lib/format";
 import { isNewTrip, getOnboardingSteps } from "@/lib/onboarding";
 import { useTripDashboard } from "@/hooks/trips/use-trip-dashboard";
@@ -16,6 +16,7 @@ import { RecentExpensesList } from "@/components/dashboard/recent-expense-list";
 import { TodayItinerary } from "@/components/dashboard/today-itinerary";
 import { ParticipantsBalanceRow } from "@/components/dashboard/participants-balance-row";
 import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
+import { ErrorState } from "@/components/ui/error-state";
 
 export default function DashboardPage({
     params,
@@ -23,32 +24,36 @@ export default function DashboardPage({
     params: Promise<{ tripId: string }>;
 }) {
     const { tripId } = use(params);
-    const { data, isLoading, isError } = useTripDashboard(tripId);
+    const { data, isLoading, isRefetching, isError, refetch } = useTripDashboard(tripId);
 
     if (isLoading) return <DashboardSkeleton />;
 
-    if (isError || !data) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-sm text-neutral-500">
-                    Erro ao carregar dashboard. Tente novamente.
-                </p>
-            </div>
-        );
-    }
+    if (isError || !data) return (
+        <ErrorState
+            title="Não foi possível carregar o dashboard"
+            onRetry={() => refetch()}
+            isRetrying={isRefetching}
+            className="mt-6"
+        />
+    );
 
     if (isNewTrip(data)) {
         const steps = getOnboardingSteps(tripId, data.newTripStatus);
 
         return (
-            <div className="space-y-1">
+            <div className="space-y-6">
                 <NewTripHeaderCard trip={data.trip} />
 
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     <StatCard icon={Wallet} label="Total gasto" value={formatCurrencyBRL(data.totalSpent)} sublabel="Total gasto" />
                     <StatCard icon={Receipt} label="Despesas" value={data.expenseCount} sublabel="Despesas" />
                     <StatCard icon={Map} label="Atividades" value={data.activityCount} sublabel="Atividades" />
-                    <StatCard icon={Hotel} label="Participante" value={data.trip.participantCount} sublabel="Participante" />
+                    <StatCard
+                        icon={Users}
+                        label={data.trip.participantCount === 1 ? "Participante" : "Participantes"}
+                        value={data.trip.participantCount}
+                        sublabel="no grupo"
+                    />
                 </div>
 
                 <OnboardingChecklist steps={steps} />
@@ -68,7 +73,7 @@ export default function DashboardPage({
     }
 
     return (
-        <div className="space-y-1">
+        <div className="space-y-6">
             <TripHeaderCard trip={data.trip} />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

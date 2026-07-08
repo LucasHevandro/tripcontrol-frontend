@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
-    X, Link as LinkIcon, Copy, Check, Mail, Send, Plus, Trash2, Users,
+    Link as LinkIcon, Copy, Check, Mail, Send, Plus, Trash2, Users,
 } from "lucide-react";
 import { useInviteByEmail } from "@/hooks/participants/use-participants";
+import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface InviteModalProps {
     tripId: string;
@@ -37,17 +39,6 @@ export function InviteModal({ tripId, tripName, inviteLink, onClose }: InviteMod
     ]);
     const [allSent, setAllSent] = useState(false);
     const inviteByEmail = useInviteByEmail(tripId);
-
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-        document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [onClose]);
-
-    useEffect(() => {
-        document.body.style.overflow = "hidden";
-        return () => { document.body.style.overflow = ""; };
-    }, []);
 
     function handleCopyLink() {
         navigator.clipboard.writeText(inviteLink).then(() => {
@@ -84,33 +75,20 @@ export function InviteModal({ tripId, tripName, inviteLink, onClose }: InviteMod
     const hasAnyEmail = emails.some((e) => e.value.trim() !== "");
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-2 py-4 sm:px-4 sm:py-10"
-            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        <Dialog
+            open
+            onClose={onClose}
+            ariaLabel="Convidar participante"
+            size="lg"
+            mobileSheet
         >
-            <div
-                role="dialog"
-                aria-modal="true"
-                aria-label="Convidar participante"
-                className="w-full max-w-[500px] rounded-xl bg-white shadow-xl dark:bg-neutral-900"
-            >
-                {/* Header */}
-                <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-4 dark:border-neutral-800 sm:px-5">
-                    <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
-                        <Users className="h-4 w-4" />
-                        Convidar participante
-                    </h2>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800"
-                        aria-label="Fechar"
-                    >
-                        <X className="h-4 w-4" />
-                    </button>
-                </div>
-
-                <div className="space-y-5 px-4 py-5 sm:px-5">
+            <DialogHeader
+                title="Convidar participante"
+                icon={<Users className="h-4 w-4" />}
+                onClose={onClose}
+            />
+            <DialogBody className="space-y-5">
+                <div className="space-y-5 px-4 sm:px-5">
                     {/* Contexto da viagem */}
                     <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 dark:bg-emerald-950">
                         <span className="text-base">✈️</span>
@@ -146,8 +124,8 @@ export function InviteModal({ tripId, tripName, inviteLink, onClose }: InviteMod
                                 type="button"
                                 onClick={handleCopyLink}
                                 className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-xs font-medium transition-colors ${copied
-                                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
-                                        : "bg-emerald-600 text-white hover:bg-emerald-700"
+                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
+                                    : "bg-emerald-600 text-white hover:bg-emerald-700"
                                     }`}
                             >
                                 {copied ? (
@@ -213,8 +191,8 @@ export function InviteModal({ tripId, tripName, inviteLink, onClose }: InviteMod
                                                     onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addEmailField(); } }}
                                                     placeholder="email@exemplo.com"
                                                     className={`w-full rounded-lg border py-2.5 pl-9 pr-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:ring-2 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500 ${entry.error
-                                                            ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
-                                                            : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:border-neutral-700"
+                                                        ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                                                        : "border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20 dark:border-neutral-700"
                                                         }`}
                                                 />
                                             </div>
@@ -247,32 +225,24 @@ export function InviteModal({ tripId, tripName, inviteLink, onClose }: InviteMod
                         )}
                     </div>
                 </div>
+            </DialogBody>
 
-                {/* Footer */}
-                {!allSent && (
-                    <div className="flex items-center justify-end gap-3 border-t border-neutral-100 px-4 py-4 dark:border-neutral-800 sm:px-5">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                        >
-                            Fechar
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleSendInvites}
-                            disabled={!hasAnyEmail || inviteByEmail.isPending}
-                            className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            {inviteByEmail.isPending ? (
-                                <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />Enviando...</>
-                            ) : (
-                                <><Send className="h-4 w-4" />Enviar convites</>
-                            )}
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
+            {!allSent && (
+                <DialogFooter>
+                    <Button variant="secondary" onClick={onClose}>
+                        Fechar
+                    </Button>
+                    <Button
+                        onClick={handleSendInvites}
+                        disabled={!hasAnyEmail}
+                        isLoading={inviteByEmail.isPending}
+                        leftIcon={inviteByEmail.isPending ? undefined : Send}
+                    >
+                        {inviteByEmail.isPending ? "Enviando..." : "Enviar convites"}
+                    </Button>
+                </DialogFooter>
+            )
+            }
+        </Dialog >
     );
 }

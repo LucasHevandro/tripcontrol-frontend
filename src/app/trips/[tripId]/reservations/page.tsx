@@ -8,6 +8,8 @@ import { ReservationCard } from "@/components/reservations/reservation-card";
 import { CategoryFilter } from "@/components/reservations/category-filter";
 import { ReservationTrigger } from "@/components/reservations/reservation-trigger";
 import type { ReservationCategory } from "@/core/domain/reservation/reservation.types";
+import { PageHeader } from "@/components/ui/page-header";
+import { ErrorState } from "@/components/ui/error-state";
 
 type FilterOption = ReservationCategory | "all";
 
@@ -18,7 +20,7 @@ export default function ReservationsPage({
 }) {
     const { tripId } = use(params);
     const [filter, setFilter] = useState<FilterOption>("all");
-    const { data, isLoading, isError } = useReservations(tripId);
+    const { data, isLoading, isRefetching, isError, refetch } = useReservations(tripId);
 
     if (isLoading) {
         return (
@@ -33,10 +35,13 @@ export default function ReservationsPage({
         );
     }
 
-    if (isError) return (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar Reservas.</p>
-        </div>
+    if (isError || !data) return (
+        <ErrorState
+            title="Não foi possível carregar as reservas"
+            onRetry={() => refetch()}
+            isRetrying={isRefetching}
+            className="mt-6"
+        />
     );
 
     const filtered =
@@ -45,18 +50,14 @@ export default function ReservationsPage({
             : (data?.reservations ?? []).filter((r) => r.category === filter);
 
     return (
-        <div className="space-y-1">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                        Gerenciamento de reservas
-                    </h1>
-                    <p className="text-sm text-neutral-400">
-                        {data?.tripName} · {data?.tripPeriod}
-                    </p>
-                </div>
-                <ReservationTrigger tripId={tripId} variant="button" label="Nova reserva" />
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Gerenciamento de reservas"
+                subtitle={`${data?.tripName} · ${data?.tripPeriod}`}
+                action={
+                    <ReservationTrigger tripId={tripId} variant="button" label="Nova reserva" />
+                }
+            />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <ReservationStatCard

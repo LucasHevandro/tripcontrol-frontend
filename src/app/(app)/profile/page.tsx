@@ -5,9 +5,12 @@ import { ProfileAvatarUpload } from "@/components/profile/profile-avatar-upload"
 import { PersonalInfoForm } from "@/components/profile/personal-info-form";
 import { ChangePasswordForm } from "@/components/profile/change-password-form";
 import { PreferencesForm } from "@/components/profile/preferences-form";
+import { ErrorState } from "@/components/ui/error-state";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
 
 export default function ProfilePage() {
-    const { data: profile, isLoading, isError } = useUserProfile();
+    const { data: profile, isLoading, isError, refetch, isRefetching } = useUserProfile();
 
     if (isLoading) {
         return (
@@ -27,29 +30,28 @@ export default function ProfilePage() {
         );
     }
 
-    if (isError) return (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar perfil.</p>
-        </div>
-    );
+    if (isError) {
+        return (
+            <ErrorState
+                title="Erro ao carregar perfil"
+                description="Verifique sua conexão e tente novamente."
+                onRetry={() => refetch()}
+                isRetrying={isRefetching}
+                className="mt-6"
+            />
+        );
+    }
 
     if (!profile) return null;
 
     return (
         <div className="space-y-4">
-            <div>
-                <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                    Perfil
-                </h1>
-                <p className="text-sm text-neutral-400 dark:text-neutral-500">
-                    Gerencie seus dados pessoais e preferências
-                </p>
-            </div>
+            <PageHeader title="Perfil" subtitle="Gerencie seus dados pessoais e preferências" />
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
                 <div className="space-y-4">
                     {/* Dados pessoais */}
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                    <Card padding="lg">
                         <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                             Dados pessoais
                         </h2>
@@ -63,28 +65,28 @@ export default function ProfilePage() {
                         <div className="mt-5">
                             <PersonalInfoForm profile={profile} />
                         </div>
-                    </div>
+                    </Card>
 
                     {/* Alterar senha */}
-                    <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                    <Card padding="lg">
                         <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                             Alterar senha
                         </h2>
                         <div className="mt-4">
                             <ChangePasswordForm />
                         </div>
-                    </div>
+                    </Card>
                 </div>
 
                 {/* Preferências */}
-                <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                <Card padding="lg">
                     <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                         Preferências
                     </h2>
                     <div className="mt-4">
                         <PreferencesForm profile={profile} />
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

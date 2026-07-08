@@ -13,7 +13,9 @@ export default async function TripLayout({
     return (
         <div className="min-h-screen bg-[#f7f6f1] dark:bg-neutral-950">
             <TripNavbar tripId={tripId} />
-            <main><PageContainer>{children}</PageContainer></main>
+            <main className="pb-24 md:pb-0">
+                <PageContainer>{children}</PageContainer>
+            </main>
         </div>
     );
 }

@@ -11,4 +11,5 @@ export interface IAuthRepository {
     logout(): Promise<void>;
     refresh(): Promise<AuthTokens>;
     me(): Promise<AuthResponse['user']>;
+    googleLogin(credential: string): Promise<AuthResponse>;
 }

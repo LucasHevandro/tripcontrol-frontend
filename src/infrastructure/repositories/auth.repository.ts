@@ -49,4 +49,13 @@ export class HttpAuthRepository implements IAuthRepository {
         const { data } = await apiClient.get('/auth/me');
         return data;
     }
+
+    async googleLogin(credential: string): Promise<AuthResponse> {
+        const { data } = await apiClient.post<AuthResponse>(
+            '/auth/google',
+            { credential },
+        );
+        tokenStorage.setTokens(data.accessToken, data.refreshToken);
+        return data;
+    }
 }

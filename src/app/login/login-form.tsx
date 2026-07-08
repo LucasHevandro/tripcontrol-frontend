@@ -5,6 +5,9 @@ import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users } from "lucide-rea
 import { useLogin, useRegister } from "@/hooks/auth/use-auth";
 import { useSearchParams } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { GoogleLogin } from "@react-oauth/google";
+import { useTheme } from "@/contexts/theme-context";
+import { useGoogleAuth } from "@/hooks/auth/use-auth";
 
 const FEATURES = [
     { icon: Wallet, bg: "bg-amber-100", iconColor: "text-amber-700", text: "Controle financeiro compartilhado e acertos automáticos" },
@@ -56,6 +59,9 @@ export default function LoginForm() {
 
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get("redirect") ?? "/trips";
+
+    const googleAuth = useGoogleAuth();
+    const { resolvedTheme } = useTheme();
 
     function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -200,13 +206,21 @@ export default function LoginForm() {
                                 <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
                             </div>
 
-                            <button
-                                type="button"
-                                className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                            >
-                                <GoogleIcon className="h-4 w-4" />
-                                Continuar com Google
-                            </button>
+                            <div className="flex justify-center">
+                                <GoogleLogin
+                                    onSuccess={(credentialResponse) => {
+                                        if (credentialResponse.credential) {
+                                            googleAuth.mutate(credentialResponse.credential);
+                                        }
+                                    }}
+                                    onError={() => {
+                                        // popup fechado ou falhou — a lib já lida com isso
+                                    }}
+                                    theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
+                                    text="continue_with"
+                                    width="340"
+                                />
+                            </div>
 
                             <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
                                 Não tem conta?{" "}
@@ -342,13 +356,21 @@ export default function LoginForm() {
                                 <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
                             </div>
 
-                            <button
-                                type="button"
-                                className="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-                            >
-                                <GoogleIcon className="h-4 w-4" />
-                                Continuar com Google
-                            </button>
+                            <div className="flex justify-center">
+                                <GoogleLogin
+                                    onSuccess={(credentialResponse) => {
+                                        if (credentialResponse.credential) {
+                                            googleAuth.mutate(credentialResponse.credential);
+                                        }
+                                    }}
+                                    onError={() => {
+                                        // popup fechado ou falhou — a lib já lida com isso
+                                    }}
+                                    theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
+                                    text="continue_with"
+                                    width="340"
+                                />
+                            </div>
 
                             <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
                                 Já tem conta?{" "}

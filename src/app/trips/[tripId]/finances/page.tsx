@@ -11,6 +11,9 @@ import { IndividualBalances } from "@/components/finances/individual-balances";
 import { ExpenseTrigger } from "@/components/expenses/expense-trigger";
 import { FinancesSkeleton } from "@/components/finances/finances-skeleton";
 import { useParticipants } from "@/hooks/participants/use-participants";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+import { ErrorState } from "@/components/ui/error-state";
 
 export default function FinancesPage({
     params,
@@ -18,40 +21,31 @@ export default function FinancesPage({
     params: Promise<{ tripId: string }>;
 }) {
     const { tripId } = use(params);
-    const { data: summary, isLoading: loadingSummary, isError, refetch: refetchSummary } = useExpenseSummary(tripId);
+    const { data: summary, isLoading: loadingSummary, isRefetching: refetchingSummary, isError, refetch: refetchSummary } = useExpenseSummary(tripId);
     const { data: expensesData, isLoading: loadingExpenses } = useExpenses(tripId);
     const { data: participantsData } = useParticipants(tripId);
+    const settlements = participantsData?.settlementSummary ?? [];
+    const participants = participantsData?.participants ?? [];
 
     if (loadingSummary || loadingExpenses) return <FinancesSkeleton />;
 
     if (isError) return (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar dados.</p>
-            <button
-                onClick={() => refetchSummary()}
-                className="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-400"
-            >
-                Tentar novamente
-            </button>
-        </div>
+        <ErrorState
+            title="Não foi possível carregar as finanças"
+            description="Verifique sua conexão e tente novamente."
+            onRetry={() => refetchSummary()}
+            isRetrying={refetchingSummary}
+            className="mt-6"
+        />
     );
 
-    const settlements = participantsData?.settlementSummary ?? [];
-    const participants = participantsData?.participants ?? [];
-
     return (
-        <div className="space-y-4">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                        Controle financeiro
-                    </h1>
-                    <p className="text-sm text-neutral-400 dark:text-neutral-500">
-                        {summary?.tripName} · {summary?.tripPeriod}
-                    </p>
-                </div>
-                <ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Controle financeiro"
+                subtitle={`${summary?.tripName} · ${summary?.tripPeriod}`}
+                action={<ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />}
+            />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <FinanceStatCard
@@ -78,12 +72,12 @@ export default function FinancesPage({
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_380px]">
-                <div className="space-y-6 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                <Card padding="lg" className="space-y-6">
                     <ExpensesTable tripId={tripId} expenses={expensesData?.data ?? []} />
                     <CategoryBreakdownList categories={summary?.categoryBreakdown ?? []} />
-                </div>
+                </Card>
 
-                <div className="space-y-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+                <Card padding="lg" className="space-y-4">
                     <SettlementsList
                         settlements={settlements}
                         perPersonAverage={summary?.perPersonAverage ?? 0}
@@ -95,7 +89,7 @@ export default function FinancesPage({
                             balance: p.balance,
                         }))}
                     />
-                </div>
+                </Card>
             </div>
         </div>
     );

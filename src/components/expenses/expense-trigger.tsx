@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { NewExpenseModal } from "./new-expense-modal";
 import { useParticipants } from "@/hooks/participants/use-participants";
 import { useUser } from "@/contexts/user-context";
+import { Button } from "@/components/ui/button";
 
 interface ExpenseTriggerProps {
     tripId: string;
@@ -31,14 +32,9 @@ export function ExpenseTrigger({
     return (
         <>
             {variant === "button" ? (
-                <button
-                    type="button"
-                    onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
+                <Button onClick={() => setIsOpen(true)} leftIcon={Plus}>
                     {label}
-                </button>
+                </Button>
             ) : (
                 <button
                     type="button"

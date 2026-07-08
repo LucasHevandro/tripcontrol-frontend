@@ -74,3 +74,27 @@ export function useLogout() {
         },
     });
 }
+
+export function useGoogleAuth() {
+    const { auth } = useRepositories();
+    const router = useRouter();
+    const { addToast } = useToast();
+    const queryClient = useQueryClient();
+    const searchParams =
+        typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search)
+            : null;
+    const redirectTo = searchParams?.get('redirect') ?? '/trips';
+
+    return useMutation({
+        mutationFn: (credential: string) => auth.googleLogin(credential),
+        onSuccess: (data) => {
+            queryClient.setQueryData(['auth', 'me'], data.user);
+            addToast('Login com Google realizado com sucesso!');
+            router.push(redirectTo);
+        },
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao entrar com Google'), 'error');
+        },
+    });
+}

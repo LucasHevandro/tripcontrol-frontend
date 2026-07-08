@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/contexts/theme-context";
 import { ToastContainer } from "@/components/ui/toast";
 import { TanStackQueryProvider } from "@/providers/query-client.provider";
 import { RepositoriesProvider } from "@/providers/repositories.provider";
+import { GoogleAuthProvider } from "@/providers/google-oauth.provider";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -49,14 +50,16 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
-          <TanStackQueryProvider>
-            <RepositoriesProvider>
-              <ToastProvider>
-                <UserProvider>{children}</UserProvider>
-                <ToastContainer />
-              </ToastProvider>
-            </RepositoriesProvider>
-          </TanStackQueryProvider>
+          <GoogleAuthProvider>
+            <TanStackQueryProvider>
+              <RepositoriesProvider>
+                <ToastProvider>
+                  <UserProvider>{children}</UserProvider>
+                  <ToastContainer />
+                </ToastProvider>
+              </RepositoriesProvider>
+            </TanStackQueryProvider>
+          </GoogleAuthProvider>
         </ThemeProvider>
       </body>
     </html>

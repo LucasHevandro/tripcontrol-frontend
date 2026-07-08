@@ -11,12 +11,15 @@ interface ExpenseTriggerProps {
     tripId: string;
     variant?: "button" | "link";
     label?: string;
+    buttonClassName?: string;
+
 }
 
 export function ExpenseTrigger({
     tripId,
     variant = "button",
     label = "Adicionar despesa",
+    buttonClassName,
 }: ExpenseTriggerProps) {
     const [isOpen, setIsOpen] = useState(false);
     const { data: participantsData, isLoading } = useParticipants(tripId);
@@ -32,7 +35,7 @@ export function ExpenseTrigger({
     return (
         <>
             {variant === "button" ? (
-                <Button onClick={() => setIsOpen(true)} leftIcon={Plus}>
+                <Button onClick={() => setIsOpen(true)} leftIcon={Plus} className={buttonClassName}>
                     {label}
                 </Button>
             ) : (

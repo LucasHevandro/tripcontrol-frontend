@@ -1,22 +1,23 @@
 "use client";
 
 import { use } from "react";
-import { Wallet, Receipt, Map, Hotel, Users, Receipt as ReceiptIcon, Map as MapIcon } from "lucide-react";
+import { Wallet, Receipt, Map, Hotel, Users, Map as MapIcon } from "lucide-react";
 import { formatCurrencyBRL } from "@/lib/format";
 import { isNewTrip, getOnboardingSteps } from "@/lib/onboarding";
 import { useTripDashboard } from "@/hooks/trips/use-trip-dashboard";
-import { TripHeaderCard } from "@/components/dashboard/trip-header-card";
-import { NewTripHeaderCard } from "@/components/dashboard/new-trip-header-card";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { EmptyExpensesSection } from "@/components/dashboard/empty-expenses-section";
 import { EmptySectionCard } from "@/components/dashboard/empty-section-card";
 import { StatCard } from "@/components/dashboard/stat-card";
-import { BudgetProgressBar } from "@/components/dashboard/budget-progress-bar";
 import { RecentExpensesList } from "@/components/dashboard/recent-expense-list";
 import { TodayItinerary } from "@/components/dashboard/today-itinerary";
 import { ParticipantsBalanceRow } from "@/components/dashboard/participants-balance-row";
 import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 import { ErrorState } from "@/components/ui/error-state";
+import Link from "next/link";
+import { UserPlus } from "lucide-react";
+import { TripHeroCard } from "@/components/dashboard/trip-hero-card";
+import { ExpenseTrigger } from "@/components/expenses/expense-trigger";
 
 export default function DashboardPage({
     params,
@@ -42,7 +43,18 @@ export default function DashboardPage({
 
         return (
             <div className="space-y-6">
-                <NewTripHeaderCard trip={data.trip} />
+                <TripHeroCard
+                    trip={data.trip}
+                    primaryAction={
+                        <Link
+                            href={`/trips/${tripId}/participants`}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-medium text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
+                        >
+                            <UserPlus className="h-4 w-4" />
+                            Convidar participantes
+                        </Link>
+                    }
+                />
 
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     <StatCard icon={Wallet} label="Total gasto" value={formatCurrencyBRL(data.totalSpent)} sublabel="Total gasto" />
@@ -74,7 +86,19 @@ export default function DashboardPage({
 
     return (
         <div className="space-y-6">
-            <TripHeaderCard trip={data.trip} />
+            <TripHeroCard
+                trip={data.trip}
+                totalSpent={data.totalSpent}
+                budget={data.budget}
+                primaryAction={
+                    <ExpenseTrigger
+                        tripId={tripId}
+                        variant="button"
+                        label="Nova despesa"
+                        buttonClassName="bg-white text-emerald-700 shadow-sm hover:bg-emerald-50"
+                    />
+                }
+            />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <StatCard icon={Wallet} label="Total gasto" value={formatCurrencyBRL(data.totalSpent)} sublabel={`de ${formatCurrencyBRL(data.budget)} orçados`} />
@@ -82,8 +106,6 @@ export default function DashboardPage({
                 <StatCard icon={Map} label="Atividades" value={data.activityCount} sublabel={`${data.completedActivityCount} concluídas`} />
                 <StatCard icon={Hotel} label="Reservas" value={data.reservationCount} sublabel={data.allReservationsConfirmed ? "todas confirmadas" : "pendências"} />
             </div>
-
-            <BudgetProgressBar totalSpent={data.totalSpent} budget={data.budget} />
 
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 <RecentExpensesList tripId={tripId} expenses={data.recentExpenses} />

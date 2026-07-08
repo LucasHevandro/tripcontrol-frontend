@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { Wallet, Receipt, Map, Hotel, Receipt as ReceiptIcon, Map as MapIcon } from "lucide-react";
+import { Wallet, Receipt, Map, Hotel, Users, Receipt as ReceiptIcon, Map as MapIcon } from "lucide-react";
 import { formatCurrencyBRL } from "@/lib/format";
 import { isNewTrip, getOnboardingSteps } from "@/lib/onboarding";
 import { useTripDashboard } from "@/hooks/trips/use-trip-dashboard";
@@ -48,7 +48,12 @@ export default function DashboardPage({
                     <StatCard icon={Wallet} label="Total gasto" value={formatCurrencyBRL(data.totalSpent)} sublabel="Total gasto" />
                     <StatCard icon={Receipt} label="Despesas" value={data.expenseCount} sublabel="Despesas" />
                     <StatCard icon={Map} label="Atividades" value={data.activityCount} sublabel="Atividades" />
-                    <StatCard icon={Hotel} label="Participante" value={data.trip.participantCount} sublabel="Participante" />
+                    <StatCard
+                        icon={Users}
+                        label={data.trip.participantCount === 1 ? "Participante" : "Participantes"}
+                        value={data.trip.participantCount}
+                        sublabel="no grupo"
+                    />
                 </div>
 
                 <OnboardingChecklist steps={steps} />

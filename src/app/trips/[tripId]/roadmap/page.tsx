@@ -62,6 +62,11 @@ export default function RoadmapPage({
                         defaultSelectedIndex={defaultDayIndex}
                     />
                 </div>
+                <aside className="space-y-4">
+                    {data.activeReservations.length > 0 && (
+                        <ActiveReservations reservations={data.activeReservations} />
+                    )}
+                </aside>
             </div>
         </div>
     );

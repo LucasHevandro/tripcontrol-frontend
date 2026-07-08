@@ -12,7 +12,7 @@ export default async function TripLayout({
     return (
         <div className="min-h-screen bg-[#f7f6f1] dark:bg-neutral-950">
             <TripNavbar tripId={tripId} />
-            <main className="mx-auto max-w-7xl px-12 py-8">{children}</main>
+            <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{children}</main>
         </div>
     );
 }

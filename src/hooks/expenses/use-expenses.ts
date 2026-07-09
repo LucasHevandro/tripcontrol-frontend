@@ -38,8 +38,7 @@ export function useCreateExpense(tripId: string) {
         mutationFn: (payload: CreateExpensePayload) =>
             expense.create(tripId, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['trips', tripId, 'expenses'] });
-            queryClient.invalidateQueries({ queryKey: ['trips', tripId, 'dashboard'] });
+            queryClient.invalidateQueries({ queryKey: ['trips'] });
             addToast('Despesa adicionada com sucesso!');
         },
         onError: (error) => {
@@ -62,8 +61,7 @@ export function useUpdateExpense(tripId: string) {
             payload: Partial<CreateExpensePayload>;
         }) => expense.update(tripId, expenseId, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['trips', tripId, 'expenses'] });
-            queryClient.invalidateQueries({ queryKey: ['trips', tripId, 'dashboard'] });
+            queryClient.invalidateQueries({ queryKey: ['trips'] });
             addToast('Despesa atualizada com sucesso!');
         },
         onError: (error) => {
@@ -80,8 +78,7 @@ export function useDeleteExpense(tripId: string) {
     return useMutation({
         mutationFn: (expenseId: string) => expense.remove(tripId, expenseId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['trips', tripId, 'expenses'] });
-            queryClient.invalidateQueries({ queryKey: ['trips', tripId, 'dashboard'] });
+            queryClient.invalidateQueries({ queryKey: ['trips'] });
             addToast('Despesa removida com sucesso');
         },
         onError: (error) => {

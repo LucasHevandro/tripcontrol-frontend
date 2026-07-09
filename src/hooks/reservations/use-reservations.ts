@@ -32,7 +32,7 @@ export function useCreateReservation(tripId: string) {
             reservation.create(tripId, payload),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'reservations'],
+                queryKey: ['trips'],
             });
             addToast('Reserva salva com sucesso!');
         },
@@ -57,7 +57,7 @@ export function useUpdateReservation(tripId: string) {
         }) => reservation.update(tripId, reservationId, payload),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'reservations'],
+                queryKey: ['trips'],
             });
             addToast('Reserva atualizada com sucesso!');
         },
@@ -77,7 +77,7 @@ export function useDeleteReservation(tripId: string) {
             reservation.remove(tripId, reservationId),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'reservations'],
+                queryKey: ['trips'],
             });
             addToast('Reserva removida com sucesso');
         },

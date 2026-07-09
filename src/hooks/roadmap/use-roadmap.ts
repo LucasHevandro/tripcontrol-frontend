@@ -26,7 +26,7 @@ export function useCreateActivity(tripId: string) {
             roadmap.create(tripId, payload),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'roadmap'],
+                queryKey: ['trips'],
             });
             addToast('Atividade adicionada ao roteiro!');
         },
@@ -51,7 +51,7 @@ export function useUpdateActivityStatus(tripId: string) {
         }) => roadmap.updateStatus(tripId, activityId, status),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'roadmap'],
+                queryKey: ['trips'],
             });
         },
         onError: (error) => {
@@ -75,7 +75,7 @@ export function useUpdateActivity(tripId: string) {
         }) => roadmap.update(tripId, activityId, payload),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'roadmap'],
+                queryKey: ['trips'],
             });
             addToast('Atividade atualizada com sucesso!');
         },
@@ -94,7 +94,7 @@ export function useDeleteActivity(tripId: string) {
         mutationFn: (activityId: string) => roadmap.remove(tripId, activityId),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['trips', tripId, 'roadmap'],
+                queryKey: ['trips'],
             });
             addToast('Atividade removida com sucesso');
         },

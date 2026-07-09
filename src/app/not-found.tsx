@@ -3,7 +3,7 @@ import { Sparkles, MapPin, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f6f1] px-4 text-center dark:bg-neutral-950">
+        <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
             <Link href="/trips" className="mb-12 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-neutral-900 dark:text-neutral-100" />
                 <span className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">TripControl</span>

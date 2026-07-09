@@ -11,7 +11,7 @@ export default async function TripLayout({
     const { tripId } = await params;
 
     return (
-        <div className="min-h-screen bg-[#f7f6f1] dark:bg-neutral-950">
+        <div className="min-h-screen">
             <TripNavbar tripId={tripId} />
             <main className="pb-24 md:pb-0">
                 <PageContainer>{children}</PageContainer>

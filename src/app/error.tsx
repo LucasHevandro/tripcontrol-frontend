@@ -16,7 +16,7 @@ export default function Error({
     }, [error]);
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f6f1] px-4 text-center dark:bg-neutral-950">
+        <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950">
                 <AlertTriangle className="h-8 w-8 text-rose-600 dark:text-rose-400" />
             </div>

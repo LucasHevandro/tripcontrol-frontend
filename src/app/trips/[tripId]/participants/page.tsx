@@ -11,6 +11,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { ErrorState } from "@/components/ui/error-state";
 import { Card } from "@/components/ui/card";
 import { Users } from "lucide-react";
+import { useUser } from "@/contexts/user-context";
 
 export default function ParticipantsPage({
     params,
@@ -19,6 +20,7 @@ export default function ParticipantsPage({
 }) {
     const { tripId } = use(params);
     const { data, isLoading, isRefetching, isError, refetch } = useParticipants(tripId);
+    const { user } = useUser();
 
     if (isLoading) {
         return (
@@ -113,7 +115,11 @@ export default function ParticipantsPage({
                     ))}
                 </div>
 
-                <SettlementSummary tripId={tripId} settlements={data.settlementSummary} />
+                <SettlementSummary
+                    tripId={tripId}
+                    settlements={data.settlementSummary}
+                    currentUserId={user?.id ?? ""}
+                />
             </div>
         </div>
     );

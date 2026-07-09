@@ -8,6 +8,7 @@ import { HttpExpenseRepository } from '@/infrastructure/repositories/expense.rep
 import { HttpParticipantRepository } from '@/infrastructure/repositories/participant.repository';
 import { HttpRoadmapRepository } from '@/infrastructure/repositories/roadmap.repository';
 import { HttpReservationRepository } from '@/infrastructure/repositories/reservation.repository';
+import { HttpPaymentRepository } from '@/infrastructure/repositories/payment.repository';
 import type { IAuthRepository } from '@/core/domain/auth/auth.repository.interface';
 import type { IUserRepository } from '@/core/domain/user/user.repository.interface';
 import type { ITripRepository } from '@/core/domain/trip/trip.repository.interface';
@@ -15,6 +16,7 @@ import type { IExpenseRepository } from '@/core/domain/expense/expense.repositor
 import type { IParticipantRepository } from '@/core/domain/participant/participant.repository.interface';
 import type { IRoadmapRepository } from '@/core/domain/roadmap/roadmap.repository.interface';
 import type { IReservationRepository } from '@/core/domain/reservation/reservation.repository.interface';
+import type { IPaymentRepository } from '@/core/domain/payment/payment.repository.interface';
 
 interface Repositories {
     auth: IAuthRepository;
@@ -24,9 +26,9 @@ interface Repositories {
     participant: IParticipantRepository;
     roadmap: IRoadmapRepository;
     reservation: IReservationRepository;
+    payment: IPaymentRepository;
 }
 
-// Singleton — instâncias criadas uma vez e reutilizadas
 const repositories: Repositories = {
     auth: new HttpAuthRepository(),
     user: new HttpUserRepository(),
@@ -35,6 +37,7 @@ const repositories: Repositories = {
     participant: new HttpParticipantRepository(),
     roadmap: new HttpRoadmapRepository(),
     reservation: new HttpReservationRepository(),
+    payment: new HttpPaymentRepository(),
 };
 
 const RepositoriesContext = createContext<Repositories>(repositories);

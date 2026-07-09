@@ -2,15 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
 import { getErrorMessage } from '@/lib/utils';
-
-interface CreatePaymentPayload {
-    fromParticipantId: string;
-    toParticipantId: string;
-    amount: number;
-}
+import type { CreatePaymentPayload } from '@/core/domain/payment/payment.types';
 
 export function useCreatePayment(tripId: string) {
-    const { payment } = useRepositories(); // adicionar no provider
+    const { payment } = useRepositories();
     const queryClient = useQueryClient();
     const { addToast } = useToast();
 

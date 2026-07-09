@@ -3,25 +3,22 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { NewTripModal } from "./new-trip/new-trip-modal";
+import { Button } from "../ui/button";
 
 interface NewTripTriggerProps {
     variant?: "button" | "card";
+    label?: string;
 }
 
-export function NewTripTrigger({ variant = "button" }: NewTripTriggerProps) {
+export function NewTripTrigger({ variant = "button", label }: NewTripTriggerProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <>
             {variant === "button" ? (
-                <button
-                    type="button"
-                    onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Nova viagem
-                </button>
+                <Button onClick={() => setIsOpen(true)} leftIcon={Plus}>
+                    {label}
+                </Button>
             ) : (
                 <button
                     type="button"

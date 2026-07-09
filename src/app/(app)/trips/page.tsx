@@ -4,35 +4,31 @@ import { NewTripTrigger } from "@/components/trips/new-trip-trigger";
 import { TripsFilterTabs } from "@/components/trips/trips-filter-tabs";
 import { TripsSkeleton } from "@/components/trips/trips-skeleton";
 import { useTrips } from "@/hooks/trips/use-trips";
+import { ErrorState } from "@/components/ui/error-state";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function MyTripsPage() {
-    const { data, isLoading, isError } = useTrips();
+    const { data, isLoading, isError, refetch, isRefetching } = useTrips();
 
     if (isLoading) return <TripsSkeleton />;
 
     if (isError) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-sm text-neutral-500">
-                    Erro ao carregar viagens. Tente novamente.
-                </p>
-            </div>
+            <ErrorState
+                title="Erro ao carregar viagens"
+                description="Verifique sua conexão e tente novamente."
+                onRetry={() => refetch()}
+                isRetrying={isRefetching}
+                className="mt-6"
+            />
         );
     }
 
     return (
         <div className="space-y-1">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                        Minhas viagens
-                    </h1>
-                    <p className="text-sm text-neutral-400">
-                        {data?.activeTripCount ?? 0} viagens ativas ·{" "}
-                        {data?.completedTripCount ?? 0} concluída
-                    </p>
-                </div>
-                <NewTripTrigger variant="button" />
+            <div className="flex items-center justify-between">
+                <PageHeader title="Minhas viagens" subtitle={`${data?.activeTripCount ?? 0} viagens ativas · ${data?.completedTripCount ?? 0} concluídas`} />
+                <NewTripTrigger variant="button" label="Criar Viagem" />
             </div>
 
             <TripsFilterTabs trips={data?.trips ?? []} />

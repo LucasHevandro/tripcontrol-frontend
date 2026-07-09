@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Bell } from "lucide-react";
+import { ArrowRight, Bell, PartyPopper } from "lucide-react";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
@@ -71,7 +71,7 @@ export function SettlementSummary({ tripId, settlements }: SettlementSummaryProp
                 </>
             ) : (
                 <div className="mt-4 flex flex-col items-center gap-1 py-6 text-center">
-                    <span className="text-2xl">🎉</span>
+                    <PartyPopper className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                     <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                         Tudo certo por aqui!
                     </p>

@@ -43,22 +43,22 @@ export function ActivityCard({ tripId, activity }: ActivityCardProps) {
                             </span>
                         )}
                         {/* Ações — aparecem no hover */}
-                        <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="flex items-center gap-0.5 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                             <button
                                 type="button"
                                 onClick={() => setIsEditing(true)}
                                 aria-label={`Editar atividade ${activity.title}`}
-                                className="flex h-6 w-6 items-center justify-center rounded text-neutral-400 hover:bg-neutral-200 hover:text-neutral-600 dark:hover:bg-neutral-700 dark:hover:text-neutral-200"
+                                className="flex h-8 w-8 items-center justify-center rounded text-neutral-400 ..."
                             >
-                                <Pencil className="h-3 w-3" />
+                                <Pencil className="h-3.5 w-3.5" />
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setConfirmDelete(true)}
                                 aria-label={`Excluir atividade ${activity.title}`}
-                                className="flex h-6 w-6 items-center justify-center rounded text-neutral-400 hover:bg-rose-100 hover:text-rose-500 dark:hover:bg-rose-950 dark:hover:text-rose-400"
+                                className="flex h-8 w-8 items-center justify-center rounded text-neutral-400 ..."
                             >
-                                <Trash2 className="h-3 w-3" />
+                                <Trash2 className="h-3.5 w-3.5" />
                             </button>
                         </div>
                     </div>

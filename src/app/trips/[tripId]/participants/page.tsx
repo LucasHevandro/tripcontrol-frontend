@@ -7,6 +7,10 @@ import { ParticipantStatCard } from "@/components/participants/participant-stat-
 import { ParticipantCard } from "@/components/participants/participant-card";
 import { SettlementSummary } from "@/components/participants/settlement-summary";
 import { InviteTrigger } from "@/components/participants/invite-trigger";
+import { PageHeader } from "@/components/ui/page-header";
+import { ErrorState } from "@/components/ui/error-state";
+import { Card } from "@/components/ui/card";
+import { Users } from "lucide-react";
 
 export default function ParticipantsPage({
     params,
@@ -14,7 +18,7 @@ export default function ParticipantsPage({
     params: Promise<{ tripId: string }>;
 }) {
     const { tripId } = use(params);
-    const { data, isLoading, isError } = useParticipants(tripId);
+    const { data, isLoading, isRefetching, isError, refetch } = useParticipants(tripId);
 
     if (isLoading) {
         return (
@@ -44,31 +48,28 @@ export default function ParticipantsPage({
         );
     }
 
-    if (isError || !data) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                    Erro ao carregar participantes.
-                </p>
-            </div>
-        );
-    }
+    if (isError || !data) return (
+        <ErrorState
+            title="Não foi possível carregar as reservas"
+            onRetry={() => refetch()}
+            isRetrying={isRefetching}
+            className="mt-6"
+        />
+    );
 
     return (
         <div className="space-y-4">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                        Gerenciamento de participantes
-                    </h1>
-                    <p className="text-sm text-neutral-400 dark:text-neutral-500">
-                        {data.tripName} · {data.tripPeriod}
-                    </p>
-                </div>
-                <InviteTrigger
-                    tripId={tripId}
-                    tripName={data.tripName}
-                    inviteLink={data.inviteLink}
+            <div>
+                <PageHeader
+                    title="Gerenciamento de participantes"
+                    subtitle={`${data.tripName} · ${data.tripPeriod}`}
+                    action={
+                        <InviteTrigger
+                            tripId={tripId}
+                            tripName={data.tripName}
+                            inviteLink={data.inviteLink}
+                        />
+                    }
                 />
             </div>
 
@@ -95,25 +96,20 @@ export default function ParticipantsPage({
                     valueClassName="text-emerald-600 dark:text-emerald-400"
                 />
             </div>
-
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
                 <div className="space-y-2">
-                    {/* Cabeçalho da lista */}
-                    <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3 dark:border-neutral-700 dark:bg-neutral-900">
+                    <Card padding="none" className="flex items-center justify-between px-4 py-3">
                         <h2 className="flex items-center gap-2 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                            👥 Membros da viagem
+                            <Users className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
+                            Membros da viagem
                         </h2>
-                        <span className="text-xs text-neutral-400 dark:text-neutral-500">
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">
                             {data.participantCount} de {data.maxParticipants} vagas
                         </span>
-                    </div>
+                    </Card>
 
                     {data.participants.map((participant) => (
-                        <ParticipantCard
-                            key={participant.id}
-                            participant={participant}
-                            tripId={tripId}
-                        />
+                        <ParticipantCard key={participant.id} participant={participant} tripId={tripId} />
                     ))}
                 </div>
 

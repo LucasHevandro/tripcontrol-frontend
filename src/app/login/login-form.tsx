@@ -87,7 +87,7 @@ export default function LoginForm() {
     }
 
     return (
-        <div className="relative flex min-h-screen w-full bg-[#f7f6f1] dark:bg-neutral-950">
+        <div className="relative flex min-h-screen w-full">
             {/* Toggle de tema — canto superior direito */}
             <div className="absolute right-4 top-4 z-10">
                 <ThemeToggle />

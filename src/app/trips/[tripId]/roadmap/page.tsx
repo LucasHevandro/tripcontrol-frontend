@@ -3,16 +3,17 @@
 import { use } from "react";
 import { useRoadmap } from "@/hooks/roadmap/use-roadmap";
 import { DaySelector } from "@/components/roadmap/day-selector";
-import { ActiveReservations } from "@/components/roadmap/active-reservations";
 import { ActivityTrigger } from "@/components/roadmap/activity-trigger";
-
+import { PageHeader } from "@/components/ui/page-header";
+import { ErrorState } from "@/components/ui/error-state";
+import { ActiveReservations } from "@/components/roadmap/active-reservations";
 export default function RoadmapPage({
     params,
 }: {
     params: Promise<{ tripId: string }>;
 }) {
     const { tripId } = use(params);
-    const { data, isLoading, isError } = useRoadmap(tripId);
+    const { data, isLoading, isRefetching, isError, refetch } = useRoadmap(tripId);
 
     if (isLoading) {
         return (
@@ -23,13 +24,14 @@ export default function RoadmapPage({
         );
     }
 
-    if (isError || !data) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">Erro ao carregar roteiro.</p>
-            </div>
-        );
-    }
+    if (isError || !data) return (
+        <ErrorState
+            title="Não foi possível carregar o roteiro"
+            onRetry={() => refetch()}
+            isRetrying={isRefetching}
+            className="mt-6"
+        />
+    );
 
     const defaultDayIndex = Math.max(
         data.days.findIndex((d) => d.activities.length > 0),
@@ -37,22 +39,18 @@ export default function RoadmapPage({
     );
 
     return (
-        <div className="space-y-1">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                        Planejamento de roteiro
-                    </h1>
-                    <p className="text-sm text-neutral-400">
-                        {data.tripName} · {data.tripPeriod} · {data.tripDurationDays} dias
-                    </p>
-                </div>
-                <ActivityTrigger
-                    tripId={tripId}
-                    defaultDate={data.days[defaultDayIndex]?.date}
-                    variant="button"
-                />
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Planejamento de roteiro"
+                subtitle={`${data.tripName} · ${data.tripPeriod} · ${data.tripDurationDays} dias`}
+                action={
+                    <ActivityTrigger
+                        tripId={tripId}
+                        defaultDate={data.days[defaultDayIndex]?.date}
+                        variant="button"
+                    />
+                }
+            />
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_280px]">
                 <div>
@@ -62,6 +60,11 @@ export default function RoadmapPage({
                         defaultSelectedIndex={defaultDayIndex}
                     />
                 </div>
+                <aside className="space-y-4">
+                    {data.activeReservations.length > 0 && (
+                        <ActiveReservations reservations={data.activeReservations} />
+                    )}
+                </aside>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, PartyPopper } from "lucide-react";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
@@ -34,9 +34,10 @@ export function SettlementsList({ settlements, perPersonAverage }: SettlementsLi
             </p>
 
             {settlements.length === 0 ? (
-                <p className="mt-4 text-sm text-neutral-400 dark:text-neutral-500">
-                    Nenhum acerto pendente 🎉
-                </p>
+                <span className="inline-flex items-center gap-1.5">
+                    <PartyPopper className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    Nenhum acerto pendente
+                </span>
             ) : (
                 <ul className="mt-4 space-y-4">
                     {settlements.map((s) => (

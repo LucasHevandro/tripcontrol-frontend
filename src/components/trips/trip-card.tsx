@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, Plane } from "lucide-react";
 import type { TripCard as LegacyTripCard } from "@/types/trip";
 import type { TripCard as DomainTripCard } from "@/core/domain/trip/trip.types";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL, formatDateRange } from "@/lib/format";
+import { getTripGradient } from "@/lib/trip-gradients";
 import { TripStatusBadge } from "./trip-status-badge";
 
 type TripCardType = LegacyTripCard | DomainTripCard;
@@ -13,35 +14,32 @@ interface TripCardProps {
     trip: TripCardType;
 }
 
-const BANNER_CLASSES = [
-    "bg-emerald-50 dark:bg-emerald-950",
-    "bg-sky-50 dark:bg-sky-950",
-    "bg-neutral-100 dark:bg-neutral-800",
-    "bg-amber-50 dark:bg-amber-950",
-    "bg-indigo-50 dark:bg-indigo-950",
-    "bg-rose-50 dark:bg-rose-950",
-];
-
-function getBannerClassName(tripId: string): string {
-    let sum = 0;
-    for (let i = 0; i < tripId.length; i++) sum += tripId.charCodeAt(i);
-    return BANNER_CLASSES[sum % BANNER_CLASSES.length];
-}
-
 export function TripCard({ trip }: TripCardProps) {
     const hasBudgetData = trip.budget > 0;
     const percentage = hasBudgetData ? Math.min((trip.totalSpent / trip.budget) * 100, 100) : 0;
     const isOverBudget = trip.totalSpent > trip.budget;
-    const bannerClassName = "bannerClassName" in trip ? trip.bannerClassName : getBannerClassName(trip.id);
-    const emoji = trip.emoji || "✈️";
+    const gradient = getTripGradient(trip.id);
+    const userEmoji = trip.emoji;
 
     return (
         <Link
             href={`/trips/${trip.id}/dashboard`}
-            className="block overflow-hidden rounded-xl border border-neutral-200 bg-white transition-shadow hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:shadow-neutral-800"
+            className="group block overflow-hidden rounded-xl border border-neutral-200 bg-white transition-shadow hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:shadow-neutral-800"
         >
-            <div className={`flex h-20 items-center justify-center sm:h-28 ${bannerClassName}`}>
-                <span className="text-3xl sm:text-5xl">{emoji}</span>
+            {/* Banner */}
+            <div className={`relative flex h-20 items-center justify-center overflow-hidden bg-gradient-to-br ${gradient} sm:h-28`}>
+                <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/15 blur-2xl" aria-hidden="true" />
+                <div className="pointer-events-none absolute -bottom-6 -left-4 h-20 w-20 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
+                {userEmoji ? (
+                    <span
+                        className="relative text-3xl drop-shadow-md sm:text-5xl"
+                        aria-hidden="true"
+                    >
+                        {userEmoji}
+                    </span>
+                ) : (
+                    <Plane className="relative h-8 w-8 text-white/90 drop-shadow-md sm:h-10 sm:w-10" aria-hidden="true" />
+                )}
             </div>
 
             <div className="p-4">
@@ -50,12 +48,12 @@ export function TripCard({ trip }: TripCardProps) {
                     <TripStatusBadge status={trip.status} />
                 </div>
 
-                <p className="mt-1 flex items-center gap-1 text-xs text-neutral-400 dark:text-neutral-500">
+                <p className="mt-1 flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400">
                     <MapPin className="h-3 w-3" />
                     {trip.destination}
                 </p>
 
-                <p className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">
+                <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                     {formatDateRange(trip.startDate, trip.endDate)}
                 </p>
 

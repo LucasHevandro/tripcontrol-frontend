@@ -68,8 +68,7 @@ export function ToastContainer() {
         <div
             aria-live="polite"
             aria-label="Notificações"
-            className="fixed bottom-4 right-4 z-[100] flex w-full max-w-[360px] flex-col gap-2"
-        >
+            className="fixed bottom-4 left-4 right-4 z-[100] flex flex-col gap-2 sm:left-auto sm:w-full sm:max-w-[360px]"        >
             {toasts.map((toast) => (
                 <ToastItem key={toast.id} toast={toast} />
             ))}

@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { NewReservationModal } from "./new-reservation-modal";
 import { useParticipants } from "@/hooks/participants/use-participants";
 import { useUser } from "@/contexts/user-context";
+import { Button } from "../ui/button";
 
 interface ReservationTriggerProps {
     tripId: string;
@@ -23,10 +24,9 @@ export function ReservationTrigger({ tripId, variant = "button", label = "Nova r
     return (
         <>
             {variant === "button" ? (
-                <button type="button" onClick={() => setIsOpen(true)}
-                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700">
-                    <Plus className="h-4 w-4" />{label}
-                </button>
+                <Button onClick={() => setIsOpen(true)} leftIcon={Plus}>
+                    {label}
+                </Button>
             ) : (
                 <button type="button" onClick={() => setIsOpen(true)}
                     className="flex min-h-[200px] w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-200 bg-white transition-colors hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600 dark:hover:bg-neutral-800">

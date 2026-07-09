@@ -24,9 +24,12 @@ interface NewExpenseModalProps {
     onSave?: (data: NewExpenseFormData) => void;
 }
 
-const SPLIT_OPTIONS = [
+type SplitTypeUI = "equal" | "custom" | "individual";
+
+const SPLIT_OPTIONS: { value: SplitTypeUI; label: string }[] = [
     { value: "equal", label: "Igualmente entre todos" },
     { value: "custom", label: "Personalizado" },
+    { value: "individual", label: "Cada um pagou o seu (sem acerto)" },
 ];
 
 const inputClass =
@@ -43,7 +46,6 @@ export function NewExpenseModal({
     participants,
     currentUserId,
     onClose,
-    onSave,
 }: NewExpenseModalProps) {
     const initialForm = useMemo<NewExpenseFormData>(() => ({
         description: "",
@@ -63,12 +65,14 @@ export function NewExpenseModal({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const createExpense = useCreateExpense(tripId);
 
+    const isIndividual = form.splitType === "individual";
+
     function update(updates: Partial<NewExpenseFormData>) {
         setForm((prev) => ({ ...prev, ...updates }));
     }
 
     function toggleParticipant(id: string) {
-        if (form.splitType === "equal") return;
+        if (form.splitType === "equal" || form.splitType === "individual") return;
         setForm((prev) => {
             const already = prev.splitParticipantIds.includes(id);
             if (already && prev.splitParticipantIds.length === 1) return prev;
@@ -82,13 +86,13 @@ export function NewExpenseModal({
     }
 
     function handleSplitTypeChange(value: string) {
-        const newSplitType = value as "equal" | "custom";
+        const newSplitType = value as SplitTypeUI;
         update({
             splitType: newSplitType,
             splitParticipantIds:
-                newSplitType === "equal"
-                    ? participants.map((p) => p.id)
-                    : form.splitParticipantIds,
+                newSplitType === "custom"
+                    ? form.splitParticipantIds
+                    : participants.map((p) => p.id),
         });
     }
 
@@ -107,6 +111,11 @@ export function NewExpenseModal({
 
     function handleSubmit() {
         if (!isValid) return;
+        const splitTypePayload =
+            form.splitType === "equal" ? "EQUAL"
+                : form.splitType === "custom" ? "CUSTOM"
+                    : "INDIVIDUAL";
+
         createExpense.mutate(
             {
                 description: form.description,
@@ -114,7 +123,7 @@ export function NewExpenseModal({
                 date: form.date,
                 category: form.category!,
                 paidById: form.paidById,
-                splitType: "EQUAL",
+                splitType: splitTypePayload,
                 splitParticipants: form.splitParticipantIds.map((id) => ({ participantId: id })),
                 notes: form.notes || undefined,
             },
@@ -136,7 +145,7 @@ export function NewExpenseModal({
             open
             onClose={onClose}
             ariaLabel="Adicionar nova despesa"
-            size="lg"
+            size="md"
             mobileSheet
         >
             <DialogHeader
@@ -210,92 +219,107 @@ export function NewExpenseModal({
                     </div>
                 </div>
 
-                {/* Pago por + Divisão */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label className={labelClass}>Pago por</label>
-                        <select
-                            value={form.paidById}
-                            onChange={(e) => update({ paidById: e.target.value })}
-                            className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
-                        >
-                            {participants.map((p) => (
-                                <option key={p.id} value={p.id}>{p.name}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className={labelClass}>Divisão</label>
-                        <select
-                            value={form.splitType}
-                            onChange={(e) => handleSplitTypeChange(e.target.value)}
-                            className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
-                        >
-                            {SPLIT_OPTIONS.map((o) => (
-                                <option key={o.value} value={o.value}>{o.label}</option>
-                            ))}
-                        </select>
-                    </div>
+                {/* Divisão — sempre visível */}
+                <div>
+                    <label className={labelClass}>Divisão da despesa</label>
+                    <select
+                        value={form.splitType}
+                        onChange={(e) => handleSplitTypeChange(e.target.value)}
+                        className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                    >
+                        {SPLIT_OPTIONS.map((o) => (
+                            <option key={o.value} value={o.value}>{o.label}</option>
+                        ))}
+                    </select>
                 </div>
 
-                {/* Dividir com */}
-                <div>
-                    <p className={`${labelClass} mb-2`}>Dividir com</p>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                        {participants.map((p) => {
-                            const isSelected = form.splitParticipantIds.includes(p.id);
-                            const isEqual = form.splitType === "equal";
-                            const color = getAvatarColor(p.id);
-                            return (
-                                <button
-                                    key={p.id}
-                                    type="button"
-                                    onClick={() => toggleParticipant(p.id)}
-                                    disabled={isEqual}
-                                    className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${isSelected
-                                        ? isEqual
-                                            ? "cursor-default border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950"
-                                            : "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-950"
-                                        : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600"
-                                        }`}
-                                >
-                                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${color.bg} ${color.text}`}>
-                                        {getInitials(p.name)}
-                                    </span>
-                                    <span className="min-w-0 flex-1 truncate text-left text-sm text-neutral-900 dark:text-neutral-100">
-                                        {p.name}
-                                    </span>
-                                    <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${isSelected
-                                        ? "border-emerald-600 bg-emerald-600"
-                                        : "border-neutral-300 dark:border-neutral-600"
-                                        }`}>
-                                        {isSelected && (
-                                            <svg viewBox="0 0 10 8" fill="none" className="h-2.5 w-2.5 text-white">
-                                                <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
+                {/* Pago por + Dividir com — apenas se não for individual */}
+                {!isIndividual && (
+                    <>
+                        <div>
+                            <label className={labelClass}>Pago por</label>
+                            <select
+                                value={form.paidById}
+                                onChange={(e) => update({ paidById: e.target.value })}
+                                className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                            >
+                                {participants.map((p) => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <p className={`${labelClass} mb-2`}>Dividir com</p>
+                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                                {participants.map((p) => {
+                                    const isSelected = form.splitParticipantIds.includes(p.id);
+                                    const isEqual = form.splitType === "equal";
+                                    const color = getAvatarColor(p.id);
+                                    return (
+                                        <button
+                                            key={p.id}
+                                            type="button"
+                                            onClick={() => toggleParticipant(p.id)}
+                                            disabled={isEqual}
+                                            className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${isSelected
+                                                ? isEqual
+                                                    ? "cursor-default border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950"
+                                                    : "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-950"
+                                                : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600"
+                                                }`}
+                                        >
+                                            <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${color.bg} ${color.text}`}>
+                                                {getInitials(p.name)}
+                                            </span>
+                                            <span className="min-w-0 flex-1 truncate text-left text-sm text-neutral-900 dark:text-neutral-100">
+                                                {p.name}
+                                            </span>
+                                            <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${isSelected
+                                                ? "border-emerald-600 bg-emerald-600"
+                                                : "border-neutral-300 dark:border-neutral-600"
+                                                }`}>
+                                                {isSelected && (
+                                                    <svg viewBox="0 0 10 8" fill="none" className="h-2.5 w-2.5 text-white">
+                                                        <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                )}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Preview valor por pessoa */}
+                            {amountNumber > 0 && selectedCount > 0 && (
+                                <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                                    <Lightbulb className="h-3.5 w-3.5 shrink-0" />
+                                    <span>
+                                        {form.splitType === "equal" ? "Dividido igualmente: " : "Valor por pessoa: "}
+                                        <strong>{formatCurrencyBRL(perPerson)}</strong>{" "}
+                                        ({form.splitType === "equal" ? participants.length : selectedCount} participante
+                                        {(form.splitType === "equal" ? participants.length : selectedCount) !== 1 ? "s" : ""})
+                                        {form.splitType === "equal" && (
+                                            <span className="ml-1 text-amber-600 dark:text-amber-400">· todos incluídos</span>
                                         )}
                                     </span>
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    {/* Preview valor por pessoa */}
-                    {amountNumber > 0 && selectedCount > 0 && (
-                        <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                            <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
-                            <span>
-                                {form.splitType === "equal" ? "Dividido igualmente: " : "Valor por pessoa: "}
-                                <strong>{formatCurrencyBRL(perPerson)}</strong>{" "}
-                                ({form.splitType === "equal" ? participants.length : selectedCount} participante
-                                {(form.splitType === "equal" ? participants.length : selectedCount) !== 1 ? "s" : ""})
-                                {form.splitType === "equal" && (
-                                    <span className="ml-1 text-amber-600 dark:text-amber-400">· todos incluídos</span>
-                                )}
-                            </span>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
+                    </>
+                )}
+
+                {/* Resumo do modo individual */}
+                {isIndividual && amountNumber > 0 && (
+                    <div className="rounded-lg bg-neutral-50 px-3 py-3 text-sm dark:bg-neutral-800">
+                        <p className="text-neutral-700 dark:text-neutral-300">
+                            Valor total do grupo: <strong>{formatCurrencyBRL(amountNumber)}</strong>
+                        </p>
+                        <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                            Registrado sem acerto entre participantes — cada um pagou o seu.
+                        </p>
+                    </div>
+                )}
 
                 {/* Comprovante */}
                 <div>
@@ -312,7 +336,7 @@ export function NewExpenseModal({
                                 : "border-neutral-200 bg-neutral-50 hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600"
                             }`}
                     >
-                        <Paperclip className={`h-5 w-5 ${receiptPreview ? "text-emerald-600" : "text-neutral-300 dark:text-neutral-600"}`} />
+                        <Paperclip className={`h-5 w-5 ${receiptPreview ? "text-emerald-600" : "text-neutral-400 dark:text-neutral-500"}`} />
                         {receiptPreview ? (
                             <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{receiptPreview}</p>
                         ) : (
@@ -321,7 +345,7 @@ export function NewExpenseModal({
                                     Arraste um arquivo ou{" "}
                                     <span className="font-medium text-emerald-700 dark:text-emerald-400">clique para selecionar</span>
                                 </p>
-                                <p className="text-xs text-neutral-400 dark:text-neutral-500">JPG, PNG ou PDF · máx. 5MB</p>
+                                <p className="text-xs text-neutral-500 dark:text-neutral-400">JPG, PNG ou PDF · máx. 5MB</p>
                             </>
                         )}
                     </div>

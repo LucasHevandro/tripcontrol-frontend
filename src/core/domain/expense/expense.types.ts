@@ -1,4 +1,4 @@
-export type SplitType = 'EQUAL' | 'CUSTOM';
+export type SplitType = 'EQUAL' | 'CUSTOM' | 'INDIVIDUAL';
 
 export interface Expense {
     id: string;

@@ -53,6 +53,7 @@ export function ExpensesTable({ tripId, expenses }: ExpensesTableProps) {
                         </div>
 
                         {expenses.map((expense) => {
+                            const isIndividual = expense.splitType === "INDIVIDUAL";
                             const avatarColor = getAvatarColor(expense.paidById);
                             const categoryColor = getCategoryColor(expense.category);
                             return (
@@ -63,12 +64,18 @@ export function ExpensesTable({ tripId, expenses }: ExpensesTableProps) {
                                     <span className="font-medium text-neutral-900 dark:text-neutral-100">
                                         {expense.description}
                                     </span>
-                                    <span className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-                                        <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${avatarColor.bg} ${avatarColor.text}`}>
-                                            {getInitials(expense.paidByName)}
+                                    {isIndividual ? (
+                                        <span className="text-xs italic text-neutral-500 dark:text-neutral-400">
+                                            Cada um pagou o seu
                                         </span>
-                                        <span className="max-w-[80px] truncate">{expense.paidByName}</span>
-                                    </span>
+                                    ) : (
+                                        <span className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
+                                            <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${avatarColor.bg} ${avatarColor.text}`}>
+                                                {getInitials(expense.paidByName)}
+                                            </span>
+                                            <span className="max-w-[80px] truncate">{expense.paidByName}</span>
+                                        </span>
+                                    )}
                                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${categoryColor.badge}`}>
                                         {expense.category}
                                     </span>
@@ -94,6 +101,7 @@ export function ExpensesTable({ tripId, expenses }: ExpensesTableProps) {
                     {/* Cards (< sm) */}
                     <div className="mt-3 space-y-2 sm:hidden">
                         {expenses.map((expense) => {
+                            const isIndividual = expense.splitType === "INDIVIDUAL";
                             const avatarColor = getAvatarColor(expense.paidById);
                             const categoryColor = getCategoryColor(expense.category);
                             const firstName = expense.paidByName.split(" ")[0];
@@ -115,12 +123,16 @@ export function ExpensesTable({ tripId, expenses }: ExpensesTableProps) {
                                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${categoryColor.badge}`}>
                                             {expense.category}
                                         </span>
-                                        <span className="flex items-center gap-1.5">
-                                            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold ${avatarColor.bg} ${avatarColor.text}`}>
-                                                {getInitials(expense.paidByName)}
+                                        {isIndividual ? (
+                                            <span className="italic">Cada um pagou o seu</span>
+                                        ) : (
+                                            <span className="flex items-center gap-1.5">
+                                                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold ${avatarColor.bg} ${avatarColor.text}`}>
+                                                    {getInitials(expense.paidByName)}
+                                                </span>
+                                                {firstName}
                                             </span>
-                                            {firstName}
-                                        </span>
+                                        )}
                                         <span className="text-neutral-400 dark:text-neutral-600">·</span>
                                         <span>{expense.date}</span>
                                         <button

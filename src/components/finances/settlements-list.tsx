@@ -7,6 +7,8 @@ import type { Settlement } from "@/types/trip";
 interface SettlementsListProps {
     settlements: Settlement[];
     perPersonAverage: number;
+    currentUserId: string;
+    tripId: string;
 }
 
 function Avatar({ id, name }: { id: string; name: string }) {

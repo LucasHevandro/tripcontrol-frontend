@@ -34,20 +34,25 @@ export function RecentExpensesList({ tripId, expenses }: RecentExpensesListProps
             <ul className="mt-3 divide-y divide-neutral-100 dark:divide-neutral-800">
                 {expenses.map((expense) => {
                     const Icon = CATEGORY_ICON[expense.category] ?? Receipt;
+                    const isIndividual = expense.splitType === "INDIVIDUAL";
                     return (
                         <li key={expense.id} className="flex items-center gap-3 py-3">
                             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
                                 <Icon className="h-[18px] w-[18px]" />
                             </span>
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                            <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
                                     {expense.description}
                                 </p>
-                                <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                                    {expense.category} · {expense.paidByName}
+                                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                    {expense.category} · {isIndividual ? (
+                                        <span className="italic">Cada um pagou o seu</span>
+                                    ) : (
+                                        expense.paidByName
+                                    )}
                                 </p>
                             </div>
-                            <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                            <span className="shrink-0 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                                 {formatCurrencyBRL(expense.amount)}
                             </span>
                         </li>

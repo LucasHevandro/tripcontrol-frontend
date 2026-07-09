@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
     Link as LinkIcon, Copy, Check, Mail, Send, Plus, Trash2, Users,
+    Plane,
 } from "lucide-react";
 import { useInviteByEmail } from "@/hooks/participants/use-participants";
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@/components/ui/dialog";
@@ -91,7 +92,7 @@ export function InviteModal({ tripId, tripName, inviteLink, onClose }: InviteMod
                 <div className="space-y-5 px-4 sm:px-5">
                     {/* Contexto da viagem */}
                     <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 dark:bg-emerald-950">
-                        <span className="text-base">✈️</span>
+                        <Plane className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                         <div>
                             <p className="text-sm font-medium text-emerald-900 dark:text-emerald-300">{tripName}</p>
                             <p className="text-xs text-emerald-700 dark:text-emerald-500">

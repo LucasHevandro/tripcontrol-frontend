@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { Plus, Paperclip, AlertCircle } from "lucide-react";
+import { Plus, Paperclip, AlertCircle, Lightbulb } from "lucide-react";
 import { getCategoryColor, getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
@@ -283,7 +283,7 @@ export function NewExpenseModal({
                     {/* Preview valor por pessoa */}
                     {amountNumber > 0 && selectedCount > 0 && (
                         <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                            <span>💡</span>
+                            <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
                             <span>
                                 {form.splitType === "equal" ? "Dividido igualmente: " : "Valor por pessoa: "}
                                 <strong>{formatCurrencyBRL(perPerson)}</strong>{" "}

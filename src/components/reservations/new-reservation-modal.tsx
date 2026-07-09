@@ -188,7 +188,7 @@ export function NewReservationModal({
                 {form.category && (
                     <div className="rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800">
                         <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-                            <span>{selectedCategory?.emoji}</span>
+                            {selectedCategory?.icon && <selectedCategory.icon className="h-3.5 w-3.5" />}
                             Detalhes da {selectedCategory?.label}
                         </p>
                         <ReservationCategoryFields

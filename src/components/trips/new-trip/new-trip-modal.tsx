@@ -63,11 +63,7 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
             tripType: data.tripType ? toUpperEnum<TripType>(data.tripType) : undefined,
             budget: data.budget ? Number(data.budget) : undefined,
             description: data.description || undefined,
-            emoji:
-                data.destinationType === "beach" ? "🏖️"
-                    : data.destinationType === "countryside" ? "🏔️"
-                        : data.destinationType === "city" ? "🌆"
-                            : "✈️",
+            emoji: undefined,
         });
     }
 

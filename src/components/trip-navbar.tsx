@@ -115,13 +115,12 @@ export function TripNavbar({ tripId, activeTab }: TripNavbarProps) {
 
                         {/* Dropdown (desktop) */}
                         {isAccountMenuOpen && (
-                            <div className="absolute right-0 top-[calc(100%+8px)] hidden w-52 rounded-lg border border-neutral-200 bg-white py-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-900 md:block">
-                                {user && (
-                                    <div className="border-b border-neutral-100 px-4 py-3 dark:border-neutral-800">
-                                        <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{user.name}</p>
-                                        <p className="text-xs text-neutral-500 dark:text-neutral-400">{user.email}</p>
-                                    </div>
-                                )}
+                            <div className="absolute right-0 top-[calc(100%+8px)] z-50 hidden w-52 rounded-lg border border-neutral-200 bg-white py-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-900 md:block">                                {user && (
+                                <div className="border-b border-neutral-100 px-4 py-3 dark:border-neutral-800">
+                                    <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{user.name}</p>
+                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">{user.email}</p>
+                                </div>
+                            )}
                                 <Link
                                     href="/profile"
                                     onClick={() => setIsAccountMenuOpen(false)}

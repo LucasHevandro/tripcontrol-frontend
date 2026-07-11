@@ -16,6 +16,8 @@ export interface Expense {
     paidByParticipantId: string;
     paidByName: string;
     amount: number;
+    splitType?: 'EQUAL' | 'CUSTOM' | 'INDIVIDUAL'; // ← adicionar
+
 }
 
 export type ActivityStatus = "completed" | "current" | "upcoming";
@@ -261,7 +263,7 @@ export type ExpenseCategory =
     | "Compras"
     | "Outro";
 
-export type ExpenseSplitType = "equal" | "custom";
+export type ExpenseSplitType = "equal" | "custom" | "individual";
 
 export interface NewExpenseFormData {
     description: string;

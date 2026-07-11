@@ -14,6 +14,7 @@ import { useParticipants } from "@/hooks/participants/use-participants";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
+import { useUser } from "@/contexts/user-context";
 
 export default function FinancesPage({
     params,
@@ -26,6 +27,7 @@ export default function FinancesPage({
     const { data: participantsData } = useParticipants(tripId);
     const settlements = participantsData?.settlementSummary ?? [];
     const participants = participantsData?.participants ?? [];
+    const { user } = useUser();
 
     if (loadingSummary || loadingExpenses) return <FinancesSkeleton />;
 
@@ -81,6 +83,8 @@ export default function FinancesPage({
                     <SettlementsList
                         settlements={settlements}
                         perPersonAverage={summary?.perPersonAverage ?? 0}
+                        currentUserId={user?.id ?? ""}
+                        tripId={tripId}
                     />
                     <IndividualBalances
                         participants={participants.map((p) => ({

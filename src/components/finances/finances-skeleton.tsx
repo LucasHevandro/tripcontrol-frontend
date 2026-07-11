@@ -3,7 +3,7 @@ import { SkeletonCard } from "@/components/ui/skeleton-card";
 
 export function FinancesSkeleton() {
     return (
-        <div className="space-y-1">
+        <div className="space-y-6">
             {/* Header */}
             <div className="flex items-start justify-between">
                 <div className="space-y-1.5">
@@ -83,7 +83,7 @@ export function FinancesSkeleton() {
                     </div>
 
                     {/* Saldo individual */}
-                    <div className="rounded-lg bg-neutral-50 p-4">
+                    <div className="rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800">
                         <Skeleton className="h-4 w-28 mb-3" />
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="flex items-center gap-3 mb-3">

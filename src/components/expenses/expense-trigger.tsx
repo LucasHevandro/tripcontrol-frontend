@@ -22,7 +22,7 @@ export function ExpenseTrigger({
     buttonClassName,
 }: ExpenseTriggerProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const { data: participantsData, isLoading } = useParticipants(tripId);
+    const { data: participantsData } = useParticipants(tripId);
     const { user } = useUser();
 
     const participants = (participantsData?.participants ?? []).map((p) => ({

@@ -30,10 +30,8 @@ export function useUpdateProfile() {
             queryClient.setQueryData(['user', 'profile'], data);
             addToast('Dados salvos com sucesso!');
         },
-        onError: (error: any) => {
-            const message =
-                error?.response?.data?.message ?? 'Erro ao salvar dados';
-            addToast(message, 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao salvar dados'), 'error');
         },
     });
 }
@@ -48,10 +46,8 @@ export function useUpdatePassword() {
         onSuccess: () => {
             addToast('Senha atualizada com sucesso!');
         },
-        onError: (error: any) => {
-            const message =
-                error?.response?.data?.message ?? 'Erro ao atualizar senha';
-            addToast(message, 'error');
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao atualizar senha'), 'error');
         },
     });
 }

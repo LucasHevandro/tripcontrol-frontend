@@ -29,6 +29,11 @@ export interface ReservationsResponse {
     reservations: Reservation[];
 }
 
+export type ReservationDetails = Record<
+    string,
+    string | number | boolean | null | undefined
+>;
+
 export interface CreateReservationPayload {
     category: Uppercase<ReservationCategory>;
     title: string;
@@ -37,5 +42,5 @@ export interface CreateReservationPayload {
     amount: number;
     paidById?: string;
     notes?: string;
-    details?: Record<string, any>;
+    details?: ReservationDetails;
 }   

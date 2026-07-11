@@ -63,7 +63,6 @@ export function useRegister() {
 export function useLogout() {
     const { auth } = useRepositories();
     const router = useRouter();
-    const { addToast } = useToast();
     const queryClient = useQueryClient();
 
     return useMutation({

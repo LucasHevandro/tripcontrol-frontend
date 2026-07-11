@@ -16,7 +16,6 @@ interface NewActivityModalProps {
     defaultDate?: string;
     editingActivity?: RoadmapActivity | null;
     onClose: () => void;
-    onSave?: (data: NewActivityFormData) => void;
 }
 
 const COST_TYPE_OPTIONS = [
@@ -43,7 +42,6 @@ export function NewActivityModal({
     defaultDate,
     editingActivity,
     onClose,
-    onSave,
 }: NewActivityModalProps) {
     const isEditing = !!editingActivity;
 

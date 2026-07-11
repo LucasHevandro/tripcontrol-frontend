@@ -8,7 +8,7 @@ import { formatCurrencyBRL } from "@/lib/format";
 import type { NewReservationFormData, ReservationCategory, ReservationDetail } from "@/types/trip";
 import { useCreateReservation, useUpdateReservation } from "@/hooks/reservations/use-reservations";
 import { toUpperEnum } from "@/lib/utils";
-import type { ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
+import type { CreateReservationPayload, ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
 import { Dialog, DialogBody, DialogFooter, DialogHeader } from "../ui/dialog";
 import { Button } from "../ui/button";
 
@@ -23,7 +23,6 @@ interface NewReservationModalProps {
     currentUserId: string;
     editingReservation?: ReservationDetail | null;
     onClose: () => void;
-    onSave?: (data: NewReservationFormData) => void;
 }
 
 const EMPTY_FORM: NewReservationFormData = {
@@ -44,13 +43,19 @@ const inputClass =
 
 const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
 
+function getReservationDetails(
+    form: NewReservationFormData,
+): CreateReservationPayload["details"] {
+    if (!form.category) return undefined;
+    return { ...form[form.category] };
+}
+
 export function NewReservationModal({
     tripId,
     participants,
     currentUserId,
     editingReservation,
     onClose,
-    onSave,
 }: NewReservationModalProps) {
     const isEditing = !!editingReservation;
 
@@ -93,14 +98,14 @@ export function NewReservationModal({
 
     function handleSubmit() {
         if (!isValid) return;
-        const payload = {
+        const payload: CreateReservationPayload = {
             category: toUpperEnum<ReservationCategoryUpper>(form.category!),
             title: form.title,
             subtitle: form.subtitle || undefined,
             amount: Number(form.amount),
             paidById: form.paidById || undefined,
             notes: form.notes || undefined,
-            details: form.category ? (form[form.category] as any) : undefined,
+            details: getReservationDetails(form),
         };
 
         if (isEditing && editingReservation) {

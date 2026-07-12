@@ -65,6 +65,8 @@ export type DestinationType = "beach" | "city" | "countryside" | "international"
 export interface NewTripFormData {
     name: string;
     destination: string;
+    destinationLat?: number;
+    destinationLng?: number;
     destinationType: DestinationType | null;
     startDate: string;
     endDate: string;

@@ -8,6 +8,8 @@ import type { NewTripFormData } from "../../../types/trip";
 export const INITIAL_TRIP_FORM: NewTripFormData = {
     name: "",
     destination: "",
+    destinationLat: undefined,
+    destinationLng: undefined,
     destinationType: null,
     startDate: "",
     endDate: "",
@@ -33,16 +35,19 @@ export function getTripDurationDays(start: string, end: string): number {
 
 export function buildCreateTripPayload(data: NewTripFormData): CreateTripPayload {
     return {
-        name: data.name,
-        destination: data.destination,
+        name: data.name.trim(),
+        destination: data.destination.trim(),
+        destinationLat: data.destinationLat,
+        destinationLng: data.destinationLng,
         destinationType: data.destinationType
             ? (data.destinationType.toUpperCase() as ApiDestinationType)
             : undefined,
         startDate: data.startDate,
         endDate: data.endDate,
-        tripType: data.tripType ? (data.tripType.toUpperCase() as ApiTripType) : undefined,
+        tripType: data.tripType
+            ? (data.tripType.toUpperCase() as ApiTripType)
+            : undefined,
         budget: data.budget ? Number(data.budget) : undefined,
-        description: data.description || undefined,
-        emoji: undefined,
+        description: data.description.trim() || undefined,
     };
 }

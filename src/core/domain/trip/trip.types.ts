@@ -32,6 +32,8 @@ export interface MyTripsResponse {
 export interface CreateTripPayload {
     name: string;
     destination: string;
+    destinationLat?: number;
+    destinationLng?: number;
     destinationType?: DestinationType;
     startDate: string;
     endDate: string;

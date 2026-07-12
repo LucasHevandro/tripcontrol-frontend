@@ -63,7 +63,6 @@ export function ReservationCard({ tripId, reservation: res }: ReservationCardPro
 
     const category = CATEGORY_BY_VALUE.get(res.category);
     const statusBadge = STATUS_BADGE[res.status];
-    const detailIcons = DETAIL_ICONS[res.category];
     const ActionIcon = res.primaryAction ? ACTION_ICON[res.primaryAction.icon] : null;
 
     return (

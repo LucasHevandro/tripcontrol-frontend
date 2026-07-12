@@ -7,6 +7,7 @@ import { Sparkles, Check, AlertTriangle, LogIn } from "lucide-react";
 import { useUser } from "@/contexts/user-context";
 import { useJoinTrip } from "@/hooks/participants/use-participants";
 import { getErrorMessage } from "@/lib/utils";
+import { getInviteLoginHref } from "@/lib/auth-routing";
 
 type Status = "checking" | "unauthenticated" | "joining" | "success" | "error";
 
@@ -98,7 +99,7 @@ export default function JoinPage({
                             </p>
                         </div>
                         <Link
-                            href={`/login?redirect=${encodeURIComponent(`/join/${token}`)}`}
+                            href={getInviteLoginHref(token)}
                             className="w-full rounded-lg bg-emerald-600 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
                         >
                             Entrar para continuar

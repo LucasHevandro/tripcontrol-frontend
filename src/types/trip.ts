@@ -1,223 +1,61 @@
-// types/trip.ts
+import type {
+    CategoryBreakdown as DomainCategoryBreakdown,
+    ExpenseSummary,
+} from "@/core/domain/expense/expense.types";
+import type {
+    Participant,
+    ParticipantsResponse,
+    Settlement as DomainSettlement,
+} from "@/core/domain/participant/participant.types";
+import type {
+    ActiveReservation as DomainActiveReservation,
+    RoadmapActivity as DomainRoadmapActivity,
+    RoadmapDay as DomainRoadmapDay,
+    RoadmapResponse,
+} from "@/core/domain/roadmap/roadmap.types";
+import type {
+    Reservation as DomainReservation,
+    ReservationCategory as DomainReservationCategory,
+    ReservationsResponse,
+    ReservationStatus as DomainReservationStatus,
+} from "@/core/domain/reservation/reservation.types";
+import type {
+    DashboardActivity,
+    DashboardExpense,
+    DashboardParticipant,
+    MyTripsResponse,
+    TripCard as DomainTripCard,
+    TripDashboard,
+    TripStatus as DomainTripStatus,
+} from "@/core/domain/trip/trip.types";
 
-export type TripStatus = "PLANNING" | "ONGOING" | "COMPLETED";
+export type TripStatus = DomainTripStatus;
+export type TripParticipant = DashboardParticipant;
+export type Expense = DashboardExpense;
+export type Activity = DashboardActivity;
+export type ActivityStatus = DashboardActivity["status"];
+export type TripSummary = TripDashboard["trip"];
+export type TripDashboardData = TripDashboard;
+export type CategoryBreakdown = DomainCategoryBreakdown;
+export type Settlement = DomainSettlement;
+export type ActiveReservation = DomainActiveReservation;
+export type RoadmapActivity = DomainRoadmapActivity;
+export type RoadmapDay = DomainRoadmapDay;
+export type RoadmapData = RoadmapResponse;
+export type ReservationCategory = DomainReservationCategory;
+export type ReservationStatus = DomainReservationStatus;
+export type ReservationDetail = DomainReservation;
+export type ReservationsData = ReservationsResponse;
+export type ParticipantRole = Participant["role"];
+export type ParticipantDetail = Participant;
+export type ParticipantsData = ParticipantsResponse;
+export type TripCard = DomainTripCard;
+export type MyTripsData = MyTripsResponse;
 
-export interface TripParticipant {
-    id: string;
-    name: string;
-    /** Saldo em reais. Positivo = a receber, negativo = a pagar. */
-    balance: number;
-}
-
-export interface Expense {
-    id: string;
-    description: string;
-    category: string;
-    paidByParticipantId: string;
-    paidByName: string;
-    amount: number;
-    splitType?: 'EQUAL' | 'CUSTOM' | 'INDIVIDUAL'; // ← adicionar
-
-}
-
-export type ActivityStatus = "completed" | "current" | "upcoming";
-
-export interface Activity {
-    id: string;
-    time: string;
-    title: string;
-    location: string;
-    status: ActivityStatus;
-}
-
-export interface TripSummary {
-    id: string;
-    name: string;
-    destination: string;
-    startDate: string;
-    endDate: string;
-    status: TripStatus;
-    participantCount: number;
-}
-
-export interface TripDashboardData {
-    trip: TripSummary;
-    totalSpent: number;
-    budget: number;
-    expenseCount: number;
-    activityCount: number;
-    completedActivityCount: number;
-    reservationCount: number;
-    allReservationsConfirmed: boolean;
-    recentExpenses: Expense[];
-    todayLabel: string;
-    todayActivities: Activity[];
-    participants: TripParticipant[];
-    newTripStatus: NewTripStatus;
-}
-
-export interface CategoryBreakdown {
-    category: string;
-    total: number;
-    percentage: number;
-}
-
-export interface Settlement {
-    id: string;
-    fromParticipantId: string;
-    fromName: string;
-    toParticipantId: string;
-    toName: string;
-    amount: number;
-    description: string;
-}
-
-export interface FinancesData {
-    tripName: string;
-    tripPeriod: string;
-    totalSpent: number;
-    expenseCount: number;
-    perPersonAverage: number;
-    participantCount: number;
-    largestExpenseAmount: number;
-    largestExpenseDescription: string;
-    groupBalanceLabel: string;
-    expenses: (Expense & { date: string })[];
-    categoryBreakdown: CategoryBreakdown[];
+export interface FinancesData extends ExpenseSummary {
+    expenses: (DashboardExpense & { date: string })[];
     settlements: Settlement[];
     participants: TripParticipant[];
-}
-
-export type ReservationStatus = "confirmed" | "pending" | "cancelled";
-
-export interface ActiveReservation {
-    id: string;
-    title: string;
-    subtitle: string;
-    status: ReservationStatus;
-    icon: "hotel" | "car" | "flight" | "boat";
-}
-
-export interface RoadmapActivity {
-    id: string;
-    time: string;
-    title: string;
-    emoji: string;
-    duration: string;
-    location: string;
-    costLabel: string;
-    note: string;
-    status: ActivityStatus;
-    badge?: string;
-    // Campos crus para edição
-    date?: string;
-    startTime?: string;
-    costAmount?: number | null;
-    costType?: string;
-}
-
-export interface RoadmapDay {
-    date: string;
-    label: string;
-    shortLabel: string;
-    fullLabel: string;
-    activityCount: number;
-    participantCount: number;
-    activities: RoadmapActivity[];
-}
-
-export interface RoadmapData {
-    tripName: string;
-    tripPeriod: string;
-    tripDurationDays: number;
-    days: RoadmapDay[];
-    activeReservations: ActiveReservation[];
-}
-
-export type ReservationCategory = "hotel" | "flight" | "car" | "tour";
-
-export interface ReservationDetail {
-    id: string;
-    category: ReservationCategory;
-    status: ReservationStatus;
-    title: string;
-    subtitle: string;
-    details: string[];
-    amount: number;
-    amountSublabel: string;
-    warning?: string;
-    primaryAction?: {
-        label: string;
-        icon: "voucher" | "tickets" | "pay";
-        href: string;
-    };
-    // Campos crus para edição
-    notes?: string;
-    rawDetails?: Record<string, string>;
-    paidById?: string | null;
-}
-
-export interface ReservationsData {
-    tripName: string;
-    tripPeriod: string;
-    totalReservations: number;
-    confirmedCount: number;
-    totalInvested: number;
-    nextCheckinLabel: string;
-    nextCheckinSublabel: string;
-    nextFlightLabel: string;
-    nextFlightSublabel: string;
-    reservations: ReservationDetail[];
-}
-
-export type ParticipantRole = "ORGANIZER" | "MEMBER";
-
-export interface ParticipantDetail {
-    id: string;
-    name: string;
-    email: string;
-    role: ParticipantRole;
-    totalPaid: number;
-    individualQuota: number;
-    balance: number;
-}
-
-export interface ParticipantsData {
-    tripName: string;
-    tripPeriod: string;
-    participantCount: number;
-    maxParticipants: number;
-    organizerCount: number;
-    totalSpent: number;
-    perPersonAverage: number;
-    pendingSettlementsCount: number;
-    pendingSettlementsAmount: number;
-    groupStatusLabel: string;
-    groupStatusSublabel: string;
-    inviteLink: string;
-    participants: ParticipantDetail[];
-    settlementSummary: Settlement[];
-}
-
-export interface TripCard {
-    id: string;
-    name: string;
-    destination: string;
-    startDate: string;
-    endDate: string;
-    status: TripStatus;
-    emoji: string;
-    bannerClassName: string;
-    participants: { id: string; name: string }[];
-    extraParticipantCount: number;
-    totalSpent: number;
-    budget: number;
-}
-
-export interface MyTripsData {
-    activeTripCount: number;
-    completedTripCount: number;
-    trips: TripCard[];
 }
 
 export type TripType = "friends" | "couple" | "family" | "work" | "tour" | "other";

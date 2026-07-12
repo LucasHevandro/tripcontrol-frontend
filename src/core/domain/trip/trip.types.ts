@@ -11,12 +11,17 @@ export interface TripCard {
     endDate: string;
     status: TripStatus;
     emoji: string | null;
+    bannerClassName?: string;
     participants: { id: string; name: string; avatarUrl: string | null }[];
     extraParticipantCount: number;
     totalSpent: number;
     budget: number;
     role: string;
 }
+
+export type DashboardExpense = TripDashboard['recentExpenses'][number];
+export type DashboardActivity = TripDashboard['todayActivities'][number];
+export type DashboardParticipant = TripDashboard['participants'][number];
 
 export interface MyTripsResponse {
     activeTripCount: number;
@@ -61,6 +66,7 @@ export interface TripDashboard {
         paidByParticipantId: string;
         amount: number;
         date: string;
+        splitType?: 'EQUAL' | 'CUSTOM' | 'INDIVIDUAL';
     }[];
     todayLabel: string;
     todayActivities: {

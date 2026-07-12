@@ -7,10 +7,13 @@ import { ReservationCategoryFields } from "./reservation-category-fields";
 import { formatCurrencyBRL } from "@/lib/format";
 import type { NewReservationFormData, ReservationCategory, ReservationDetail } from "@/types/trip";
 import { useCreateReservation, useUpdateReservation } from "@/hooks/reservations/use-reservations";
-import { toUpperEnum } from "@/lib/utils";
-import type { ReservationCategoryUpper } from "@/core/domain/reservation/reservation.types";
 import { Dialog, DialogBody, DialogFooter, DialogHeader } from "../ui/dialog";
 import { Button } from "../ui/button";
+import {
+    buildReservationPayload,
+    EMPTY_RESERVATION_FORM,
+    isReservationFormValid,
+} from "./reservation-form";
 
 interface Participant {
     id: string;
@@ -23,21 +26,7 @@ interface NewReservationModalProps {
     currentUserId: string;
     editingReservation?: ReservationDetail | null;
     onClose: () => void;
-    onSave?: (data: NewReservationFormData) => void;
 }
-
-const EMPTY_FORM: NewReservationFormData = {
-    category: null,
-    title: "",
-    subtitle: "",
-    amount: "",
-    paidById: "",
-    notes: "",
-    hotel: { checkIn: "", checkOut: "", guestCount: "", roomCount: "", address: "", reservationCode: "" },
-    flight: { departureDate: "", departureTime: "", arrivalTime: "", flightNumber: "", returnDate: "", returnTime: "", returnFlightNumber: "", passengerCount: "", cabinClass: "economy", locator: "" },
-    car: { pickupDate: "", pickupTime: "", returnDate: "", returnTime: "", pickupLocation: "", carModel: "", reservationCode: "" },
-    tour: { date: "", startTime: "", endTime: "", peopleCount: "", meetingPoint: "", warning: "" },
-};
 
 const inputClass =
     "w-full rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500";
@@ -50,7 +39,6 @@ export function NewReservationModal({
     currentUserId,
     editingReservation,
     onClose,
-    onSave,
 }: NewReservationModalProps) {
     const isEditing = !!editingReservation;
 
@@ -59,7 +47,7 @@ export function NewReservationModal({
             const cat = editingReservation.category;
             const raw = editingReservation.rawDetails ?? {};
             return {
-                ...EMPTY_FORM,
+                ...EMPTY_RESERVATION_FORM,
                 category: cat,
                 title: editingReservation.title,
                 subtitle: editingReservation.subtitle,
@@ -67,10 +55,10 @@ export function NewReservationModal({
                 paidById: editingReservation.paidById ?? currentUserId,
                 notes: editingReservation.notes ?? "",
                 // Preenche apenas o bloco da categoria da reserva editada
-                [cat]: { ...EMPTY_FORM[cat], ...raw },
+                [cat]: { ...EMPTY_RESERVATION_FORM[cat], ...raw },
             } as NewReservationFormData;
         }
-        return { ...EMPTY_FORM, paidById: currentUserId };
+        return { ...EMPTY_RESERVATION_FORM, paidById: currentUserId };
     });
 
     const createReservation = useCreateReservation(tripId);
@@ -86,22 +74,11 @@ export function NewReservationModal({
         update({ category, subtitle: found?.label ?? "" });
     }
 
-    const isValid =
-        form.category !== null &&
-        form.title.trim() !== "" &&
-        Number(form.amount) > 0;
+    const isValid = isReservationFormValid(form);
 
     function handleSubmit() {
         if (!isValid) return;
-        const payload = {
-            category: toUpperEnum<ReservationCategoryUpper>(form.category!),
-            title: form.title,
-            subtitle: form.subtitle || undefined,
-            amount: Number(form.amount),
-            paidById: form.paidById || undefined,
-            notes: form.notes || undefined,
-            details: form.category ? (form[form.category] as any) : undefined,
-        };
+        const payload = buildReservationPayload(form);
 
         if (isEditing && editingReservation) {
             updateReservation.mutate(

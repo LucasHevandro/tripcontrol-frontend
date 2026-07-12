@@ -14,6 +14,10 @@ export interface RoadmapActivity {
     note: string;
     status: ActivityStatus;
     badge?: string;
+    date?: string;
+    startTime?: string;
+    costAmount?: number | null;
+    costType?: string;
 }
 
 export interface RoadmapDay {
@@ -31,13 +35,15 @@ export interface RoadmapResponse {
     tripPeriod: string;
     tripDurationDays: number;
     days: RoadmapDay[];
-    activeReservations: {
-        id: string;
-        title: string;
-        subtitle: string;
-        status: ReservationStatus;
-        icon: 'hotel' | 'car' | 'flight' | 'boat';
-    }[];
+    activeReservations: ActiveReservation[];
+}
+
+export interface ActiveReservation {
+    id: string;
+    title: string;
+    subtitle: string;
+    status: ReservationStatus;
+    icon: 'hotel' | 'car' | 'flight' | 'boat';
 }
 
 export interface CreateActivityPayload {

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MapPin, Plane } from "lucide-react";
-import type { TripCard as LegacyTripCard } from "@/types/trip";
 import type { TripCard as DomainTripCard } from "@/core/domain/trip/trip.types";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
@@ -8,10 +7,8 @@ import { formatCurrencyBRL, formatDateRange } from "@/lib/format";
 import { getTripGradient } from "@/lib/trip-gradients";
 import { TripStatusBadge } from "./trip-status-badge";
 
-type TripCardType = LegacyTripCard | DomainTripCard;
-
 interface TripCardProps {
-    trip: TripCardType;
+    trip: DomainTripCard;
 }
 
 export function TripCard({ trip }: TripCardProps) {

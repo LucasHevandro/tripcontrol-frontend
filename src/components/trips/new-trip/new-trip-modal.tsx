@@ -8,22 +8,14 @@ import { Step2Details } from "./step-2-details";
 import { Step3Review } from "./step-3-review";
 import type { NewTripFormData } from "@/types/trip";
 import { useCreateTrip } from "@/hooks/trips/use-trips";
-import { toUpperEnum } from "@/lib/utils";
-import type { DestinationType, TripType } from "@/core/domain/trip/trip.types";
+import {
+    buildCreateTripPayload,
+    INITIAL_TRIP_FORM,
+    isTripStep1Valid,
+} from "./new-trip-form";
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-
-const INITIAL_DATA: NewTripFormData = {
-    name: "",
-    destination: "",
-    destinationType: null,
-    startDate: "",
-    endDate: "",
-    tripType: null,
-    budget: "",
-    description: "",
-};
 
 interface NewTripModalProps {
     onClose: () => void;
@@ -32,17 +24,13 @@ interface NewTripModalProps {
 export function NewTripModal({ onClose }: NewTripModalProps) {
     const createTrip = useCreateTrip();
     const [step, setStep] = useState(1);
-    const [data, setData] = useState<NewTripFormData>(INITIAL_DATA);
+    const [data, setData] = useState<NewTripFormData>(INITIAL_TRIP_FORM);
 
     function updateData(updates: Partial<NewTripFormData>) {
         setData((prev) => ({ ...prev, ...updates }));
     }
 
-    const isStep1Valid =
-        data.name.trim() !== "" &&
-        data.destination.trim() !== "" &&
-        data.startDate !== "" &&
-        data.endDate !== "";
+    const isStep1Valid = isTripStep1Valid(data);
 
     function handleNext() {
         if (step === 1 && !isStep1Valid) return;
@@ -54,17 +42,7 @@ export function NewTripModal({ onClose }: NewTripModalProps) {
     }
 
     function handleCreate() {
-        createTrip.mutate({
-            name: data.name,
-            destination: data.destination,
-            destinationType: data.destinationType ? toUpperEnum<DestinationType>(data.destinationType) : undefined,
-            startDate: data.startDate,
-            endDate: data.endDate,
-            tripType: data.tripType ? toUpperEnum<TripType>(data.tripType) : undefined,
-            budget: data.budget ? Number(data.budget) : undefined,
-            description: data.description || undefined,
-            emoji: undefined,
-        });
+        createTrip.mutate(buildCreateTripPayload(data));
     }
 
     return (

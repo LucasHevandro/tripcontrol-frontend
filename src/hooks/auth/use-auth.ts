@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
 import { getErrorMessage } from '@/lib/utils';
+import { getRedirectTarget } from '@/lib/auth-routing';
 import type { LoginCredentials, RegisterCredentials } from '@/core/domain/auth/auth.types';
 import { useUser } from "@/contexts/user-context";
 
@@ -18,7 +19,7 @@ export function useLogin() {
         typeof window !== 'undefined'
             ? new URLSearchParams(window.location.search)
             : null;
-    const redirectTo = searchParams?.get('redirect') ?? '/trips';
+    const redirectTo = getRedirectTarget(searchParams);
 
     return useMutation({
         mutationFn: (credentials: LoginCredentials) => auth.login(credentials),
@@ -44,7 +45,7 @@ export function useRegister() {
         typeof window !== 'undefined'
             ? new URLSearchParams(window.location.search)
             : null;
-    const redirectTo = searchParams?.get('redirect') ?? '/trips';
+    const redirectTo = getRedirectTarget(searchParams);
 
     return useMutation({
         mutationFn: (credentials: RegisterCredentials) => auth.register(credentials),
@@ -63,7 +64,6 @@ export function useRegister() {
 export function useLogout() {
     const { auth } = useRepositories();
     const router = useRouter();
-    const { addToast } = useToast();
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -90,7 +90,7 @@ export function useGoogleAuth() {
         typeof window !== 'undefined'
             ? new URLSearchParams(window.location.search)
             : null;
-    const redirectTo = searchParams?.get('redirect') ?? '/trips';
+    const redirectTo = getRedirectTarget(searchParams);
 
     return useMutation({
         mutationFn: (credential: string) => auth.googleLogin(credential),

@@ -12,6 +12,9 @@ export interface Reservation {
     amount: number;
     amountSublabel: string;
     warning?: string;
+    notes?: string;
+    rawDetails?: Record<string, string>;
+    paidById?: string | null;
     primaryAction?: {
         label: string;
         icon: 'voucher' | 'tickets' | 'pay';
@@ -25,9 +28,16 @@ export interface ReservationsResponse {
     confirmedCount: number;
     totalInvested: number;
     nextCheckinLabel: string;
+    nextCheckinSublabel?: string;
     nextFlightLabel: string;
+    nextFlightSublabel?: string;
     reservations: Reservation[];
 }
+
+export type ReservationDetails = Record<
+    string,
+    string | number | boolean | null | undefined
+>;
 
 export interface CreateReservationPayload {
     category: Uppercase<ReservationCategory>;
@@ -37,5 +47,5 @@ export interface CreateReservationPayload {
     amount: number;
     paidById?: string;
     notes?: string;
-    details?: Record<string, any>;
+    details?: ReservationDetails;
 }   

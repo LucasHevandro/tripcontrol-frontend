@@ -2,19 +2,14 @@ import { Users } from "lucide-react";
 import { TRIP_TYPE_LABEL } from "@/lib/new-trip-options";
 import { formatCurrencyBRL, formatDateRange } from "@/lib/format";
 import type { NewTripFormData } from "@/types/trip";
+import { getTripDurationDays } from "./new-trip-form";
 
 interface Step3ReviewProps {
     data: NewTripFormData;
 }
 
-function getDurationDays(start: string, end: string): number {
-    if (!start || !end) return 0;
-    const diff = new Date(end).getTime() - new Date(start).getTime();
-    return Math.round(diff / (1000 * 60 * 60 * 24));
-}
-
 export function Step3Review({ data }: Step3ReviewProps) {
-    const durationDays = getDurationDays(data.startDate, data.endDate);
+    const durationDays = getTripDurationDays(data.startDate, data.endDate);
     const budgetNumber = Number(data.budget) || 0;
 
     const rows = [

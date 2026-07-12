@@ -23,11 +23,13 @@ export interface ExpenseSummary {
     largestExpenseAmount: number;
     largestExpenseDescription: string;
     groupBalanceLabel: string;
-    categoryBreakdown: {
-        category: string;
-        total: number;
-        percentage: number;
-    }[];
+    categoryBreakdown: CategoryBreakdown[];
+}
+
+export interface CategoryBreakdown {
+    category: string;
+    total: number;
+    percentage: number;
 }
 
 export interface CreateExpensePayload {

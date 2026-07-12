@@ -12,6 +12,9 @@ export interface Reservation {
     amount: number;
     amountSublabel: string;
     warning?: string;
+    notes?: string;
+    rawDetails?: Record<string, string>;
+    paidById?: string | null;
     primaryAction?: {
         label: string;
         icon: 'voucher' | 'tickets' | 'pay';
@@ -25,7 +28,9 @@ export interface ReservationsResponse {
     confirmedCount: number;
     totalInvested: number;
     nextCheckinLabel: string;
+    nextCheckinSublabel?: string;
     nextFlightLabel: string;
+    nextFlightSublabel?: string;
     reservations: Reservation[];
 }
 

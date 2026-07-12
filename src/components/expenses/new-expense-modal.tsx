@@ -10,6 +10,11 @@ import type { NewExpenseFormData, ExpenseCategory } from "@/types/trip";
 import { useCreateExpense } from "@/hooks/expenses/use-expenses";
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+    buildCreateExpensePayload,
+    calculatePerPersonAmount,
+    isExpenseFormValid,
+} from "./expense-form";
 
 interface Participant {
     id: string;
@@ -111,34 +116,17 @@ export function NewExpenseModal({
 
     function handleSubmit() {
         if (!isValid) return;
-        const splitTypePayload =
-            form.splitType === "equal" ? "EQUAL"
-                : form.splitType === "custom" ? "CUSTOM"
-                    : "INDIVIDUAL";
-
         createExpense.mutate(
-            {
-                description: form.description,
-                amount: Number(form.amount),
-                date: form.date,
-                category: form.category!,
-                paidById: form.paidById,
-                splitType: splitTypePayload,
-                splitParticipants: form.splitParticipantIds.map((id) => ({ participantId: id })),
-                notes: form.notes || undefined,
-            },
+            buildCreateExpensePayload(form),
             { onSuccess: () => onClose() },
         );
     }
 
     const amountNumber = Number(form.amount) || 0;
     const selectedCount = form.splitParticipantIds.length;
-    const perPerson = selectedCount > 0 ? amountNumber / selectedCount : 0;
+    const perPerson = calculatePerPersonAmount(amountNumber, selectedCount);
 
-    const isValid =
-        form.description.trim() !== "" &&
-        amountNumber > 0 &&
-        form.category !== null;
+    const isValid = isExpenseFormValid(form);
 
     return (
         <Dialog

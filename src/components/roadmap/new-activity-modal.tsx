@@ -3,13 +3,17 @@
 import { useState } from "react";
 import { MapPin, Clock, Wallet, FileText, Plus, Pencil } from "lucide-react";
 import { ACTIVITY_EMOJIS, DURATION_OPTIONS } from "@/lib/activity-options";
-import { formatCurrencyBRL } from "@/lib/format";
 import type { NewActivityFormData, RoadmapActivity } from "@/types/trip";
 import { useCreateActivity, useUpdateActivity } from "@/hooks/roadmap/use-roadmap";
-import { toUpperEnum } from "@/lib/utils";
-import { CostType } from "@/core/domain/roadmap/roadmap.types";
 import { Dialog, DialogHeader, DialogBody, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+    buildActivityPayload,
+    COST_TYPE_OPTIONS,
+    getActivityCostPreview,
+    getTodayISO,
+    isActivityFormValid,
+} from "./activity-form";
 
 interface NewActivityModalProps {
     tripId: string;
@@ -17,12 +21,6 @@ interface NewActivityModalProps {
     editingActivity?: RoadmapActivity | null;
     onClose: () => void;
 }
-
-const COST_TYPE_OPTIONS = [
-    { value: "free", label: "Gratuito" },
-    { value: "total", label: "Total do grupo" },
-    { value: "per_person", label: "Por pessoa" },
-];
 
 const inputClass =
     "w-full rounded-lg border border-neutral-200 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500";
@@ -32,10 +30,6 @@ const inputSmClass =
 
 const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
 const labelSmClass = "mb-1 block text-xs text-neutral-500 dark:text-neutral-400";
-
-function getTodayISO() {
-    return new Date().toISOString().split("T")[0];
-}
 
 export function NewActivityModal({
     tripId,
@@ -69,30 +63,13 @@ export function NewActivityModal({
         setForm((prev) => ({ ...prev, ...updates }));
     }
 
-    const isValid = form.title.trim() !== "" && form.startTime !== "";
+    const isValid = isActivityFormValid(form);
 
-    const costPreview =
-        form.costType === "free"
-            ? "Gratuito"
-            : form.costAmount
-                ? `${formatCurrencyBRL(Number(form.costAmount))}${form.costType === "per_person" ? "/pessoa" : " total"}`
-                : null;
+    const costPreview = getActivityCostPreview(form);
 
     function handleSubmit() {
         if (!isValid) return;
-        const payload = {
-            emoji: form.emoji,
-            title: form.title,
-            date: form.date,
-            startTime: form.startTime,
-            duration: form.duration || undefined,
-            location: form.location || undefined,
-            costAmount: form.costType !== "free" && form.costAmount
-                ? Number(form.costAmount)
-                : undefined,
-            costType: toUpperEnum<CostType>(form.costType),
-            note: form.note || undefined,
-        };
+        const payload = buildActivityPayload(form);
 
         if (isEditing && editingActivity) {
             updateActivity.mutate(
@@ -235,7 +212,7 @@ export function NewActivityModal({
                                         key={opt.value}
                                         type="button"
                                         onClick={() => update({
-                                            costType: opt.value as NewActivityFormData["costType"],
+                                            costType: opt.value,
                                             costAmount: opt.value === "free" ? "" : form.costAmount,
                                         })}
                                         className={`flex-1 rounded-lg border py-2 text-xs font-medium transition-colors ${form.costType === opt.value

@@ -111,7 +111,7 @@ test("expense payload and financial split are calculated consistently", () => {
         date: "2026-01-11",
         category: "Alimentação",
         paidById: "user-1",
-        splitType: "CUSTOM",
+        splitType: "EQUAL",
         splitParticipants: [
             { participantId: "user-1" },
             { participantId: "user-2" },

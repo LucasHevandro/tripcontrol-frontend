@@ -2,7 +2,6 @@ import type { CreateExpensePayload, SplitType } from "../../core/domain/expense/
 import type { NewExpenseFormData } from "../../types/trip";
 
 export function getExpenseSplitType(splitType: NewExpenseFormData["splitType"]): SplitType {
-    if (splitType === "custom") return "CUSTOM";
     if (splitType === "individual") return "INDIVIDUAL";
     return "EQUAL";
 }

@@ -7,6 +7,7 @@ import { ToastContainer } from "@/components/ui/toast";
 import { TanStackQueryProvider } from "@/providers/query-client.provider";
 import { RepositoriesProvider } from "@/providers/repositories.provider";
 import { GoogleAuthProvider } from "@/providers/google-oauth.provider";
+import { InstallAppPrompt } from "@/components/install-app-prompt";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -88,6 +89,7 @@ export default function RootLayout({
                 <ToastProvider>
                   <UserProvider>{children}</UserProvider>
                   <ToastContainer />
+                  <InstallAppPrompt />
                 </ToastProvider>
               </RepositoriesProvider>
             </TanStackQueryProvider>

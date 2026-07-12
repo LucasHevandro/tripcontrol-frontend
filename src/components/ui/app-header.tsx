@@ -29,12 +29,13 @@ export function AppHeader({ navItems, activeKey, showNavOnMobile = false }: AppH
     }
 
     return (
-        <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-4 pb-3.5 pt-[calc(env(safe-area-inset-top,0px)+0.875rem)] dark:border-neutral-800 dark:bg-neutral-900 md:px-6 md:pb-4 md:pt-[calc(env(safe-area-inset-top,0px)+1rem)]">            <Link href="/trips" className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-neutral-900 dark:text-neutral-100" />
-            <span className="text-[15px] font-semibold text-neutral-900 dark:text-neutral-100 md:text-base">
-                TripControl
-            </span>
-        </Link>
+        <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-4 pb-3.5 pt-[calc(env(safe-area-inset-top,0px)+0.875rem)] dark:border-neutral-800 dark:bg-neutral-900 md:px-6 md:pb-4 md:pt-[calc(env(safe-area-inset-top,0px)+1rem)]">
+            <Link href="/trips" className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-neutral-900 dark:text-neutral-100" />
+                <span className="text-[15px] font-semibold text-neutral-900 dark:text-neutral-100 md:text-base">
+                    TripControl
+                </span>
+            </Link>
 
             <nav className={`items-center gap-5 sm:gap-7 ${showNavOnMobile ? "flex" : "hidden md:flex"}`}>
                 {navItems.map((item) => {

@@ -42,7 +42,7 @@ export function PaymentsHistory({ tripId }: PaymentsHistoryProps) {
 
     // Some por completo enquanto carrega para não flashar vazio
     if (isLoading) return null;
-    if (!payments || payments.length === 0) return null;
+    if (!Array.isArray(payments) || payments.length === 0) return null;
 
     function handleConfirmDelete() {
         if (!toDelete) return;

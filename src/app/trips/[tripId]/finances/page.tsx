@@ -15,6 +15,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { useUser } from "@/contexts/user-context";
+import { PaymentsHistory } from "@/components/finances/payments-history";
 
 export default function FinancesPage({
     params,
@@ -93,6 +94,7 @@ export default function FinancesPage({
                             balance: p.balance,
                         }))}
                     />
+                    <PaymentsHistory tripId={tripId} />
                 </Card>
             </div>
         </div>

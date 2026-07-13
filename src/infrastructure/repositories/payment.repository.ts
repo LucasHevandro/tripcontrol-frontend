@@ -1,6 +1,10 @@
 import { apiClient } from '../http/api-client';
 import type { IPaymentRepository } from '@/core/domain/payment/payment.repository.interface';
-import type { Payment, CreatePaymentPayload } from '@/core/domain/payment/payment.types';
+import type {
+    Payment,
+    CreatePaymentPayload,
+    PaymentHistoryItem,
+} from '@/core/domain/payment/payment.types';
 
 export class HttpPaymentRepository implements IPaymentRepository {
     async create(
@@ -12,5 +16,14 @@ export class HttpPaymentRepository implements IPaymentRepository {
             payload,
         );
         return data;
+    }
+
+    async findAll(tripId: string): Promise<PaymentHistoryItem[]> {
+        const { data } = await apiClient.get(`/trips/${tripId}/payments`);
+        return data;
+    }
+
+    async remove(tripId: string, paymentId: string): Promise<void> {
+        await apiClient.delete(`/trips/${tripId}/payments/${paymentId}`);
     }
 }

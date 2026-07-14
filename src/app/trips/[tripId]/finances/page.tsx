@@ -16,6 +16,9 @@ import { Card } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { useUser } from "@/contexts/user-context";
 import { PaymentsHistory } from "@/components/finances/payments-history";
+import { FileDown } from "lucide-react";
+import { useDownloadReport } from "@/hooks/expenses/use-report";
+import { Button } from "@/components/ui/button";
 
 export default function FinancesPage({
     params,
@@ -29,6 +32,7 @@ export default function FinancesPage({
     const settlements = participantsData?.settlementSummary ?? [];
     const participants = participantsData?.participants ?? [];
     const { user } = useUser();
+    const report = useDownloadReport(tripId, summary?.tripName ?? "viagem");
 
     if (loadingSummary || loadingExpenses) return <FinancesSkeleton />;
 
@@ -47,7 +51,19 @@ export default function FinancesPage({
             <PageHeader
                 title="Controle financeiro"
                 subtitle={`${summary?.tripName} · ${summary?.tripPeriod}`}
-                action={<ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />}
+                action={
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant="secondary"
+                            leftIcon={FileDown}
+                            onClick={report.download}
+                            isLoading={report.isDownloading}
+                        >
+                            <span className="hidden sm:inline">Baixar relatório</span>
+                        </Button>
+                        <ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />
+                    </div>
+                }
             />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

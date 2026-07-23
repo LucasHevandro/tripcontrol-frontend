@@ -26,7 +26,6 @@ export interface ParticipantsResponse {
     tripName: string;
     tripPeriod: string;
     participantCount: number;
-    maxParticipants: number;
     organizerCount: number;
     totalSpent: number;
     perPersonAverage: number;

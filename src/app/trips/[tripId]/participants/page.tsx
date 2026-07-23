@@ -95,7 +95,13 @@ export default function ParticipantsPage({
                     label="Status do grupo"
                     value={data.groupStatusLabel}
                     sublabel={data.groupStatusSublabel}
-                    valueClassName="text-emerald-600 dark:text-emerald-400"
+                    valueClassName={
+                        data.groupStatusLabel === "Concluída"
+                            ? "text-neutral-500 dark:text-neutral-400"
+                            : data.groupStatusLabel === "Planejando"
+                                ? "text-sky-600 dark:text-sky-400"
+                                : "text-emerald-600 dark:text-emerald-400"
+                    }
                 />
             </div>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
@@ -106,7 +112,7 @@ export default function ParticipantsPage({
                             Membros da viagem
                         </h2>
                         <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                            {data.participantCount} de {data.maxParticipants} vagas
+                            {data.participantCount} participante{data.participantCount !== 1 ? "s" : ""}
                         </span>
                     </Card>
 

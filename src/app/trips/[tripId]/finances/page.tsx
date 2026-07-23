@@ -31,6 +31,20 @@ export default function FinancesPage({
     const { data: participantsData } = useParticipants(tripId);
     const settlements = participantsData?.settlementSummary ?? [];
     const participants = participantsData?.participants ?? [];
+    const hasPendingSettlements = settlements.length > 0;
+    const isOverBudget = !!summary?.budget && summary.budget > 0 && summary.totalSpent > summary.budget;
+
+    const groupBalanceLabel = isOverBudget ? "Estourado" : hasPendingSettlements ? "Pendente" : "Equilibrado";
+    const groupBalanceSublabel = isOverBudget
+        ? `${formatCurrencyBRL(summary!.totalSpent - summary!.budget)} acima do orçamento`
+        : hasPendingSettlements
+            ? `${settlements.length} acerto${settlements.length > 1 ? "s" : ""} pendente${settlements.length > 1 ? "s" : ""}`
+            : "acertos calculados";
+    const groupBalanceTone = isOverBudget
+        ? "text-rose-600 dark:text-rose-400"
+        : hasPendingSettlements
+            ? "text-amber-600 dark:text-amber-400"
+            : "text-emerald-600 dark:text-emerald-400";
     const { user } = useUser();
     const report = useDownloadReport(tripId, summary?.tripName ?? "viagem");
 
@@ -84,9 +98,9 @@ export default function FinancesPage({
                 />
                 <FinanceStatCard
                     label="Saldo do grupo"
-                    value={summary?.groupBalanceLabel ?? ""}
-                    sublabel="acertos calculados"
-                    valueClassName="text-emerald-600 dark:text-emerald-400"
+                    value={groupBalanceLabel}
+                    sublabel={groupBalanceSublabel}
+                    valueClassName={groupBalanceTone}
                 />
             </div>
 

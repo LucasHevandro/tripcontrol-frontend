@@ -1,27 +1,57 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart2, HandCoins, ArrowUp, ArrowDown } from "lucide-react";
+import { BarChart2, HandCoins, ArrowUp, ArrowDown, UserPlus, UserMinus } from "lucide-react";
 import { getAvatarColor } from "@/lib/avatar-color";
 import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL, formatBalance } from "@/lib/format";
-import { useNotifyDebtors } from "@/hooks/participants/use-participants";
+import { useNotifyDebtors, useSetSponsor } from "@/hooks/participants/use-participants";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { ParticipantDetail } from "@/types/trip";
 
 interface ParticipantCardProps {
     participant: ParticipantDetail;
     tripId: string;
+    currentUserId: string;
+    allParticipants: ParticipantDetail[];
 }
 
-export function ParticipantCard({ participant: p, tripId }: ParticipantCardProps) {
+export function ParticipantCard({ participant: p, tripId, currentUserId, allParticipants }: ParticipantCardProps) {
     const router = useRouter();
     const notifyDebtors = useNotifyDebtors(tripId);
+    const setSponsor = useSetSponsor(tripId);
+    const [dialog, setDialog] = useState<"link" | "unlink" | null>(null);
     const color = getAvatarColor(p.id);
     const isOrganizer = p.role === "ORGANIZER";
     const isZero = p.balance === 0;
     const isPositive = p.balance > 0;
     const isDebtor = p.balance < 0;
+
+    const currentUserParticipant = allParticipants.find((x) => x.id === currentUserId);
+    const currentUserIsDependent = !!currentUserParticipant?.sponsorId;
+    const targetAlreadySponsors = allParticipants.some((x) => x.sponsorId === p.id);
+    const isSelf = p.id === currentUserId;
+    const canLinkAsMyDependent =
+        !isSelf && p.sponsorId === null && !currentUserIsDependent && !targetAlreadySponsors && !!currentUserParticipant;
+    const canUnlink =
+        p.sponsorId !== null &&
+        (currentUserParticipant?.role === "ORGANIZER" || currentUserParticipant?.id === p.sponsorId);
+
+    const confirmLink = () => {
+        setSponsor.mutate(
+            { participantId: p.id, sponsorId: currentUserId },
+            { onSuccess: () => setDialog(null) },
+        );
+    };
+
+    const confirmUnlink = () => {
+        setSponsor.mutate(
+            { participantId: p.id, sponsorId: null },
+            { onSuccess: () => setDialog(null) },
+        );
+    };
 
     const balanceLabel = isZero ? "Sem saldo pendente" : isPositive ? "A receber" : "A pagar";
     const balanceTone = isZero
@@ -50,6 +80,11 @@ export function ParticipantCard({ participant: p, tripId }: ParticipantCardProps
                         {isOrganizer && (
                             <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
                                 Organizador
+                            </span>
+                        )}
+                        {p.sponsorId && (
+                            <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sky-700 dark:bg-sky-950 dark:text-sky-400">
+                                Dependente de {p.sponsorName}
                             </span>
                         )}
                     </div>
@@ -121,7 +156,48 @@ export function ParticipantCard({ participant: p, tripId }: ParticipantCardProps
                         Solicitar acerto
                     </Button>
                 )}
+                {canLinkAsMyDependent && (
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        leftIcon={UserPlus}
+                        onClick={() => setDialog("link")}
+                    >
+                        Marcar como dependente
+                    </Button>
+                )}
+                {canUnlink && (
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        leftIcon={UserMinus}
+                        onClick={() => setDialog("unlink")}
+                    >
+                        Remover vínculo
+                    </Button>
+                )}
             </div>
+
+            <ConfirmDialog
+                open={dialog === "link"}
+                title="Marcar como dependente"
+                message={`${p.name} passará a ter as despesas divididas em EQUAL somadas à sua cota, sem contar como um pagador independente.`}
+                confirmLabel="Marcar como dependente"
+                variant="default"
+                isLoading={setSponsor.isPending}
+                onConfirm={confirmLink}
+                onCancel={() => setDialog(null)}
+            />
+            <ConfirmDialog
+                open={dialog === "unlink"}
+                title="Remover vínculo de dependente"
+                message={`${p.name} voltará a contar como um pagador independente nas divisões futuras.`}
+                confirmLabel="Remover vínculo"
+                variant="danger"
+                isLoading={setSponsor.isPending}
+                onConfirm={confirmUnlink}
+                onCancel={() => setDialog(null)}
+            />
         </div>
     );
 }

@@ -42,6 +42,17 @@ export class HttpParticipantRepository implements IParticipantRepository {
         );
     }
 
+    async setSponsor(
+        tripId: string,
+        participantId: string,
+        sponsorId: string | null,
+    ): Promise<void> {
+        await apiClient.patch(
+            `/trips/${tripId}/participants/${participantId}/sponsor`,
+            { sponsorId },
+        );
+    }
+
     async getSettlements(
         tripId: string,
     ): Promise<{ settlements: Settlement[] }> {

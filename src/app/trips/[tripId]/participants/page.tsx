@@ -111,7 +111,13 @@ export default function ParticipantsPage({
                     </Card>
 
                     {data.participants.map((participant) => (
-                        <ParticipantCard key={participant.id} participant={participant} tripId={tripId} />
+                        <ParticipantCard
+                            key={participant.id}
+                            participant={participant}
+                            tripId={tripId}
+                            currentUserId={user?.id ?? ""}
+                            allParticipants={data.participants}
+                        />
                     ))}
                 </div>
 

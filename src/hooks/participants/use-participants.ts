@@ -55,6 +55,26 @@ export function useRemoveParticipant(tripId: string) {
     });
 }
 
+export function useSetSponsor(tripId: string) {
+    const { participant } = useRepositories();
+    const queryClient = useQueryClient();
+    const { addToast } = useToast();
+
+    return useMutation({
+        mutationFn: ({ participantId, sponsorId }: { participantId: string; sponsorId: string | null }) =>
+            participant.setSponsor(tripId, participantId, sponsorId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['trips', tripId, 'participants'],
+            });
+            addToast('Vínculo de dependente atualizado');
+        },
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao atualizar vínculo de dependente'), 'error');
+        },
+    });
+}
+
 export function useNotifyDebtors(tripId: string) {
     const { participant } = useRepositories();
     const { addToast } = useToast();

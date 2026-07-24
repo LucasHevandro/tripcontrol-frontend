@@ -23,10 +23,16 @@ apiClient.interceptors.request.use((config) => {
 
 // Flag pra evitar múltiplas tentativas de refresh simultâneas
 let isRefreshing = false;
-let refreshQueue: ((token: string) => void)[] = [];
+let refreshQueue: {
+    resolve: (value: unknown) => void;
+    reject: (reason: unknown) => void;
+}[] = [];
 
-function processQueue(token: string) {
-    refreshQueue.forEach((cb) => cb(token));
+function processQueue(error: unknown, token: string | null) {
+    refreshQueue.forEach(({ resolve, reject }) => {
+        if (error) reject(error);
+        else resolve(token);
+    });
     refreshQueue = [];
 }
 
@@ -47,12 +53,15 @@ apiClient.interceptors.response.use(
 
             if (isRefreshing) {
                 // Fila de requisições esperando o refresh terminar
-                return new Promise((resolve) => {
-                    refreshQueue.push((token: string) => {
-                        if (originalRequest.headers) {
-                            originalRequest.headers.Authorization = `Bearer ${token}`;
-                        }
-                        resolve(apiClient(originalRequest));
+                return new Promise((resolve, reject) => {
+                    refreshQueue.push({
+                        resolve: (token) => {
+                            if (originalRequest.headers) {
+                                originalRequest.headers.Authorization = `Bearer ${token}`;
+                            }
+                            resolve(apiClient(originalRequest));
+                        },
+                        reject,
                     });
                 });
             }
@@ -71,17 +80,17 @@ apiClient.interceptors.response.use(
 
                 const { accessToken, refreshToken: newRefreshToken } = data;
                 tokenStorage.setTokens(accessToken, newRefreshToken);
-                processQueue(accessToken);
+                processQueue(null, accessToken);
 
                 if (originalRequest.headers) {
                     originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                 }
 
                 return apiClient(originalRequest);
-            } catch {
+            } catch (refreshError) {
                 // Refresh falhou — limpa tokens e redireciona pro login
+                processQueue(refreshError, null);
                 tokenStorage.clearTokens();
-                refreshQueue = [];
                 if (typeof window !== 'undefined') {
                     window.location.href = '/login';
                 }

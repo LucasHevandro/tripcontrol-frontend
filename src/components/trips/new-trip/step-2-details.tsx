@@ -31,8 +31,9 @@ export function Step2Details({ data, onChange }: Step2DetailsProps) {
             </div>
 
             <div>
-                <label className={labelClass}>Orçamento total do grupo (opcional)</label>
+                <label htmlFor="new-trip-budget" className={labelClass}>Orçamento total do grupo (opcional)</label>
                 <input
+                    id="new-trip-budget"
                     type="number"
                     inputMode="decimal"
                     value={data.budget}
@@ -46,8 +47,9 @@ export function Step2Details({ data, onChange }: Step2DetailsProps) {
             </div>
 
             <div>
-                <label className={labelClass}>Descrição / observações (opcional)</label>
+                <label htmlFor="new-trip-description" className={labelClass}>Descrição / observações (opcional)</label>
                 <textarea
+                    id="new-trip-description"
                     value={data.description}
                     onChange={(e) => onChange({ description: e.target.value })}
                     rows={3}

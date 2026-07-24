@@ -147,10 +147,11 @@ export function NewReservationModal({
                         Identificação
                     </h3>
                     <div>
-                        <label className={labelClass}>
+                        <label htmlFor="reservation-title" className={labelClass}>
                             Nome da reserva <span className="text-rose-500">*</span>
                         </label>
                         <input
+                            id="reservation-title"
                             type="text"
                             value={form.title}
                             onChange={(e) => update({ title: e.target.value })}
@@ -188,10 +189,11 @@ export function NewReservationModal({
                     </h3>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label className={labelClass}>
+                            <label htmlFor="reservation-amount" className={labelClass}>
                                 Valor total (R$) <span className="text-rose-500">*</span>
                             </label>
                             <input
+                                id="reservation-amount"
                                 type="number"
                                 inputMode="decimal"
                                 min="0"
@@ -208,8 +210,9 @@ export function NewReservationModal({
                             )}
                         </div>
                         <div>
-                            <label className={labelClass}>Pago por</label>
+                            <label htmlFor="reservation-paid-by" className={labelClass}>Pago por</label>
                             <select
+                                id="reservation-paid-by"
                                 value={form.paidById}
                                 onChange={(e) => update({ paidById: e.target.value })}
                                 className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"

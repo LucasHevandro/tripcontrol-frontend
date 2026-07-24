@@ -145,8 +145,9 @@ export function NewExpenseModal({
             <DialogBody className="space-y-5">
                 {/* Descrição */}
                 <div>
-                    <label className={labelClass}>Descrição da despesa</label>
+                    <label htmlFor="expense-description" className={labelClass}>Descrição da despesa</label>
                     <input
+                        id="expense-description"
                         type="text"
                         value={form.description}
                         onChange={(e) => update({ description: e.target.value })}
@@ -158,8 +159,9 @@ export function NewExpenseModal({
                 {/* Valor + Data */}
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                        <label className={labelClass}>Valor (R$)</label>
+                        <label htmlFor="expense-amount" className={labelClass}>Valor (R$)</label>
                         <input
+                            id="expense-amount"
                             type="number"
                             inputMode="decimal"
                             min="0"
@@ -171,8 +173,9 @@ export function NewExpenseModal({
                         />
                     </div>
                     <div>
-                        <label className={labelClass}>Data</label>
+                        <label htmlFor="expense-date" className={labelClass}>Data</label>
                         <input
+                            id="expense-date"
                             type="date"
                             value={form.date}
                             onChange={(e) => update({ date: e.target.value })}
@@ -209,8 +212,9 @@ export function NewExpenseModal({
 
                 {/* Divisão — sempre visível */}
                 <div>
-                    <label className={labelClass}>Divisão da despesa</label>
+                    <label htmlFor="expense-split-type" className={labelClass}>Divisão da despesa</label>
                     <select
+                        id="expense-split-type"
                         value={form.splitType}
                         onChange={(e) => handleSplitTypeChange(e.target.value)}
                         className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
@@ -225,8 +229,9 @@ export function NewExpenseModal({
                 {!isIndividual && (
                     <>
                         <div>
-                            <label className={labelClass}>Pago por</label>
+                            <label htmlFor="expense-paid-by" className={labelClass}>Pago por</label>
                             <select
+                                id="expense-paid-by"
                                 value={form.paidById}
                                 onChange={(e) => update({ paidById: e.target.value })}
                                 className="w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
@@ -348,8 +353,9 @@ export function NewExpenseModal({
 
                 {/* Observações */}
                 <div>
-                    <label className={labelClass}>Observações</label>
+                    <label htmlFor="expense-notes" className={labelClass}>Observações</label>
                     <textarea
+                        id="expense-notes"
                         value={form.notes}
                         onChange={(e) => update({ notes: e.target.value })}
                         rows={3}

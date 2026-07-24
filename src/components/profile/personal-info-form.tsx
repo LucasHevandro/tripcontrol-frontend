@@ -35,8 +35,9 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
     return (
         <form onSubmit={handleSave} className="space-y-4">
             <div>
-                <label className={labelClass}>Nome completo</label>
+                <label htmlFor="profile-name" className={labelClass}>Nome completo</label>
                 <input
+                    id="profile-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -45,8 +46,9 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             </div>
 
             <div>
-                <label className={labelClass}>E-mail</label>
+                <label htmlFor="profile-email" className={labelClass}>E-mail</label>
                 <input
+                    id="profile-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}

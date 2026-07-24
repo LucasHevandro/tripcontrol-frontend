@@ -65,8 +65,9 @@ export function PreferencesForm({ profile }: PreferencesFormProps) {
     return (
         <div className="space-y-5">
             <div>
-                <label className={labelClass}>Idioma</label>
+                <label htmlFor="pref-language" className={labelClass}>Idioma</label>
                 <select
+                    id="pref-language"
                     value={language}
                     onChange={(e) => handleLanguageChange(e.target.value)}
                     className={selectClass}
@@ -78,8 +79,9 @@ export function PreferencesForm({ profile }: PreferencesFormProps) {
             </div>
 
             <div>
-                <label className={labelClass}>Moeda padrão</label>
+                <label htmlFor="pref-currency" className={labelClass}>Moeda padrão</label>
                 <select
+                    id="pref-currency"
                     value={currency}
                     onChange={(e) => handleCurrencyChange(e.target.value)}
                     className={selectClass}

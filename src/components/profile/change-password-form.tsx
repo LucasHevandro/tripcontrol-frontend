@@ -54,9 +54,10 @@ export function ChangePasswordForm() {
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label className={labelClass}>Senha atual</label>
+                <label htmlFor="current-password" className={labelClass}>Senha atual</label>
                 <div className="relative">
                     <input
+                        id="current-password"
                         type={showPasswords ? "text" : "password"}
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
@@ -74,8 +75,9 @@ export function ChangePasswordForm() {
             </div>
 
             <div>
-                <label className={labelClass}>Nova senha</label>
+                <label htmlFor="new-password" className={labelClass}>Nova senha</label>
                 <input
+                    id="new-password"
                     type={showPasswords ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -98,8 +100,9 @@ export function ChangePasswordForm() {
             </div>
 
             <div>
-                <label className={labelClass}>Confirmar nova senha</label>
+                <label htmlFor="confirm-new-password" className={labelClass}>Confirmar nova senha</label>
                 <input
+                    id="confirm-new-password"
                     type={showPasswords ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}

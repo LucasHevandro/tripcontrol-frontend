@@ -1,5 +1,21 @@
 import type { ITokenStorage } from './token-storage.interface';
 
+// Decodifica o `exp` do JWT (payload em base64url) pra usar como max-age real
+// do cookie, em vez de duplicar o TTL como número fixo (que desalinha se
+// JWT_EXPIRES_IN/JWT_REFRESH_EXPIRES_IN mudar no backend).
+function getJwtExpirySeconds(token: string): number | null {
+    try {
+        const payload = token.split('.')[1];
+        const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        const { exp } = JSON.parse(json) as { exp?: number };
+        if (typeof exp !== 'number') return null;
+        const secondsLeft = exp - Math.floor(Date.now() / 1000);
+        return secondsLeft > 0 ? secondsLeft : null;
+    } catch {
+        return null;
+    }
+}
+
 // TODO: para trocar pra cookie httpOnly no futuro, crie um
 // CookieTokenAdapter implementando a mesma interface ITokenStorage
 // e substitua onde LocalStorageTokenAdapter é instanciado.
@@ -24,8 +40,10 @@ export class LocalStorageTokenAdapter implements ITokenStorage {
 
         // Salva também em cookie pra o middleware conseguir ler no servidor
         // SameSite=Lax protege contra CSRF sem bloquear navegação normal
-        document.cookie = `${this.ACCESS_KEY}=${accessToken}; path=/; SameSite=Lax; max-age=${60 * 15}`;
-        document.cookie = `${this.REFRESH_KEY}=${refreshToken}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}`;
+        const accessMaxAge = getJwtExpirySeconds(accessToken) ?? 60 * 15;
+        const refreshMaxAge = getJwtExpirySeconds(refreshToken) ?? 60 * 60 * 24 * 7;
+        document.cookie = `${this.ACCESS_KEY}=${accessToken}; path=/; Secure; SameSite=Lax; max-age=${accessMaxAge}`;
+        document.cookie = `${this.REFRESH_KEY}=${refreshToken}; path=/; Secure; SameSite=Lax; max-age=${refreshMaxAge}`;
     }
 
     clearTokens(): void {

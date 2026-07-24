@@ -85,7 +85,7 @@ export function useGoogleAuth() {
     const router = useRouter();
     const { addToast } = useToast();
     const queryClient = useQueryClient();
-    const { setUser } = useUser();   // ← adiciona
+    const { setUser } = useUser();
     const searchParams =
         typeof window !== 'undefined'
             ? new URLSearchParams(window.location.search)
@@ -96,7 +96,7 @@ export function useGoogleAuth() {
         mutationFn: (credential: string) => auth.googleLogin(credential),
         onSuccess: (data) => {
             queryClient.setQueryData(['auth', 'me'], data.user);
-            setUser(data.user);           // ← atualiza o UserContext
+            setUser(data.user);
             addToast('Login com Google realizado com sucesso!');
             router.push(redirectTo);
         },

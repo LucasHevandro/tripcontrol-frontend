@@ -7,14 +7,12 @@ import { LocalStorageTokenAdapter } from './local-storage-token.adapter';
 
 const tokenStorage = new LocalStorageTokenAdapter();
 
-// Instância principal — usada em todas as requisições autenticadas
 export const apiClient: AxiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api/v1',
     headers: { 'Content-Type': 'application/json' },
     timeout: 15000,
 });
 
-// Interceptor de REQUEST — injeta o accessToken no header
 apiClient.interceptors.request.use((config) => {
     const token = tokenStorage.getAccessToken();
     if (token) {

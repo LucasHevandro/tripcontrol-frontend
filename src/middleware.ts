@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Rotas que não precisam de autenticação
 const PUBLIC_ROUTES = ['/login'];
-
-// Prefixos de rotas protegidas
 const PROTECTED_PREFIXES = ['/trips', '/profile'];
 
 export function middleware(request: NextRequest) {
@@ -14,7 +11,8 @@ export function middleware(request: NextRequest) {
         pathname.startsWith(prefix),
     );
 
-    // Lê o token do localStorage via cookie — o adapter precisa de ajuste (ver abaixo)
+    // Middleware roda no servidor e não tem acesso a localStorage, então lemos o
+    // cookie espelho que LocalStorageTokenAdapter grava a cada login (ver local-storage-token.adapter.ts)
     const accessToken = request.cookies.get('tc_access_token')?.value;
 
     // Rota protegida sem token → redireciona pro login

@@ -1,5 +1,3 @@
-// lib/avatar-color.ts
-
 const AVATAR_COLORS = [
     { bg: "bg-emerald-100", text: "text-emerald-700" },
     { bg: "bg-sky-100", text: "text-sky-700" },

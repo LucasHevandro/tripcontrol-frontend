@@ -33,7 +33,6 @@ export class LocalStorageTokenAdapter implements ITokenStorage {
         localStorage.removeItem(this.ACCESS_KEY);
         localStorage.removeItem(this.REFRESH_KEY);
 
-        // Remove os cookies também
         document.cookie = `${this.ACCESS_KEY}=; path=/; max-age=0`;
         document.cookie = `${this.REFRESH_KEY}=; path=/; max-age=0`;
     }

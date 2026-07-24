@@ -30,7 +30,6 @@ export function LocationAutocomplete({
 
     const { suggestions, isLoading, error } = useLocationSearch(pristine ? "" : value);
 
-    // Fecha ao clicar fora
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
             if (!containerRef.current) return;
@@ -42,7 +41,6 @@ export function LocationAutocomplete({
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // Reset activeIndex quando sugestões mudam
     useEffect(() => {
         setActiveIndex(-1);
     }, [suggestions]);

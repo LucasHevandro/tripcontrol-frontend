@@ -1,5 +1,3 @@
-// lib/format.ts
-
 export function formatCurrencyBRL(value: number): string {
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",

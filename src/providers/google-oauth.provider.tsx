@@ -3,7 +3,7 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { ReactNode } from "react";
 
-export function GoogleAuthProvider({ children }: { children: ReactNode }) {
+export function GoogleAuthProvider({ children, nonce }: { children: ReactNode; nonce?: string }) {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
     // Se o Client ID não estiver configurado, não quebra o app —
@@ -13,8 +13,8 @@ export function GoogleAuthProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <GoogleOAuthProvider clientId={clientId}>
+        <GoogleOAuthProvider clientId={clientId} nonce={nonce}>
             {children}
         </GoogleOAuthProvider>
     );
-}
+}

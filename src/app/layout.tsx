@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { UserProvider } from "@/contexts/user-context";
 import { ToastProvider } from "@/contexts/toast-context";
@@ -69,9 +70,10 @@ const themeScript = `
   })();
 `;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const nonce = (await headers()).get('x-csp-nonce') ?? '';
   return (
     <html
       lang="pt-BR"
@@ -79,11 +81,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
-          <GoogleAuthProvider>
+          <GoogleAuthProvider nonce={nonce}>
             <TanStackQueryProvider>
               <RepositoriesProvider>
                 <ToastProvider>

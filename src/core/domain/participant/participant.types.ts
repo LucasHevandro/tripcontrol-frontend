@@ -7,6 +7,8 @@ export interface Participant {
     totalPaid: number;
     individualQuota: number;
     balance: number;
+    sponsorId: string | null;
+    sponsorName: string | null;
 }
 export type ParticipantRole = 'ORGANIZER' | 'MEMBER';
 
@@ -24,7 +26,6 @@ export interface ParticipantsResponse {
     tripName: string;
     tripPeriod: string;
     participantCount: number;
-    maxParticipants: number;
     organizerCount: number;
     totalSpent: number;
     perPersonAverage: number;

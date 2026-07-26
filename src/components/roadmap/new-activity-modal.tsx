@@ -126,10 +126,11 @@ export function NewActivityModal({
 
                 {/* Título */}
                 <div>
-                    <label className={labelClass}>
+                    <label htmlFor="activity-title" className={labelClass}>
                         Título da atividade <span className="text-rose-500">*</span>
                     </label>
                     <input
+                        id="activity-title"
                         type="text"
                         value={form.title}
                         onChange={(e) => update({ title: e.target.value })}
@@ -146,10 +147,11 @@ export function NewActivityModal({
                     </p>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                         <div>
-                            <label className={labelSmClass}>
+                            <label htmlFor="activity-date" className={labelSmClass}>
                                 Data <span className="text-rose-500">*</span>
                             </label>
                             <input
+                                id="activity-date"
                                 type="date"
                                 value={form.date}
                                 onChange={(e) => update({ date: e.target.value })}
@@ -157,10 +159,11 @@ export function NewActivityModal({
                             />
                         </div>
                         <div>
-                            <label className={labelSmClass}>
+                            <label htmlFor="activity-start-time" className={labelSmClass}>
                                 Horário de início <span className="text-rose-500">*</span>
                             </label>
                             <input
+                                id="activity-start-time"
                                 type="time"
                                 value={form.startTime}
                                 onChange={(e) => update({ startTime: e.target.value })}
@@ -168,8 +171,9 @@ export function NewActivityModal({
                             />
                         </div>
                         <div>
-                            <label className={labelSmClass}>Duração</label>
+                            <label htmlFor="activity-duration" className={labelSmClass}>Duração</label>
                             <select
+                                id="activity-duration"
                                 value={form.duration}
                                 onChange={(e) => update({ duration: e.target.value })}
                                 className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
@@ -184,11 +188,12 @@ export function NewActivityModal({
 
                 {/* Localização */}
                 <div>
-                    <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    <label htmlFor="activity-location" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                         <MapPin className="h-3.5 w-3.5" />
                         Localização (opcional)
                     </label>
                     <input
+                        id="activity-location"
                         type="text"
                         value={form.location}
                         onChange={(e) => update({ location: e.target.value })}
@@ -226,8 +231,9 @@ export function NewActivityModal({
                             </div>
                         </div>
                         <div>
-                            <label className={labelSmClass}>Valor (R$)</label>
+                            <label htmlFor="activity-cost-amount" className={labelSmClass}>Valor (R$)</label>
                             <input
+                                id="activity-cost-amount"
                                 type="number"
                                 inputMode="decimal"
                                 min="0"
@@ -253,11 +259,12 @@ export function NewActivityModal({
 
                 {/* Nota */}
                 <div>
-                    <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    <label htmlFor="activity-note" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                         <FileText className="h-3.5 w-3.5" />
                         Observações (opcional)
                     </label>
                     <textarea
+                        id="activity-note"
                         value={form.note}
                         onChange={(e) => update({ note: e.target.value })}
                         rows={2}

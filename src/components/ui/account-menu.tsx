@@ -16,13 +16,11 @@ export function AccountMenu() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
-    // Fecha menus ao mudar de rota
     useEffect(() => {
         setIsSheetOpen(false);
         setIsMenuOpen(false);
     }, [pathname]);
 
-    // Fecha dropdown desktop ao clicar fora
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
             if (menuRef.current && !menuRef.current.contains(e.target as Node)) {

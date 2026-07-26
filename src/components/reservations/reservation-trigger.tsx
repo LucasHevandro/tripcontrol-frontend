@@ -1,4 +1,3 @@
-// ─── reservation-trigger.tsx ─────────────────────────────────────────────────
 "use client";
 
 import { useState } from "react";

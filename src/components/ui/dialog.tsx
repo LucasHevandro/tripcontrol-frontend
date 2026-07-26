@@ -57,7 +57,6 @@ export function Dialog({
         return () => cancelAnimationFrame(id);
     }, [open]);
 
-    // Escape fecha
     useEffect(() => {
         if (!open) return;
         const handler = (e: globalThis.KeyboardEvent) => { if (e.key === "Escape") onClose(); };

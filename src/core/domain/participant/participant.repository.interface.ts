@@ -12,6 +12,7 @@ export interface IParticipantRepository {
     getInviteLink(tripId: string): Promise<{ inviteLink: string; inviteToken: string }>;
     joinByToken(token: string): Promise<JoinResult>;
     remove(tripId: string, participantId: string): Promise<void>;
+    setSponsor(tripId: string, participantId: string, sponsorId: string | null): Promise<void>;
     getSettlements(tripId: string): Promise<{ settlements: Settlement[] }>;
     notifyDebtors(tripId: string): Promise<{ message: string }>;
 }

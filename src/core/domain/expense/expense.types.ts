@@ -22,6 +22,7 @@ export interface ExpenseSummary {
     participantCount: number;
     largestExpenseAmount: number;
     largestExpenseDescription: string;
+    budget: number;
     groupBalanceLabel: string;
     categoryBreakdown: CategoryBreakdown[];
 }

@@ -47,12 +47,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const resolved: "light" | "dark" =
         theme === "system" ? getSystemTheme() : theme;
 
-    // Aplica o tema sempre que mudar
     useEffect(() => {
         applyTheme(resolved);
     }, [resolved]);
 
-    // Escuta mudanças no tema do sistema
     useEffect(() => {
         const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
         function handleSystemChange() {

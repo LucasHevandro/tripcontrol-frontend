@@ -16,6 +16,9 @@ import { Card } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { useUser } from "@/contexts/user-context";
 import { PaymentsHistory } from "@/components/finances/payments-history";
+import { FileDown } from "lucide-react";
+import { useDownloadReport } from "@/hooks/expenses/use-report";
+import { Button } from "@/components/ui/button";
 
 export default function FinancesPage({
     params,
@@ -28,7 +31,22 @@ export default function FinancesPage({
     const { data: participantsData } = useParticipants(tripId);
     const settlements = participantsData?.settlementSummary ?? [];
     const participants = participantsData?.participants ?? [];
+    const hasPendingSettlements = settlements.length > 0;
+    const isOverBudget = !!summary?.budget && summary.budget > 0 && summary.totalSpent > summary.budget;
+
+    const groupBalanceLabel = isOverBudget ? "Estourado" : hasPendingSettlements ? "Pendente" : "Equilibrado";
+    const groupBalanceSublabel = isOverBudget
+        ? `${formatCurrencyBRL(summary!.totalSpent - summary!.budget)} acima do orçamento`
+        : hasPendingSettlements
+            ? `${settlements.length} acerto${settlements.length > 1 ? "s" : ""} pendente${settlements.length > 1 ? "s" : ""}`
+            : "acertos calculados";
+    const groupBalanceTone = isOverBudget
+        ? "text-rose-600 dark:text-rose-400"
+        : hasPendingSettlements
+            ? "text-amber-600 dark:text-amber-400"
+            : "text-emerald-600 dark:text-emerald-400";
     const { user } = useUser();
+    const report = useDownloadReport(tripId, summary?.tripName ?? "viagem");
 
     if (loadingSummary || loadingExpenses) return <FinancesSkeleton />;
 
@@ -47,7 +65,19 @@ export default function FinancesPage({
             <PageHeader
                 title="Controle financeiro"
                 subtitle={`${summary?.tripName} · ${summary?.tripPeriod}`}
-                action={<ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />}
+                action={
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant="secondary"
+                            leftIcon={FileDown}
+                            onClick={report.download}
+                            isLoading={report.isDownloading}
+                        >
+                            <span className="hidden sm:inline">Baixar relatório</span>
+                        </Button>
+                        <ExpenseTrigger tripId={tripId} variant="button" label="Nova despesa" />
+                    </div>
+                }
             />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -68,9 +98,9 @@ export default function FinancesPage({
                 />
                 <FinanceStatCard
                     label="Saldo do grupo"
-                    value={summary?.groupBalanceLabel ?? ""}
-                    sublabel="acertos calculados"
-                    valueClassName="text-emerald-600 dark:text-emerald-400"
+                    value={groupBalanceLabel}
+                    sublabel={groupBalanceSublabel}
+                    valueClassName={groupBalanceTone}
                 />
             </div>
 

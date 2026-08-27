@@ -21,7 +21,7 @@ function buildCsp(nonce: string): string {
         `style-src 'self' 'unsafe-inline'`,
         `img-src 'self' data: https:`,
         `font-src 'self' data:`,
-        `connect-src 'self' ${apiOrigin} https://accounts.google.com`,
+        `connect-src 'self' ${apiOrigin} https://accounts.google.com https://photon.komoot.io`,
         `frame-src https://accounts.google.com`,
         `object-src 'none'`,
         `base-uri 'self'`,
@@ -30,7 +30,7 @@ function buildCsp(nonce: string): string {
     ].join('; ');
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     const isPublic = PUBLIC_ROUTES.some((route) => pathname === route);

@@ -195,39 +195,6 @@ export default function LoginForm() {
                             >
                                 {loginMutation.isPending ? "Entrando..." : "Entrar"}
                             </button>
-
-                            <div className="relative my-2 flex items-center">
-                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
-                                <span className="px-3 text-xs text-neutral-400 dark:text-neutral-500">ou</span>
-                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
-                            </div>
-
-                            <div className="flex justify-center">
-                                <GoogleLogin
-                                    onSuccess={(credentialResponse) => {
-                                        if (credentialResponse.credential) {
-                                            googleAuth.mutate(credentialResponse.credential);
-                                        }
-                                    }}
-                                    onError={() => {
-                                        // popup fechado ou falhou — a lib já lida com isso
-                                    }}
-                                    theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
-                                    text="continue_with"
-                                    width="340"
-                                />
-                            </div>
-
-                            <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
-                                Não tem conta?{" "}
-                                <button
-                                    type="button"
-                                    onClick={() => setTab("criar")}
-                                    className="font-medium text-emerald-700 dark:text-emerald-400"
-                                >
-                                    Cadastre-se grátis
-                                </button>
-                            </p>
                         </form>
                     ) : (
                         <form onSubmit={handleRegister} className="mt-6 space-y-4">
@@ -345,41 +312,60 @@ export default function LoginForm() {
                             >
                                 {registerMutation.isPending ? "Criando conta..." : "Criar conta"}
                             </button>
-
-                            <div className="relative my-2 flex items-center">
-                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
-                                <span className="px-3 text-xs text-neutral-400 dark:text-neutral-500">ou</span>
-                                <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
-                            </div>
-
-                            <div className="flex justify-center">
-                                <GoogleLogin
-                                    onSuccess={(credentialResponse) => {
-                                        if (credentialResponse.credential) {
-                                            googleAuth.mutate(credentialResponse.credential);
-                                        }
-                                    }}
-                                    onError={() => {
-                                        // popup fechado ou falhou — a lib já lida com isso
-                                    }}
-                                    theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
-                                    text="continue_with"
-                                    width="340"
-                                />
-                            </div>
-
-                            <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
-                                Já tem conta?{" "}
-                                <button
-                                    type="button"
-                                    onClick={() => setTab("entrar")}
-                                    className="font-medium text-emerald-700 dark:text-emerald-400"
-                                >
-                                    Entrar
-                                </button>
-                            </p>
                         </form>
                     )}
+
+                    {/* Google Login — renderizado UMA vez, fora das tabs, para evitar
+                        múltiplas chamadas a google.accounts.id.initialize() */}
+                    <div className="mt-4 space-y-3">
+                        <div className="relative flex items-center">
+                            <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
+                            <span className="px-3 text-xs text-neutral-400 dark:text-neutral-500">ou</span>
+                            <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-700" />
+                        </div>
+
+                        <div className="flex justify-center">
+                            <GoogleLogin
+                                onSuccess={(credentialResponse) => {
+                                    if (credentialResponse.credential) {
+                                        googleAuth.mutate(credentialResponse.credential);
+                                    }
+                                }}
+                                onError={() => {
+                                    // popup fechado ou falhou — a lib já lida com isso
+                                }}
+                                theme={resolvedTheme === "dark" ? "filled_black" : "outline"}
+                                text="continue_with"
+                                width="340"
+                            />
+                        </div>
+
+                        <p className="pt-1 text-center text-sm text-neutral-500 dark:text-neutral-400">
+                            {tab === "entrar" ? (
+                                <>
+                                    Não tem conta?{" "}
+                                    <button
+                                        type="button"
+                                        onClick={() => setTab("criar")}
+                                        className="font-medium text-emerald-700 dark:text-emerald-400"
+                                    >
+                                        Cadastre-se grátis
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    Já tem conta?{" "}
+                                    <button
+                                        type="button"
+                                        onClick={() => setTab("entrar")}
+                                        className="font-medium text-emerald-700 dark:text-emerald-400"
+                                    >
+                                        Entrar
+                                    </button>
+                                </>
+                            )}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

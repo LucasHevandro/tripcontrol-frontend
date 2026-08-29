@@ -6,6 +6,11 @@ import { useToast } from '@/contexts/toast-context';
 import { getErrorMessage } from '@/lib/utils';
 import type { CreateExpensePayload } from '@/core/domain/expense/expense.types';
 
+export interface CreateExpenseInput {
+    payload: CreateExpensePayload;
+    receiptFile?: File | null;
+}
+
 export function useExpenses(
     tripId: string,
     params?: { category?: string; page?: number; limit?: number },
@@ -35,11 +40,30 @@ export function useCreateExpense(tripId: string) {
     const { addToast } = useToast();
 
     return useMutation({
-        mutationFn: (payload: CreateExpensePayload) =>
-            expense.create(tripId, payload),
-        onSuccess: () => {
+        mutationFn: async ({ payload, receiptFile }: CreateExpenseInput) => {
+            const created = await expense.create(tripId, payload);
+
+            let receiptError: unknown = null;
+            if (receiptFile) {
+                try {
+                    await expense.uploadReceipt(tripId, created.id, receiptFile);
+                } catch (error) {
+                    receiptError = error;
+                }
+            }
+
+            return { expense: created, receiptError };
+        },
+        onSuccess: ({ receiptError }) => {
             queryClient.invalidateQueries({ queryKey: ['trips'] });
-            addToast('Despesa adicionada com sucesso!');
+            if (receiptError) {
+                addToast(
+                    getErrorMessage(receiptError, 'Despesa adicionada, mas o comprovante não foi enviado'),
+                    'error',
+                );
+            } else {
+                addToast('Despesa adicionada com sucesso!');
+            }
         },
         onError: (error) => {
             addToast(getErrorMessage(error, 'Erro ao adicionar despesa'), 'error');

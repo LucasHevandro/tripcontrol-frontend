@@ -25,7 +25,7 @@ export function useCreatePayment(tripId: string) {
 export function usePayments(tripId: string) {
     const { payment } = useRepositories();
     return useQuery({
-        queryKey: ['trips'],
+        queryKey: ['trips', tripId, 'payments'],
         queryFn: () => payment.findAll(tripId),
     });
 }

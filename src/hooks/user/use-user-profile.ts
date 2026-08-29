@@ -61,6 +61,7 @@ export function useUpdateAvatar() {
         mutationFn: (file: File) => user.updateAvatar(file),
         onSuccess: (data) => {
             queryClient.setQueryData(['user', 'profile'], data);
+            queryClient.invalidateQueries({ queryKey: ['user', 'profile'] });
             addToast('Foto atualizada com sucesso!');
         },
         onError: (error) => {

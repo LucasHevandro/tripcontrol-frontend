@@ -69,6 +69,8 @@ test("trip creation payload converts UI values to API enums", () => {
         name: "Floripa",
         destination: "Florianopolis",
         destinationType: "beach",
+        destinationLat: -27.5954,
+        destinationLng: -48.548,
         startDate: "2026-01-10",
         endDate: "2026-01-17",
         tripType: "friends",
@@ -80,13 +82,14 @@ test("trip creation payload converts UI values to API enums", () => {
     assert.deepEqual(buildCreateTripPayload(form), {
         name: "Floripa",
         destination: "Florianopolis",
+        destinationLat: -27.5954,
+        destinationLng: -48.548,
         destinationType: "BEACH",
         startDate: "2026-01-10",
         endDate: "2026-01-17",
         tripType: "FRIENDS",
         budget: 2500,
         description: "Ferias em grupo",
-        emoji: undefined,
     });
 });
 

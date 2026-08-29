@@ -5,15 +5,11 @@ import type { UserProfile } from "@/core/domain/user/user.types";
 import { useUpdatePreferences } from "@/hooks/user/use-user-profile";
 
 const LANGUAGES = [
-    { value: "pt-BR", label: "Português (Brasil)" },
-    { value: "en-US", label: "English (US)" },
-    { value: "es-ES", label: "Español" },
+    { value: "pt-BR", label: "Português (Brasil)" }
 ];
 
 const CURRENCIES = [
-    { value: "BRL", label: "Real (R$)" },
-    { value: "USD", label: "Dólar (US$)" },
-    { value: "EUR", label: "Euro (€)" },
+    { value: "BRL", label: "Real (R$)" }
 ];
 
 interface Toggle {

@@ -117,7 +117,7 @@ export function NewExpenseModal({
     function handleSubmit() {
         if (!isValid) return;
         createExpense.mutate(
-            buildCreateExpensePayload(form),
+            { payload: buildCreateExpensePayload(form), receiptFile: form.receiptFile },
             { onSuccess: () => onClose() },
         );
     }

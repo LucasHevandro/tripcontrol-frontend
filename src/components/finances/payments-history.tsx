@@ -7,7 +7,6 @@ import { getInitials } from "@/lib/get-initials";
 import { formatCurrencyBRL } from "@/lib/format";
 import { usePayments, useDeletePayment } from "@/hooks/expenses/use-payments";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { Button } from "@/components/ui/button";
 import type { PaymentHistoryItem } from "@/core/domain/payment/payment.types";
 
 interface PaymentsHistoryProps {

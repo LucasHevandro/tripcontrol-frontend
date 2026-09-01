@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users, Link } from "lucide-react";
+import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users } from "lucide-react";
 import { useLogin, useRegister } from "@/hooks/auth/use-auth";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { GoogleLogin } from "@react-oauth/google";

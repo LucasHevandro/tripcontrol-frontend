@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForgotPassword } from '@/hooks/auth/use-auth';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ForgotPasswordForm() {
     const [email, setEmail] = useState('');
@@ -12,9 +13,11 @@ export default function ForgotPasswordForm() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         forgotPassword.mutate(email);
-        setTimeout(() => {
-            router.push('/login');
-        }, 1000);
+        if (forgotPassword.isSuccess) {
+            setTimeout(() => {
+                router.push('/login');
+            }, 1000);
+        }
     };
 
     return (
@@ -51,9 +54,9 @@ export default function ForgotPasswordForm() {
                     </div>
                 </form>
                 <div className="mt-6 text-center">
-                    <a href="/login" className="text-primary hover:underline text-sm">
+                    <Link href="/login" className="text-primary hover:underline text-sm">
                         Voltar para login
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

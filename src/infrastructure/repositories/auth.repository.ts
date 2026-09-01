@@ -58,4 +58,20 @@ export class HttpAuthRepository implements IAuthRepository {
         tokenStorage.setTokens(data.accessToken, data.refreshToken);
         return data;
     }
+
+    async forgotPassword(email: string): Promise<{ message: string }> {
+        const { data } = await apiClient.post<{ message: string }>(
+            '/auth/forgot-password',
+            { email },
+        );
+        return data;
+    }
+
+    async resetPassword(token: string, password: string): Promise<{ message: string }> {
+        const { data } = await apiClient.post<{ message: string }>(
+            '/auth/reset-password',
+            { token, password },
+        );
+        return data;
+    }
 }

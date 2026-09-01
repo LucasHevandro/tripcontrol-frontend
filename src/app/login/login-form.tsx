@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users } from "lucide-react";
+import { Eye, EyeOff, Sparkles, Wallet, Map, Building2, Users, Link } from "lucide-react";
 import { useLogin, useRegister } from "@/hooks/auth/use-auth";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { GoogleLogin } from "@react-oauth/google";
 import { useTheme } from "@/contexts/theme-context";
 import { useGoogleAuth } from "@/hooks/auth/use-auth";
+import NextLink from "next/link";
 
 const FEATURES = [
     { icon: Wallet, bg: "bg-amber-100", iconColor: "text-amber-700", text: "Controle financeiro compartilhado e acertos automáticos" },
@@ -314,7 +315,6 @@ export default function LoginForm() {
                             </button>
                         </form>
                     )}
-
                     {/* Google Login — renderizado UMA vez, fora das tabs, para evitar
                         múltiplas chamadas a google.accounts.id.initialize() */}
                     <div className="mt-4 space-y-3">
@@ -347,7 +347,7 @@ export default function LoginForm() {
                                     <button
                                         type="button"
                                         onClick={() => setTab("criar")}
-                                        className="font-medium text-emerald-700 dark:text-emerald-400"
+                                        className="font-medium text-emerald-700 dark:text-emerald-400 hover:underline"
                                     >
                                         Cadastre-se grátis
                                     </button>
@@ -358,13 +358,20 @@ export default function LoginForm() {
                                     <button
                                         type="button"
                                         onClick={() => setTab("entrar")}
-                                        className="font-medium text-emerald-700 dark:text-emerald-400"
+                                        className="font-medium text-emerald-700 dark:text-emerald-400 hover:underline"
                                     >
                                         Entrar
                                     </button>
                                 </>
                             )}
                         </p>
+                    </div>
+                    <div className="mt-1 flex justify-center">
+                        <NextLink href="/forgot-password">
+                            <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:underline">
+                                Esqueci minha senha
+                            </span>
+                        </NextLink>
                     </div>
                 </div>
             </div>

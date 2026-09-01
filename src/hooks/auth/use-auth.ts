@@ -105,3 +105,33 @@ export function useGoogleAuth() {
         },
     });
 }
+
+export function useForgotPassword() {
+    const { auth } = useRepositories();
+    const { addToast } = useToast();
+
+    return useMutation({
+        mutationFn: (email: string) => auth.forgotPassword(email),
+        onSuccess: () => {
+            addToast('E-mail de recuperação enviado com sucesso!');
+        },
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao enviar e-mail de recuperação'), 'error');
+        },
+    });
+}
+
+export function useResetPassword() {
+    const { auth } = useRepositories();
+    const { addToast } = useToast();
+
+    return useMutation({
+        mutationFn: ({ token, password }: { token: string, password: string }) => auth.resetPassword(token, password),
+        onSuccess: () => {
+            addToast('Senha redefinida com sucesso!');
+        },
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao redefinir senha'), 'error');
+        },
+    });
+}

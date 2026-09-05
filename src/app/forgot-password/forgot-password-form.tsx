@@ -12,12 +12,11 @@ export default function ForgotPasswordForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        forgotPassword.mutate(email);
-        if (forgotPassword.isSuccess) {
-            setTimeout(() => {
+        forgotPassword.mutate(email, {
+            onSuccess: () => {
                 router.push('/login');
-            }, 1000);
-        }
+            }
+        });
     };
 
     return (

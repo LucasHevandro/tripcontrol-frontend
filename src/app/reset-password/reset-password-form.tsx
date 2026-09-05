@@ -15,13 +15,11 @@ export default function ResetPasswordForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        resetPassword.mutate({ token: token!, password });
-
-        if (resetPassword.isSuccess) {
-            setTimeout(() => {
+        resetPassword.mutate({ token: token!, password }, {
+            onSuccess: () => {
                 router.push('/login');
-            }, 1000);
-        }
+            }
+        });
     };
 
     return (

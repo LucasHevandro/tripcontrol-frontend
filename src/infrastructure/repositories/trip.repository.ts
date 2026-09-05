@@ -4,6 +4,7 @@ import type {
     MyTripsResponse,
     CreateTripPayload,
     TripDashboard,
+    UpdateTripPayload,
 } from '@/core/domain/trip/trip.types';
 
 export class HttpTripRepository implements ITripRepository {
@@ -26,7 +27,7 @@ export class HttpTripRepository implements ITripRepository {
 
     async update(
         tripId: string,
-        payload: Partial<CreateTripPayload>,
+        payload: UpdateTripPayload,
     ): Promise<void> {
         await apiClient.patch(`/trips/${tripId}`, payload);
     }

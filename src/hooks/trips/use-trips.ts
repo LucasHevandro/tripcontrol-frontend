@@ -5,7 +5,7 @@ import { useRepositories } from '@/providers/repositories.provider';
 import { useToast } from '@/contexts/toast-context';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import type { CreateTripPayload } from '@/core/domain/trip/trip.types';
+import type { CreateTripPayload, UpdateTripPayload } from '@/core/domain/trip/trip.types';
 
 export function useTrips() {
     const { trip } = useRepositories();
@@ -48,6 +48,23 @@ export function useDeleteTrip() {
         },
         onError: (error) => {
             addToast(getErrorMessage(error, 'Erro ao remover viagem'), 'error');
+        },
+    });
+}
+
+export function useUpdateTrip(tripId: string) {
+    const { trip } = useRepositories();
+    const queryClient = useQueryClient();
+    const { addToast } = useToast();
+
+    return useMutation({
+        mutationFn: (payload: UpdateTripPayload) => trip.update(tripId, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['trips'] });
+            addToast('Viagem atualizada com sucesso');
+        },
+        onError: (error) => {
+            addToast(getErrorMessage(error, 'Erro ao atualizar viagem'), 'error');
         },
     });
 }

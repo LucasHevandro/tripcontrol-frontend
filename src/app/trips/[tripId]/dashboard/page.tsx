@@ -18,6 +18,7 @@ import Link from "next/link";
 import { UserPlus } from "lucide-react";
 import { TripHeroCard } from "@/components/dashboard/trip-hero-card";
 import { ExpenseTrigger } from "@/components/expenses/expense-trigger";
+import { StatusSuggestionBanner } from "@/components/trips/status-suggestion-banner";
 
 export default function DashboardPage({
     params,
@@ -43,6 +44,11 @@ export default function DashboardPage({
 
         return (
             <div className="space-y-6">
+                <StatusSuggestionBanner
+                    tripId={tripId}
+                    suggestion={data.trip.statusSuggestion}
+                    isOrganizer={data.trip.isOrganizer}
+                />
                 <TripHeroCard
                     trip={data.trip}
                     primaryAction={
@@ -86,6 +92,11 @@ export default function DashboardPage({
 
     return (
         <div className="space-y-6">
+            <StatusSuggestionBanner
+                tripId={tripId}
+                suggestion={data.trip.statusSuggestion}
+                isOrganizer={data.trip.isOrganizer}
+            />
             <TripHeroCard
                 trip={data.trip}
                 totalSpent={data.totalSpent}

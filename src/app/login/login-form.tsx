@@ -8,6 +8,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useTheme } from "@/contexts/theme-context";
 import { useGoogleAuth } from "@/hooks/auth/use-auth";
 import NextLink from "next/link";
+import { getPasswordStrength } from "@/lib/utils";
 
 const FEATURES = [
     { icon: Wallet, bg: "bg-amber-100", iconColor: "text-amber-700", text: "Controle financeiro compartilhado e acertos automáticos" },
@@ -20,20 +21,6 @@ const inputClass =
     "w-full rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500";
 
 const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300";
-
-function getPasswordStrength(password: string) {
-    if (password.length === 0) return { level: 0, label: "", barColor: "", textColor: "" };
-    let score = 0;
-    if (password.length >= 8) score++;
-    if (password.length >= 12) score++;
-    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
-    if (/\d/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-    if (score <= 1) return { level: 1, label: "Senha fraca", barColor: "bg-rose-500", textColor: "text-rose-600" };
-    if (score <= 2) return { level: 2, label: "Senha razoável", barColor: "bg-amber-500", textColor: "text-amber-600" };
-    if (score <= 3) return { level: 3, label: "Senha boa", barColor: "bg-sky-500", textColor: "text-sky-600" };
-    return { level: 4, label: "Senha forte", barColor: "bg-emerald-500", textColor: "text-emerald-600" };
-}
 
 export default function LoginForm() {
     const [tab, setTab] = useState<"entrar" | "criar">("entrar");

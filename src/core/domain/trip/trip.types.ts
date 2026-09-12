@@ -10,6 +10,8 @@ export interface TripCard {
     startDate: string;
     endDate: string;
     status: TripStatus;
+    statusSuggestion?: TripStatus;
+    isOrganizer?: boolean;
     emoji: string | null;
     bannerClassName?: string;
     participants: { id: string; name: string; avatarUrl: string | null }[];
@@ -43,6 +45,10 @@ export interface CreateTripPayload {
     emoji?: string;
 }
 
+export type UpdateTripPayload = Partial<CreateTripPayload> & {
+    status?: TripStatus;
+};
+
 export interface TripDashboard {
     trip: {
         id: string;
@@ -51,6 +57,8 @@ export interface TripDashboard {
         startDate: string;
         endDate: string;
         status: TripStatus;
+        statusSuggestion: TripStatus;
+        isOrganizer: boolean;
         participantCount: number;
     };
     totalSpent: number;

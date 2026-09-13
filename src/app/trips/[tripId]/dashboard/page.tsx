@@ -112,18 +112,18 @@ export default function DashboardPage({
             />
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                <StatCard icon={Wallet} label="Total gasto" value={formatCurrencyBRL(data.totalSpent)} sublabel={`de ${formatCurrencyBRL(data.budget)} orçados`} />
-                <StatCard icon={Receipt} label="Despesas" value={data.expenseCount} sublabel="registradas" />
-                <StatCard icon={Map} label="Atividades" value={data.activityCount} sublabel={`${data.completedActivityCount} concluídas`} />
-                <StatCard icon={Hotel} label="Reservas" value={data.reservationCount} sublabel={data.allReservationsConfirmed ? "todas confirmadas" : "pendências"} />
+                <StatCard icon={Wallet} label="Total gasto" value={formatCurrencyBRL(data.totalSpent ?? 0)} sublabel={`de ${formatCurrencyBRL(data.budget ?? 0)} orçados`} />
+                <StatCard icon={Receipt} label="Despesas" value={data.expenseCount ?? 0} sublabel="registradas" />
+                <StatCard icon={Map} label="Atividades" value={data.activityCount ?? 0} sublabel={`${data.completedActivityCount ?? 0} concluídas`} />
+                <StatCard icon={Hotel} label="Reservas" value={data.reservationCount ?? 0} sublabel={data.allReservationsConfirmed ? "todas confirmadas" : "pendências"} />
             </div>
 
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                <RecentExpensesList tripId={tripId} expenses={data.recentExpenses} />
-                <TodayItinerary todayLabel={data.todayLabel} activities={data.todayActivities} />
+                <RecentExpensesList tripId={tripId} expenses={data.recentExpenses ?? []} />
+                <TodayItinerary todayLabel={data.todayLabel} activities={data.todayActivities ?? []} />
             </div>
 
-            <ParticipantsBalanceRow participants={data.participants} />
+            <ParticipantsBalanceRow participants={data.participants ?? []} />
         </div>
     );
 }

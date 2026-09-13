@@ -15,9 +15,10 @@ const apiOrigin = (() => {
 })();
 
 function buildCsp(nonce: string): string {
+    const isDev = process.env.NODE_ENV === 'development';
     return [
         `default-src 'self'`,
-        `script-src 'self' 'nonce-${nonce}' https://accounts.google.com`,
+        `script-src 'self' 'nonce-${nonce}' https://accounts.google.com${isDev ? " 'unsafe-eval'" : ""}`,
         `style-src 'self' 'unsafe-inline'`,
         `img-src 'self' data: https:`,
         `font-src 'self' data:`,

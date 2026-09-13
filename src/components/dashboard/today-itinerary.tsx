@@ -14,11 +14,13 @@ const STATUS_BADGE: Record<ActivityStatus, { label: string; className: string } 
 };
 
 interface TodayItineraryProps {
-    todayLabel: string;
-    activities: Activity[];
+    todayLabel?: string;
+    activities?: Activity[];
 }
 
-export function TodayItinerary({ todayLabel, activities }: TodayItineraryProps) {
+export function TodayItinerary({ todayLabel, activities = [] }: TodayItineraryProps) {
+    const safeActivities = activities ?? [];
+
     return (
         <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
             <div className="flex items-center justify-between">
@@ -26,46 +28,54 @@ export function TodayItinerary({ todayLabel, activities }: TodayItineraryProps) 
                     <CalendarDays className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
                     Roteiro de hoje
                 </h2>
-                <span className="text-xs text-neutral-400 dark:text-neutral-500">{todayLabel}</span>
+                {todayLabel && <span className="text-xs text-neutral-400 dark:text-neutral-500">{todayLabel}</span>}
             </div>
 
-            <ul className="mt-3 space-y-4">
-                {activities.map((activity) => {
-                    const badge = STATUS_BADGE[activity.status];
-                    return (
-                        <li key={activity.id} className="flex gap-3">
-                            <div className="flex w-12 shrink-0 flex-col items-start">
-                                <span className="text-xs text-neutral-400 dark:text-neutral-500">{activity.time}</span>
-                            </div>
+            {safeActivities.length === 0 ? (
+                <div className="mt-4 rounded-lg border border-dashed border-neutral-200 py-6 text-center dark:border-neutral-800">
+                    <p className="text-xs text-neutral-400 dark:text-neutral-500">
+                        Nenhuma atividade programada para hoje
+                    </p>
+                </div>
+            ) : (
+                <ul className="mt-3 space-y-4">
+                    {safeActivities.map((activity) => {
+                        const badge = STATUS_BADGE[activity.status];
+                        return (
+                            <li key={activity.id} className="flex gap-3">
+                                <div className="flex w-12 shrink-0 flex-col items-start">
+                                    <span className="text-xs text-neutral-400 dark:text-neutral-500">{activity.time}</span>
+                                </div>
 
-                            <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[activity.status]}`} />
+                                <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[activity.status]}`} />
 
-                            <div className="flex-1">
-                                <div className="flex items-center gap-1.5">
-                                    <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                                        {activity.title}
-                                    </p>
-                                    {activity.status === "completed" && (
-                                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-1.5">
+                                        <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                                            {activity.title}
+                                        </p>
+                                        {activity.status === "completed" && (
+                                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                                        )}
+                                    </div>
+                                    {activity.location && (
+                                        <p className="mt-0.5 flex items-center gap-1 text-xs text-neutral-400 dark:text-neutral-500">
+                                            <MapPin className="h-3 w-3" />
+                                            {activity.location}
+                                        </p>
                                     )}
                                 </div>
-                                {activity.location && (
-                                    <p className="mt-0.5 flex items-center gap-1 text-xs text-neutral-400 dark:text-neutral-500">
-                                        <MapPin className="h-3 w-3" />
-                                        {activity.location}
-                                    </p>
-                                )}
-                            </div>
 
-                            {badge && (
-                                <span className={`h-fit rounded-full px-2.5 py-0.5 text-xs font-medium ${badge.className}`}>
-                                    {badge.label}
-                                </span>
-                            )}
-                        </li>
-                    );
-                })}
-            </ul>
+                                {badge && (
+                                    <span className={`h-fit rounded-full px-2.5 py-0.5 text-xs font-medium ${badge.className}`}>
+                                        {badge.label}
+                                    </span>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
         </div>
     );
 }

@@ -3,21 +3,178 @@
 /* Configura dark mode por classe em vez de prefers-color-scheme */
 @variant dark (&:where(.dark, .dark *));
 
+/*
+ * Tokens semânticos do TripControl.
+ * Valores = paleta padrão do Tailwind v4 (nome da cor no comentário).
+ * Os componentes usam só os nomes semânticos (bg-surface, text-ink...),
+ * então o tema escuro fica todo aqui, sem "dark:" espalhado pelo código.
+ */
 :root {
   color-scheme: light;
+
+  /* Página */
   --background: #f7f6f1;
   --text-primary: #171717;
+
+  /* Superfícies */
+  --surface: #ffffff;
+  /* white */
+  --surface-muted: oklch(98.5% 0 0);
+  /* neutral-50 */
+  --surface-hover: oklch(97% 0 0);
+  /* neutral-100 */
+
+  /* Bordas */
+  --border: oklch(92.2% 0 0);
+  /* neutral-200 — cards (decorativa) */
+  --border-subtle: oklch(97% 0 0);
+  /* neutral-100 — divisórias do dialog */
+  --input: oklch(70.8% 0 0);
+  /* neutral-400 — borda de campos (antes neutral-200) */
+
+  /* Texto */
+  --ink: oklch(20.5% 0 0);
+  /* neutral-900 — títulos, valores, texto de input */
+  --ink-secondary: oklch(37.1% 0 0);
+  /* neutral-700 — labels, botão secondary */
+  --ink-muted: oklch(55.6% 0 0);
+  /* neutral-500 — descrições e hints */
+  --ink-subtle: oklch(55.6% 0 0);
+  /* neutral-500 — placeholders (antes neutral-400, 2.6:1) */
+
+  /* Marca / ação */
+  --primary: oklch(50.8% 0.118 165.612);
+  /* emerald-700 — antes 600 (3.7:1 → 5.4:1 com branco) */
+  --primary-hover: oklch(43.2% 0.095 166.913);
+  /* emerald-800 */
+  --on-primary: #ffffff;
+  --primary-soft: oklch(97.9% 0.021 166.113);
+  /* emerald-50 */
+  --primary-text: oklch(50.8% 0.118 165.612);
+  /* emerald-700 */
+  --focus: oklch(59.6% 0.145 163.225);
+  /* emerald-600 — anel de foco (emerald-500 dava 2.5:1) */
+
+  /* Perigo */
+  --danger: oklch(58.6% 0.253 17.585);
+  /* rose-600 */
+  --danger-hover: oklch(51.4% 0.222 16.935);
+  /* rose-700 */
+  --danger-soft: oklch(96.9% 0.015 12.422);
+  /* rose-50 */
+  --danger-text: oklch(58.6% 0.253 17.585);
+  /* rose-600 */
+  --danger-border: oklch(81% 0.117 11.638);
+  /* rose-300 */
+
+  /* Atenção */
+  --warning-soft: oklch(98.7% 0.022 95.277);
+  /* amber-50 */
+  --warning-text: oklch(55.5% 0.163 48.998);
+  /* amber-700 */
+
+  /* Carregamento */
+  --skeleton: oklch(92.2% 0 0);
+  /* neutral-200 */
 }
 
 .dark {
   color-scheme: dark;
+
   --background: #0a0a0a;
   --text-primary: #ededed;
+
+  --surface: oklch(20.5% 0 0);
+  /* neutral-900 */
+  --surface-muted: oklch(26.9% 0 0);
+  /* neutral-800 */
+  --surface-hover: oklch(26.9% 0 0);
+  /* neutral-800 */
+
+  --border: oklch(37.1% 0 0);
+  /* neutral-700 */
+  --border-subtle: oklch(26.9% 0 0);
+  /* neutral-800 */
+  --input: oklch(43.9% 0 0);
+  /* neutral-600 — antes neutral-700 */
+
+  --ink: oklch(97% 0 0);
+  /* neutral-100 */
+  --ink-secondary: oklch(87% 0 0);
+  /* neutral-300 */
+  --ink-muted: oklch(70.8% 0 0);
+  /* neutral-400 */
+  --ink-subtle: oklch(70.8% 0 0);
+  /* neutral-400 — antes neutral-500 (3.8:1) */
+
+  --primary: oklch(50.8% 0.118 165.612);
+  /* emerald-700 */
+  --primary-hover: oklch(43.2% 0.095 166.913);
+  /* emerald-800 */
+  --on-primary: #ffffff;
+  --primary-soft: oklch(26.2% 0.051 172.552);
+  /* emerald-950 */
+  --primary-text: oklch(76.5% 0.177 163.223);
+  /* emerald-400 */
+  --focus: oklch(69.6% 0.17 162.48);
+  /* emerald-500 */
+
+  --danger: oklch(58.6% 0.253 17.585);
+  /* rose-600 */
+  --danger-hover: oklch(51.4% 0.222 16.935);
+  /* rose-700 */
+  --danger-soft: oklch(27.1% 0.105 12.094);
+  /* rose-950 */
+  --danger-text: oklch(71.2% 0.194 13.428);
+  /* rose-400 */
+  --danger-border: oklch(45.5% 0.188 13.697);
+  /* rose-800 */
+
+  --warning-soft: oklch(27.9% 0.077 45.635);
+  /* amber-950 */
+  --warning-text: oklch(82.8% 0.189 84.429);
+  /* amber-400 */
+
+  --skeleton: oklch(37.1% 0 0);
+  /* neutral-700 */
 }
 
+/* Expõe os tokens como utilitários do Tailwind: bg-surface, text-ink, border-input, ring-focus... */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--text-primary);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-input: var(--input);
+
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-text: var(--primary-text);
+  --color-focus: var(--focus);
+
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-text: var(--danger-text);
+  --color-danger-border: var(--danger-border);
+
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-text: var(--warning-text);
+
+  --color-skeleton: var(--skeleton);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

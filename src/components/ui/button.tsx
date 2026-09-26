@@ -17,13 +17,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANT: Record<Variant, string> = {
     primary:
-        "bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-500 disabled:bg-emerald-600/60",
+        "bg-primary text-on-primary hover:bg-primary-hover focus-visible:ring-focus disabled:bg-primary/60",
     secondary:
-        "border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-100 focus-visible:ring-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800",
+        "border border-border bg-surface text-ink-secondary hover:bg-surface-hover focus-visible:ring-focus",
     danger:
-        "bg-rose-600 text-white hover:bg-rose-700 focus-visible:ring-rose-500 disabled:bg-rose-600/60",
+        "bg-danger text-on-primary hover:bg-danger-hover focus-visible:ring-danger disabled:bg-danger/60",
     ghost:
-        "text-neutral-600 hover:bg-neutral-100 focus-visible:ring-neutral-400 dark:text-neutral-300 dark:hover:bg-neutral-800",
+        "text-ink-muted hover:bg-surface-hover focus-visible:ring-focus",
 };
 
 const SIZE: Record<Size, string> = {
@@ -42,7 +42,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
             type={type}
             disabled={disabled || isLoading}
             className={cn(
-                "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed dark:focus-visible:ring-offset-neutral-950",
+                "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed",
                 VARIANT[variant],
                 SIZE[size],
                 fullWidth && "w-full",

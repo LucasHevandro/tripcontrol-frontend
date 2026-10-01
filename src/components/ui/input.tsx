@@ -20,19 +20,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             {label && (
                 <label
                     htmlFor={inputId}
-                    className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                    className="text-xs font-medium text-ink-secondary"
                 >
                     {label}
                 </label>
             )}
             <div className={cn(
-                "flex items-center rounded-lg border bg-white transition-colors focus-within:ring-2 dark:bg-neutral-900",
+                "flex items-center rounded-lg border bg-surface transition-colors focus-within:ring-2",
                 error
-                    ? "border-rose-300 focus-within:border-rose-500 focus-within:ring-rose-500/20 dark:border-rose-800"
-                    : "border-neutral-200 focus-within:border-emerald-500 focus-within:ring-emerald-500/20 dark:border-neutral-700",
+                    ? "border-danger-border focus-within:border-danger focus-within:ring-danger/20"
+                    : "border-input focus-within:border-focus focus-within:ring-focus/20",
             )}>
                 {leftAddon && (
-                    <span className="pl-3 text-neutral-400 dark:text-neutral-500">{leftAddon}</span>
+                    <span className="pl-3 text-ink-subtle">{leftAddon}</span>
                 )}
                 <input
                     ref={ref}
@@ -40,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                     aria-invalid={!!error}
                     aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
                     className={cn(
-                        "h-10 w-full rounded-lg bg-transparent px-3 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500",
+                        "h-10 w-full rounded-lg bg-transparent px-3 text-sm text-ink outline-none placeholder:text-ink-subtle",
                         leftAddon && "pl-2",
                         className,
                     )}
@@ -48,9 +48,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                 />
             </div>
             {error ? (
-                <p id={`${inputId}-error`} className="text-xs text-rose-600 dark:text-rose-400">{error}</p>
+                <p id={`${inputId}-error`} className="text-xs text-danger-text">{error}</p>
             ) : hint ? (
-                <p id={`${inputId}-hint`} className="text-xs text-neutral-500 dark:text-neutral-400">{hint}</p>
+                <p id={`${inputId}-hint`} className="text-xs text-ink-muted">{hint}</p>
             ) : null}
         </div>
     );

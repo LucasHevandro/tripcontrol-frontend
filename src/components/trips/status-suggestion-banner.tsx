@@ -24,14 +24,12 @@ interface StatusSuggestionBannerProps {
 }
 
 export function StatusSuggestionBanner({ tripId, suggestion, isOrganizer }: StatusSuggestionBannerProps) {
-
+    const updateTrip = useUpdateTrip(tripId);
+    const { addToast } = useToast();
 
     if (!suggestion || !isOrganizer || suggestion === "PLANNING") return null;
 
     const copy = COPY[suggestion];
-
-    const updateTrip = useUpdateTrip(tripId);
-    const { addToast } = useToast();
 
     return (
         <div className="flex flex-col gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-emerald-900 dark:bg-emerald-950">

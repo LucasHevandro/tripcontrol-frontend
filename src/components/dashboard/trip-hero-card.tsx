@@ -25,24 +25,31 @@ const STATUS_LABEL = {
 } as const;
 
 function getCountdown(startDate: string, endDate: string): string {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const start = new Date(startDate);
-    const end = new Date(endDate);
     const msPerDay = 1000 * 60 * 60 * 24;
+    const toDayUtc = (iso: string) => Date.parse(`${iso.split("T")[0]}T00:00:00.000Z`);
+
+    const start = toDayUtc(startDate);
+    const end = toDayUtc(endDate);
+    const today = toDayUtc(
+        new Intl.DateTimeFormat("en-CA", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).format(new Date())
+    );
 
     if (today < start) {
-        const days = Math.ceil((start.getTime() - today.getTime()) / msPerDay);
+        const days = Math.round((start - today) / msPerDay);
         return days === 1 ? "Falta 1 dia para começar" : `Faltam ${days} dias para começar`;
     }
 
     if (today <= end) {
-        const totalDays = Math.floor((end.getTime() - start.getTime()) / msPerDay) + 1;
-        const currentDay = Math.floor((today.getTime() - start.getTime()) / msPerDay) + 1;
+        const totalDays = Math.round((end - start) / msPerDay) + 1;
+        const currentDay = Math.round((today - start) / msPerDay) + 1;
         return `Dia ${currentDay} de ${totalDays}`;
     }
 
-    const days = Math.floor((today.getTime() - end.getTime()) / msPerDay);
+    const days = Math.round((today - end) / msPerDay);
     if (days === 0) return "Encerrada hoje";
     return days === 1 ? "Concluída há 1 dia" : `Concluída há ${days} dias`;
 }
